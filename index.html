@@ -1,0 +1,1913 @@
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>GitHub Cyberpunk Arcade Portal</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google Fonts: Orbitron & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            ghDark: '#0d1117',
+            ghCard: '#161b22',
+            ghBorder: '#30363d',
+            ghGreen: '#2ea44f',
+            ghGreenBright: '#3fb950',
+            cyberCyan: '#00f0ff',
+            cyberPurple: '#a855f7',
+            cyberPink: '#ff007f'
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+            cyber: ['Orbitron', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      background-color: #0d1117;
+      color: #c9d1d9;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0d1117;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #30363d;
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #3fb950;
+    }
+
+    /* Neon Glow Utilities */
+    .glow-green {
+      box-shadow: 0 0 15px rgba(63, 185, 80, 0.4);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
+    }
+    .glow-purple {
+      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
+    }
+    .text-glow-cyan {
+      text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
+    }
+    .text-glow-green {
+      text-shadow: 0 0 10px rgba(63, 185, 80, 0.7);
+    }
+
+    /* Glitch Shake Animation */
+    @keyframes glitchShake {
+      0% { transform: translate(0); }
+      20% { transform: translate(-4px, 4px); }
+      40% { transform: translate(-4px, -4px); }
+      60% { transform: translate(4px, 4px); }
+      80% { transform: translate(4px, -4px); }
+      100% { transform: translate(0); }
+    }
+    .animate-glitch {
+      animation: glitchShake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+      border-color: #ff007f !important;
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.6) !important;
+    }
+
+    /* Scanlines Overlay Effect */
+    .scanlines {
+      background: linear-gradient(
+        rgba(18, 16, 16, 0) 50%, 
+        rgba(0, 0, 0, 0.25) 50%
+      ), linear-gradient(
+        90deg,
+        rgba(255, 0, 0, 0.03),
+        rgba(0, 255, 0, 0.01),
+        rgba(0, 0, 255, 0.03)
+      );
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
+    }
+
+    /* Heatmap cell grid styling */
+    .heatmap-cell {
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+    .heatmap-cell:hover {
+      transform: scale(1.3);
+      z-index: 10;
+      filter: brightness(1.4);
+    }
+  </style>
+</head>
+
+<body class="h-full flex flex-col antialiased selection:bg-ghGreen selection:text-white">
+
+  <!-- ========================================================================= -->
+  <!-- 1. AUTHENTICATION GATE (PASSCODE PROTECTED SCREEN) -->
+  <!-- ========================================================================= -->
+  <div id="passcode-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-ghDark px-4 transition-all duration-700">
+    <!-- Matrix Rain Canvas Background -->
+    <canvas id="matrix-canvas" class="absolute inset-0 w-full h-full opacity-30 pointer-events-none"></canvas>
+    
+    <!-- CRT Scanline layer -->
+    <div class="scanlines absolute inset-0 z-10"></div>
+
+    <!-- Security Gateway Dialog Card -->
+    <div id="gate-card" class="relative z-20 w-full max-w-md bg-ghCard/90 backdrop-blur-md border border-ghBorder rounded-2xl p-6 sm:p-8 shadow-2xl transition-all duration-300">
+      
+      <!-- Top Cyber Badge -->
+      <div class="flex items-center justify-between mb-6 border-b border-ghBorder/60 pb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse" id="gate-status-led"></div>
+          <span class="font-mono text-xs text-gray-400 tracking-wider uppercase" id="gate-status-text">SECURE PORTAL // RESTRICTED</span>
+        </div>
+        <i class="fa-brands fa-github text-2xl text-cyberCyan"></i>
+      </div>
+
+      <!-- Icon & Header -->
+      <div class="text-center mb-6">
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-ghDark border border-cyberCyan/40 text-cyberCyan text-2xl mb-3 glow-cyan">
+          <i class="fa-solid fa-terminal"></i>
+        </div>
+        <h1 class="font-cyber text-2xl font-black text-white tracking-wide text-glow-cyan">GITHUB ARCADE</h1>
+        <p class="font-mono text-xs text-gray-400 mt-1">Authentication Required to Access Repository Arcade</p>
+      </div>
+
+      <!-- Passcode Input Form -->
+      <form id="passcode-form" class="space-y-4" onsubmit="event.preventDefault(); verifyPasscode();">
+        <div class="relative">
+          <label for="passcode-input" class="block font-mono text-xs text-gray-300 mb-1">ENTER PASSCODE KEY</label>
+          <div class="relative flex items-center">
+            <input 
+              type="password" 
+              id="passcode-input" 
+              maxlength="10"
+              placeholder="••••••" 
+              autocomplete="off"
+              class="w-full bg-ghDark/90 border border-ghBorder rounded-xl px-4 py-3 font-mono text-center text-xl tracking-[0.4em] text-ghGreenBright placeholder-gray-600 focus:outline-none focus:border-cyberCyan focus:ring-1 focus:ring-cyberCyan transition-all"
+            >
+            <button 
+              type="button" 
+              onclick="togglePasswordVisibility()"
+              class="absolute right-3 text-gray-500 hover:text-gray-300 transition-colors p-1"
+              title="Toggle view"
+            >
+              <i id="eye-icon" class="fa-solid fa-eye text-sm"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Alert Notification Box -->
+        <div id="gate-alert" class="hidden font-mono text-xs rounded-lg p-3 text-center border transition-all"></div>
+
+        <!-- Access Button -->
+        <button 
+          type="submit" 
+          id="unlock-btn"
+          class="w-full bg-gradient-to-r from-ghGreen to-emerald-600 hover:from-ghGreenBright hover:to-emerald-500 text-white font-cyber font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center space-x-2 glow-green"
+        >
+          <i class="fa-solid fa-key text-sm"></i>
+          <span>AUTHENTICATE & ENTER</span>
+        </button>
+      </form>
+
+      <!-- Footer Info -->
+      <div class="mt-6 pt-4 border-t border-ghBorder/40 text-center flex justify-between items-center font-mono text-[10px] text-gray-500">
+        <span>SECURITY VER: v4.10.12</span>
+        <button onclick="autoFillPasscode()" class="text-cyberCyan/70 hover:text-cyberCyan underline cursor-pointer">Hint / Auto-fill</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 2. MAIN ARCADE DASHBOARD (REVEALED UPON AUTHENTICATION) -->
+  <!-- ========================================================================= -->
+  <div id="main-portal" class="hidden min-h-screen flex flex-col bg-ghDark text-gray-200">
+    
+    <!-- Top Navigation Bar -->
+    <header class="sticky top-0 z-40 bg-ghCard/90 backdrop-blur-md border-b border-ghBorder px-4 lg:px-8 py-3">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        
+        <!-- Brand Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+          <div class="w-10 h-10 rounded-xl bg-ghDark border border-ghGreen flex items-center justify-center text-ghGreenBright glow-green">
+            <i class="fa-brands fa-github text-xl"></i>
+          </div>
+          <div>
+            <div class="font-cyber font-extrabold text-lg text-white tracking-wider leading-none flex items-center gap-2">
+              GITHUB ARCADE <span class="text-[10px] bg-ghGreen/20 text-ghGreenBright px-2 py-0.5 rounded-full border border-ghGreen/30 font-mono font-normal">v2.4</span>
+            </div>
+            <span class="font-mono text-[10px] text-gray-400">CYBERPUNK ENGINE PORTAL</span>
+          </div>
+        </div>
+
+        <!-- Search & Quick Navigation Bar -->
+        <div class="hidden md:flex flex-1 max-w-md mx-4">
+          <div class="relative w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+            <input 
+              type="text" 
+              id="game-search-input" 
+              onkeyup="filterGames()" 
+              placeholder="Search repositories & games..." 
+              class="w-full bg-ghDark border border-ghBorder rounded-lg pl-9 pr-4 py-1.5 font-mono text-xs text-gray-200 focus:outline-none focus:border-cyberCyan transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Header Controls & Utilities -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          
+          <!-- Sound Toggle Button -->
+          <button 
+            onclick="toggleAudio()" 
+            id="sound-toggle-btn"
+            title="Toggle Web Audio SFX"
+            class="p-2.5 rounded-lg bg-ghDark border border-ghBorder hover:border-cyberCyan text-gray-300 hover:text-cyberCyan transition-all text-xs flex items-center space-x-1.5"
+          >
+            <i id="sound-icon" class="fa-solid fa-volume-high text-ghGreenBright"></i>
+            <span class="hidden sm:inline font-mono">SFX</span>
+          </button>
+
+          <!-- Terminal CLI Toggle -->
+          <button 
+            onclick="openTerminalModal()" 
+            title="Open Developer CLI (~/github-arcade)"
+            class="p-2.5 rounded-lg bg-ghDark border border-ghBorder hover:border-cyberCyan text-gray-300 hover:text-cyberCyan transition-all text-xs flex items-center space-x-1.5"
+          >
+            <i class="fa-solid fa-terminal text-cyberCyan"></i>
+            <span class="hidden sm:inline font-mono">CLI</span>
+          </button>
+
+          <!-- Deployment Helper Modal Button -->
+          <button 
+            onclick="openDeployModal()" 
+            class="hidden sm:flex items-center space-x-1.5 bg-cyberPurple/10 border border-cyberPurple/40 hover:bg-cyberPurple/20 text-cyberPurple font-mono text-xs px-3 py-2 rounded-lg transition-all"
+          >
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>Deploy Site</span>
+          </button>
+
+          <!-- Lock Portal Button -->
+          <button 
+            onclick="lockPortal()" 
+            title="Lock Portal Session"
+            class="p-2.5 rounded-lg bg-red-950/40 border border-red-800/50 hover:bg-red-900/50 text-red-400 transition-all text-xs flex items-center space-x-1"
+          >
+            <i class="fa-solid fa-lock"></i>
+            <span class="hidden sm:inline font-mono">Lock</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-8">
+      
+      <!-- Profile & Git Stats Banner -->
+      <section class="bg-ghCard border border-ghBorder rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
+        <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none text-cyberCyan text-9xl">
+          <i class="fa-brands fa-github"></i>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+          
+          <!-- User Profile & Streaks -->
+          <div class="flex items-center space-x-4">
+            <div class="relative">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyberCyan to-ghGreen p-0.5 glow-cyan">
+                <div class="w-full h-full bg-ghDark rounded-[14px] flex items-center justify-center text-2xl text-white">
+                  <i class="fa-solid fa-user-ninja"></i>
+                </div>
+              </div>
+              <span class="absolute -bottom-1 -right-1 bg-ghGreen text-ghDark font-mono font-bold text-[9px] px-1.5 py-0.2 rounded-full border border-ghDark">PRO</span>
+            </div>
+
+            <div>
+              <div class="flex items-center space-x-2">
+                <h2 class="font-cyber font-bold text-xl text-white">CYBER_DEVELOPER</h2>
+                <span class="text-xs font-mono text-ghGreenBright bg-ghGreen/10 border border-ghGreen/30 px-2 py-0.5 rounded">● Online</span>
+              </div>
+              <p class="font-mono text-xs text-gray-400 mt-0.5">Master Contributor • Passcode Unlocked Level 5</p>
+              
+              <!-- Mini Stats Pills -->
+              <div class="flex items-center space-x-3 mt-2 font-mono text-xs">
+                <span class="text-yellow-400"><i class="fa-solid fa-star mr-1"></i><span id="stat-total-stars">1,482</span> Stars</span>
+                <span class="text-cyberCyan"><i class="fa-solid fa-fire mr-1"></i><span id="stat-streak">28</span> Day Streak</span>
+                <span class="text-cyberPurple"><i class="fa-solid fa-trophy mr-1"></i><span id="stat-total-score">0</span> High Score</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Commit Activity Heatmap Visualizer -->
+          <div class="w-full lg:w-auto bg-ghDark/80 border border-ghBorder/80 rounded-xl p-3.5 overflow-x-auto">
+            <div class="flex items-center justify-between mb-2 font-mono text-[11px] text-gray-400">
+              <span class="flex items-center gap-1.5">
+                <i class="fa-solid fa-chart-simple text-ghGreenBright"></i> 
+                <span>2,048 commits in the last year</span>
+              </span>
+              <span class="text-[10px] text-gray-500">Click cells to add commits!</span>
+            </div>
+
+            <!-- Heatmap Grid (Generated by JS) -->
+            <div id="heatmap-grid" class="grid grid-rows-7 grid-flow-col gap-1 w-max"></div>
+
+            <!-- Legend -->
+            <div class="flex items-center justify-end space-x-2 mt-2 font-mono text-[10px] text-gray-500">
+              <span>Less</span>
+              <div class="w-2.5 h-2.5 rounded-sm bg-[#161b22]"></div>
+              <div class="w-2.5 h-2.5 rounded-sm bg-[#0e4429]"></div>
+              <div class="w-2.5 h-2.5 rounded-sm bg-[#006d32]"></div>
+              <div class="w-2.5 h-2.5 rounded-sm bg-[#26a641]"></div>
+              <div class="w-2.5 h-2.5 rounded-sm bg-[#39d353]"></div>
+              <span>More</span>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Category Filter Tabs -->
+      <div class="flex items-center justify-between border-b border-ghBorder pb-3 overflow-x-auto">
+        <div class="flex items-center space-x-2 font-mono text-xs min-w-max">
+          <button onclick="setCategory('ALL')" class="cat-btn active bg-ghGreen text-white px-3.5 py-1.5 rounded-lg font-bold transition-all" data-cat="ALL">
+            ALL REPOS (6)
+          </button>
+          <button onclick="setCategory('ARCADE')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="ARCADE">
+            ARCADE
+          </button>
+          <button onclick="setCategory('ACTION')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="ACTION">
+            ACTION
+          </button>
+          <button onclick="setCategory('RETRO')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="RETRO">
+            RETRO
+          </button>
+          <button onclick="setCategory('PUZZLE')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="PUZZLE">
+            PUZZLE
+          </button>
+        </div>
+
+        <button onclick="openHighScoresModal()" class="font-mono text-xs text-cyberCyan hover:underline flex items-center space-x-1 min-w-max ml-4">
+          <i class="fa-solid fa-crown text-yellow-400"></i>
+          <span>Leaderboard</span>
+        </button>
+      </div>
+
+      <!-- Games Grid -->
+      <section id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Game 1: Git-Snake -->
+        <div class="game-card group bg-ghCard border border-ghBorder hover:border-ghGreen rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="snake" data-cat="ARCADE RETRO">
+          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#2ea44f_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+            <i class="fa-solid fa-staff-snake text-6xl text-ghGreenBright group-hover:scale-110 transition-transform duration-300"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-ghGreenBright font-mono text-[10px] px-2.5 py-1 rounded-full">
+              repo: git-snake.js
+            </span>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-ghGreenBright transition-colors">1. Git-Snake</h3>
+              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>482</span>
+            </div>
+            <p class="font-mono text-xs text-gray-400 line-clamp-2">Eat commit stars, extend your git commit chain, and avoid merge conflict walls.</p>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-snake" class="text-white">0</strong></span>
+              <button onclick="launchGame('snake')" class="bg-ghGreen/20 hover:bg-ghGreen text-ghGreenBright hover:text-white border border-ghGreen/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>INITIALIZE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 2: Octo-Invaders -->
+        <div class="game-card group bg-ghCard border border-ghBorder hover:border-cyberCyan rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="invaders" data-cat="ACTION RETRO">
+          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#00f0ff_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+            <i class="fa-solid fa-bugs text-6xl text-cyberCyan group-hover:scale-110 transition-transform duration-300"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-cyberCyan font-mono text-[10px] px-2.5 py-1 rounded-full">
+              repo: octo-invaders
+            </span>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-cyberCyan transition-colors">2. Octo-Invaders</h3>
+              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>391</span>
+            </div>
+            <p class="font-mono text-xs text-gray-400 line-clamp-2">Defend the main branch! Shoot down incoming syntax bugs and 404 error invaders.</p>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-invaders" class="text-white">0</strong></span>
+              <button onclick="launchGame('invaders')" class="bg-cyberCyan/20 hover:bg-cyberCyan text-cyberCyan hover:text-ghDark border border-cyberCyan/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>INITIALIZE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 3: Git-Flap -->
+        <div class="game-card group bg-ghCard border border-ghBorder hover:border-cyberPurple rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="flap" data-cat="ARCADE ACTION">
+          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#a855f7_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+            <i class="fa-solid fa-code-pull-request text-6xl text-cyberPurple group-hover:scale-110 transition-transform duration-300"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-cyberPurple font-mono text-[10px] px-2.5 py-1 rounded-full">
+              repo: git-jump
+            </span>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-cyberPurple transition-colors">3. Git-Flap</h3>
+              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>512</span>
+            </div>
+            <p class="font-mono text-xs text-gray-400 line-clamp-2">Fly Octocat safely through PR pipeline gates and server deployment obstacles.</p>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-flap" class="text-white">0</strong></span>
+              <button onclick="launchGame('flap')" class="bg-cyberPurple/20 hover:bg-cyberPurple text-cyberPurple hover:text-white border border-cyberPurple/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>INITIALIZE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 4: Git-Breakout -->
+        <div class="game-card group bg-ghCard border border-ghBorder hover:border-yellow-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="breakout" data-cat="ARCADE RETRO">
+          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#eab308_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+            <i class="fa-solid fa-cubes-stacked text-6xl text-yellow-400 group-hover:scale-110 transition-transform duration-300"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-yellow-400 font-mono text-[10px] px-2.5 py-1 rounded-full">
+              repo: code-breakout
+            </span>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-yellow-400 transition-colors">4. Git-Breakout</h3>
+              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>298</span>
+            </div>
+            <p class="font-mono text-xs text-gray-400 line-clamp-2">Smash through code block bricks, catch powerups, and clear legacy code.</p>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-breakout" class="text-white">0</strong></span>
+              <button onclick="launchGame('breakout')" class="bg-yellow-500/20 hover:bg-yellow-500 text-yellow-400 hover:text-ghDark border border-yellow-500/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>INITIALIZE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 5: Cyber-Runner -->
+        <div class="game-card group bg-ghCard border border-ghBorder hover:border-red-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="runner" data-cat="ACTION">
+          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+            <i class="fa-solid fa-person-running text-6xl text-red-500 group-hover:scale-110 transition-transform duration-300"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-red-400 font-mono text-[10px] px-2.5 py-1 rounded-full">
+              repo: cyber-runner
+            </span>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-red-400 transition-colors">5. Cyber-Runner</h3>
+              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>610</span>
+            </div>
+            <p class="font-mono text-xs text-gray-400 line-clamp-2">Endless side-scroller. Jump over firewall spikes and slide under security lasers.</p>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-runner" class="text-white">0</strong></span>
+              <button onclick="launchGame('runner')" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>INITIALIZE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 6: Hack-The-Grid -->
+        <div class="game-card group bg-ghCard border border-ghBorder hover:border-blue-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="grid" data-cat="PUZZLE">
+          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
+            <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
+            <i class="fa-solid fa-braille text-6xl text-blue-400 group-hover:scale-110 transition-transform duration-300"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-blue-400 font-mono text-[10px] px-2.5 py-1 rounded-full">
+              repo: hack-the-grid
+            </span>
+          </div>
+          <div class="p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-blue-400 transition-colors">6. Hack-The-Grid</h3>
+              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>340</span>
+            </div>
+            <p class="font-mono text-xs text-gray-400 line-clamp-2">Memory light sequence puzzle. Memorize cyber node light patterns to breach security.</p>
+            <div class="flex items-center justify-between pt-2">
+              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-grid" class="text-white">0</strong></span>
+              <button onclick="launchGame('grid')" class="bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white border border-blue-500/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>INITIALIZE</span>
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- Dashboard Footer -->
+    <footer class="border-t border-ghBorder bg-ghCard/60 py-6 mt-12 text-center font-mono text-xs text-gray-500">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div class="flex items-center space-x-2">
+          <i class="fa-brands fa-github text-base text-cyberCyan"></i>
+          <span>GitHub Cyberpunk Arcade &copy; 2026</span>
+        </div>
+        <div>
+          <span>Passcode Auth Status: <strong class="text-ghGreenBright">VERIFIED (041012)</strong></span>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 3. GAME PLAYER ENGINE MODAL & CANVAS OVERLAY -->
+  <!-- ========================================================================= -->
+  <div id="game-modal" class="fixed inset-0 z-50 hidden bg-ghDark/95 backdrop-blur-lg flex-col justify-between p-3 sm:p-6 overflow-y-auto">
+    
+    <!-- Modal Header Controls -->
+    <div class="flex items-center justify-between border-b border-ghBorder pb-3 max-w-5xl w-full mx-auto">
+      <div class="flex items-center space-x-3">
+        <span id="game-title" class="font-cyber font-bold text-xl text-white text-glow-cyan">GAME TITLE</span>
+        <span id="game-status-tag" class="font-mono text-xs bg-ghGreen/20 text-ghGreenBright border border-ghGreen/30 px-2 py-0.5 rounded">RUNNING</span>
+      </div>
+
+      <div class="flex items-center space-x-4 font-mono text-xs">
+        <div class="bg-ghCard border border-ghBorder px-3 py-1.5 rounded-lg flex items-center space-x-2">
+          <span class="text-gray-400">SCORE:</span>
+          <span id="live-score" class="text-ghGreenBright font-bold text-sm">0</span>
+        </div>
+
+        <div class="bg-ghCard border border-ghBorder px-3 py-1.5 rounded-lg flex items-center space-x-2">
+          <span class="text-gray-400">BEST:</span>
+          <span id="modal-high-score" class="text-yellow-400 font-bold text-sm">0</span>
+        </div>
+
+        <button onclick="closeGameModal()" class="bg-red-900/40 hover:bg-red-800 text-red-300 p-2 rounded-lg border border-red-700/50 transition-all">
+          <i class="fa-solid fa-xmark text-base"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Game Canvas Container -->
+    <div class="flex-1 flex flex-col items-center justify-center my-4 w-full max-w-5xl mx-auto">
+      <div class="relative w-full max-w-2xl bg-black rounded-2xl border-2 border-ghBorder shadow-2xl overflow-hidden flex flex-col items-center justify-center">
+        
+        <!-- CRT overlay lines inside game -->
+        <div class="scanlines absolute inset-0 z-10 pointer-events-none"></div>
+
+        <!-- The Main Render Canvas -->
+        <canvas id="game-canvas" width="600" height="400" class="w-full h-auto bg-black block"></canvas>
+
+        <!-- Game Overlay Controls / Game Over Screen -->
+        <div id="game-overlay" class="absolute inset-0 z-20 bg-ghDark/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center transition-all hidden">
+          <h2 id="overlay-title" class="font-cyber text-3xl font-black text-red-500 mb-2">GAME OVER</h2>
+          <p id="overlay-desc" class="font-mono text-sm text-gray-300 mb-6">Segmentation fault detected in repository space.</p>
+
+          <div class="flex items-center space-x-4">
+            <button onclick="restartCurrentGame()" class="bg-ghGreen hover:bg-ghGreenBright text-ghDark font-cyber font-bold px-6 py-3 rounded-xl shadow-lg transition-all flex items-center space-x-2 glow-green">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>RETRY // REBOOT</span>
+            </button>
+            <button onclick="closeGameModal()" class="bg-ghCard border border-ghBorder hover:border-gray-500 text-gray-300 font-mono px-4 py-3 rounded-xl transition-all">
+              EXIT TO HUB
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Touch Controls Bar (Mobile Friendly) -->
+      <div id="touch-controls" class="w-full max-w-2xl mt-4 grid grid-cols-2 gap-4 sm:hidden">
+        <div class="grid grid-cols-3 gap-1 bg-ghCard p-2 rounded-xl border border-ghBorder text-center">
+          <div></div>
+          <button ontouchstart="handleTouchInput('UP')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">▲</button>
+          <div></div>
+          <button ontouchstart="handleTouchInput('LEFT')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">◄</button>
+          <button ontouchstart="handleTouchInput('DOWN')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">▼</button>
+          <button ontouchstart="handleTouchInput('RIGHT')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">►</button>
+        </div>
+
+        <div class="flex items-center justify-center space-x-3 bg-ghCard p-2 rounded-xl border border-ghBorder">
+          <button ontouchstart="handleTouchInput('ACTION_A')" class="flex-1 h-full bg-ghGreen/30 border border-ghGreen text-ghGreenBright rounded-xl font-cyber font-bold active:bg-ghGreen active:text-ghDark">A (ACTION)</button>
+          <button ontouchstart="handleTouchInput('ACTION_B')" class="flex-1 h-full bg-cyberPurple/30 border border-cyberPurple text-cyberPurple rounded-xl font-cyber font-bold active:bg-cyberPurple active:text-white">B (JUMP)</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Instructions Banner -->
+    <div class="max-w-5xl w-full mx-auto bg-ghCard border border-ghBorder rounded-xl p-3 text-center font-mono text-xs text-gray-400">
+      <span id="game-controls-hint"><i class="fa-solid fa-keyboard mr-2 text-cyberCyan"></i>Controls: Arrow Keys / WASD or Touch D-Pad to move. Spacebar for Action.</span>
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 4. DEVELOPER TERMINAL CLI MODAL -->
+  <!-- ========================================================================= -->
+  <div id="terminal-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-3xl bg-ghDark border border-cyberCyan/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[500px]">
+      
+      <!-- Terminal Header -->
+      <div class="bg-ghCard border-b border-ghBorder px-4 py-3 flex items-center justify-between">
+        <div class="flex items-center space-x-2">
+          <div class="w-3 h-3 rounded-full bg-red-500"></div>
+          <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+          <div class="w-3 h-3 rounded-full bg-green-500"></div>
+          <span class="font-mono text-xs text-gray-400 ml-2">guest@github-arcade: ~</span>
+        </div>
+        <button onclick="closeTerminalModal()" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+
+      <!-- Terminal Output Screen -->
+      <div id="terminal-output" class="flex-1 p-4 font-mono text-xs text-ghGreenBright overflow-y-auto space-y-2">
+        <p class="text-cyberCyan">GitHub Arcade Terminal CLI [Version 2.4.0]</p>
+        <p class="text-gray-400">Type <span class="text-yellow-400">help</span> to view available system commands.</p>
+      </div>
+
+      <!-- Terminal Input Line -->
+      <form onsubmit="event.preventDefault(); processTerminalCommand();" class="border-t border-ghBorder bg-ghCard px-4 py-3 flex items-center space-x-2">
+        <span class="font-mono text-xs text-cyberCyan">guest@github-arcade:~$</span>
+        <input 
+          type="text" 
+          id="terminal-input" 
+          autocomplete="off" 
+          placeholder="type help..." 
+          class="flex-1 bg-transparent font-mono text-xs text-white focus:outline-none"
+        >
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 5. GITHUB PAGES DEPLOYMENT HELPER MODAL -->
+  <!-- ========================================================================= -->
+  <div id="deploy-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-ghCard border border-ghBorder rounded-2xl p-6 shadow-2xl space-y-6">
+      
+      <div class="flex items-center justify-between border-b border-ghBorder pb-4">
+        <div class="flex items-center space-x-3">
+          <i class="fa-brands fa-github text-3xl text-cyberPurple"></i>
+          <div>
+            <h3 class="font-cyber font-bold text-lg text-white">Deploy to GitHub Pages</h3>
+            <p class="font-mono text-xs text-gray-400">Host your own live arcade website in 4 steps</p>
+          </div>
+        </div>
+        <button onclick="closeDeployModal()" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Steps List -->
+      <div class="space-y-4 font-mono text-xs text-gray-300">
+        
+        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
+          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">1</div>
+          <div>
+            <strong class="text-white block mb-0.5">Create a GitHub Repository</strong>
+            Go to <a href="https://github.com/new" target="_blank" class="text-cyberCyan underline">github.com/new</a> and create a public repository named <code class="text-ghGreenBright">github-arcade</code>.
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
+          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">2</div>
+          <div>
+            <strong class="text-white block mb-0.5">Save Single File</strong>
+            Save this entire webpage source file as <code class="text-ghGreenBright">index.html</code> on your computer.
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
+          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">3</div>
+          <div>
+            <strong class="text-white block mb-0.5">Upload index.html</strong>
+            Click "Upload an existing file" in your repository and drop <code class="text-ghGreenBright">index.html</code> inside.
+          </div>
+        </div>
+
+        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
+          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">4</div>
+          <div>
+            <strong class="text-white block mb-0.5">Enable Pages</strong>
+            Navigate to <strong>Settings -> Pages</strong>, set Source to <code class="text-ghGreenBright">main</code> branch, and hit Save!
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-2 text-center">
+        <button onclick="closeDeployModal()" class="w-full bg-cyberPurple hover:bg-purple-600 text-white font-cyber font-bold py-3 rounded-xl transition-all">
+          GOT IT, READY TO HOST!
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- 6. HIGH SCORES & LEADERBOARD MODAL -->
+  <!-- ========================================================================= -->
+  <div id="highscores-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-ghCard border border-ghBorder rounded-2xl p-6 shadow-2xl space-y-5">
+      
+      <div class="flex items-center justify-between border-b border-ghBorder pb-4">
+        <div class="flex items-center space-x-2 text-yellow-400">
+          <i class="fa-solid fa-trophy text-2xl"></i>
+          <h3 class="font-cyber font-bold text-lg text-white">Repository Leaderboard</h3>
+        </div>
+        <button onclick="closeHighScoresModal()" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- High Scores Table -->
+      <div class="space-y-2 font-mono text-xs" id="leaderboard-list">
+        <!-- Filled dynamically -->
+      </div>
+
+      <div class="pt-2 text-center">
+        <button onclick="resetHighScores()" class="text-red-400 hover:text-red-300 font-mono text-xs underline">Reset Local High Scores</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- JS SCRIPT LOGIC: AUTHENTICATION, WEB AUDIO, HEATMAP, CLI & 6 CANVASES -->
+  <!-- ========================================================================= -->
+  <script>
+    
+    // Core Application State
+    const AUTH_PASSCODE = "041012";
+    let isAudioMuted = false;
+    let audioCtx = null;
+    let currentGameId = null;
+    let gameAnimationLoop = null;
+
+    // Local Storage High Scores Data Structure
+    let highScores = {
+      snake: 0,
+      invaders: 0,
+      flap: 0,
+      breakout: 0,
+      runner: 0,
+      grid: 0
+    };
+
+    // Load High Scores on Initialization
+    function loadSavedScores() {
+      const saved = localStorage.getItem('gh_arcade_scores');
+      if (saved) {
+        try { highScores = JSON.parse(saved); } catch(e){}
+      }
+      updateScoreUI();
+    }
+
+    function saveScores() {
+      localStorage.setItem('gh_arcade_scores', JSON.stringify(highScores));
+      updateScoreUI();
+    }
+
+    function updateScoreUI() {
+      let grandTotal = 0;
+      for (const [key, val] of Object.entries(highScores)) {
+        grandTotal += val;
+        const el = document.getElementById(`card-score-${key}`);
+        if (el) el.innerText = val;
+      }
+      const totalEl = document.getElementById('stat-total-score');
+      if (totalEl) totalEl.innerText = grandTotal;
+    }
+
+    // Web Audio API Sound Synthesizer
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playSFX(type) {
+      if (isAudioMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'unlock') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.exponentialRampToValueAtTime(880, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(160, now);
+        osc.frequency.linearRampToValueAtTime(70, now + 0.3);
+        gain.gain.setValueAtTime(0.4, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+        osc.start(now);
+        osc.stop(now + 0.3);
+      } else if (type === 'laser') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(900, now);
+        osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now);
+        osc.stop(now + 0.12);
+      } else if (type === 'jump') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(220, now);
+        osc.frequency.exponentialRampToValueAtTime(580, now + 0.18);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+        osc.start(now);
+        osc.stop(now + 0.18);
+      } else if (type === 'score') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+        osc.start(now);
+        osc.stop(now + 0.2);
+      } else if (type === 'explosion') {
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.exponentialRampToValueAtTime(30, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now);
+        osc.stop(now + 0.25);
+      } else if (type === 'click') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(400, now);
+        gain.gain.setValueAtTime(0.1, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
+        osc.start(now);
+        osc.stop(now + 0.05);
+      }
+    }
+
+    function toggleAudio() {
+      isAudioMuted = !isAudioMuted;
+      const icon = document.getElementById('sound-icon');
+      if (isAudioMuted) {
+        icon.className = 'fa-solid fa-volume-xmark text-red-400';
+      } else {
+        icon.className = 'fa-solid fa-volume-high text-ghGreenBright';
+        playSFX('click');
+      }
+    }
+
+
+    // Password Gate Verification Logic
+    function verifyPasscode() {
+      const input = document.getElementById('passcode-input');
+      const gateCard = document.getElementById('gate-card');
+      const gateAlert = document.getElementById('gate-alert');
+      const val = input.value.trim();
+
+      if (val === AUTH_PASSCODE) {
+        // Access Granted
+        playSFX('unlock');
+        localStorage.setItem('gh_arcade_authenticated', 'true');
+        
+        // UI Green Glow
+        gateCard.classList.remove('animate-glitch');
+        gateAlert.className = "font-mono text-xs rounded-lg p-3 text-center border bg-ghGreen/20 text-ghGreenBright border-ghGreen/40 block";
+        gateAlert.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>ACCESS GRANTED. DEPLOYING DASHBOARD...';
+
+        document.getElementById('gate-status-led').className = 'w-3 h-3 rounded-full bg-ghGreenBright animate-ping';
+        document.getElementById('gate-status-text').innerText = 'GRANTED // UNLOCKED';
+
+        setTimeout(() => {
+          document.getElementById('passcode-gate').classList.add('opacity-0', 'pointer-events-none');
+          document.getElementById('main-portal').classList.remove('hidden');
+          generateHeatmap();
+        }, 800);
+
+      } else {
+        // Access Denied Glitch Effect
+        playSFX('error');
+        gateCard.classList.remove('animate-glitch');
+        void gateCard.offsetWidth; // Trigger reflow
+        gateCard.classList.add('animate-glitch');
+
+        gateAlert.className = "font-mono text-xs rounded-lg p-3 text-center border bg-red-950/80 text-red-400 border-red-800 block";
+        gateAlert.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i>ACCESS DENIED: INVALID PASSCODE';
+        
+        input.value = '';
+        input.focus();
+      }
+    }
+
+    function autoFillPasscode() {
+      document.getElementById('passcode-input').value = AUTH_PASSCODE;
+      playSFX('click');
+      verifyPasscode();
+    }
+
+    function togglePasswordVisibility() {
+      const input = document.getElementById('passcode-input');
+      const icon = document.getElementById('eye-icon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'fa-solid fa-eye-slash text-sm';
+      } else {
+        input.type = 'password';
+        icon.className = 'fa-solid fa-eye text-sm';
+      }
+    }
+
+    function lockPortal() {
+      localStorage.removeItem('gh_arcade_authenticated');
+      playSFX('click');
+      document.getElementById('main-portal').classList.add('hidden');
+      const gate = document.getElementById('passcode-gate');
+      gate.classList.remove('opacity-0', 'pointer-events-none');
+      document.getElementById('passcode-input').value = '';
+      document.getElementById('gate-alert').classList.add('hidden');
+    }
+
+    // Matrix Rain Effect for Security Screen Background
+    function initMatrixRain() {
+      const canvas = document.getElementById('matrix-canvas');
+      const ctx = canvas.getContext('2d');
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      const chars = '01041012GITHUBARCADE';
+      const fontSize = 14;
+      const columns = Math.floor(canvas.width / fontSize);
+      const drops = Array(columns).fill(1);
+
+      function draw() {
+        ctx.fillStyle = 'rgba(13, 17, 23, 0.08)';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#2ea44f';
+        ctx.font = `${fontSize}px JetBrains Mono`;
+
+        for (let i = 0; i < drops.length; i++) {
+          const text = chars.charAt(Math.floor(Math.random() * chars.length));
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+      }
+      setInterval(draw, 33);
+    }
+
+
+    // GitHub Commit Activity Heatmap Visualizer
+    function generateHeatmap() {
+      const grid = document.getElementById('heatmap-grid');
+      if (!grid || grid.children.length > 0) return;
+
+      const bgColors = ['bg-[#161b22]', 'bg-[#0e4429]', 'bg-[#006d32]', 'bg-[#26a641]', 'bg-[#39d353]'];
+
+      // Generate 28 columns x 7 rows
+      for (let c = 0; c < 28; c++) {
+        for (let r = 0; r < 7; r++) {
+          const cell = document.createElement('div');
+          const level = Math.random() > 0.3 ? Math.floor(Math.random() * 5) : 0;
+          cell.className = `w-3 h-3 rounded-sm ${bgColors[level]} heatmap-cell cursor-pointer`;
+          
+          const commitCount = level * 3 + Math.floor(Math.random() * 3);
+          cell.title = `${commitCount} commits on Day ${c*7 + r}`;
+
+          // Interactive: Clicking a cell increments commit stats
+          cell.onclick = () => {
+            playSFX('score');
+            cell.className = `w-3 h-3 rounded-sm bg-[#39d353] heatmap-cell shadow-sm shadow-ghGreenBright`;
+            const stars = document.getElementById('stat-total-stars');
+            if (stars) stars.innerText = (parseInt(stars.innerText.replace(',', '')) + 1).toLocaleString();
+          };
+
+          grid.appendChild(cell);
+        }
+      }
+    }
+
+
+    // Search and Category Filter
+    function filterGames() {
+      const q = document.getElementById('game-search-input').value.toLowerCase();
+      const cards = document.querySelectorAll('.game-card');
+
+      cards.forEach(card => {
+        const title = card.querySelector('h3').innerText.toLowerCase();
+        const desc = card.querySelector('p').innerText.toLowerCase();
+        if (title.includes(q) || desc.includes(q)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+    function setCategory(cat) {
+      playSFX('click');
+      document.querySelectorAll('.cat-btn').forEach(btn => {
+        if (btn.getAttribute('data-cat') === cat) {
+          btn.className = "cat-btn active bg-ghGreen text-white px-3.5 py-1.5 rounded-lg font-bold transition-all";
+        } else {
+          btn.className = "cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder";
+        }
+      });
+
+      const cards = document.querySelectorAll('.game-card');
+      cards.forEach(card => {
+        const cats = card.getAttribute('data-cat');
+        if (cat === 'ALL' || cats.includes(cat)) {
+          card.classList.remove('hidden');
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+    }
+
+
+    // Terminal CLI Drawer Engine
+    function openTerminalModal() {
+      playSFX('click');
+      document.getElementById('terminal-modal').classList.remove('hidden');
+      document.getElementById('terminal-input').focus();
+    }
+
+    function closeTerminalModal() {
+      document.getElementById('terminal-modal').classList.add('hidden');
+    }
+
+    function processTerminalCommand() {
+      const input = document.getElementById('terminal-input');
+      const output = document.getElementById('terminal-output');
+      const cmd = input.value.trim().toLowerCase();
+      if (!cmd) return;
+
+      const p = document.createElement('p');
+      p.className = 'text-white';
+      p.innerText = `guest@github-arcade:~$ ${cmd}`;
+      output.appendChild(p);
+
+      const res = document.createElement('p');
+      res.className = 'text-ghGreenBright';
+
+      if (cmd === 'help') {
+        res.innerHTML = `Available Commands:<br>
+        - <span class="text-yellow-400">list</span>: List all 6 repository games<br>
+        - <span class="text-yellow-400">play &lt;id&gt;</span>: Play game (e.g. play snake)<br>
+        - <span class="text-yellow-400">score</span>: Show high score record<br>
+        - <span class="text-yellow-400">clear</span>: Clear terminal screen<br>
+        - <span class="text-yellow-400">lock</span>: Lock portal immediately<br>
+        - <span class="text-yellow-400">passcode</span>: Display current auth passcode`;
+      } else if (cmd === 'list') {
+        res.innerText = '1. snake  2. invaders  3. flap  4. breakout  5. runner  6. grid';
+      } else if (cmd.startsWith('play ')) {
+        const gName = cmd.replace('play ', '').trim();
+        if (['snake', 'invaders', 'flap', 'breakout', 'runner', 'grid'].includes(gName)) {
+          closeTerminalModal();
+          launchGame(gName);
+          input.value = '';
+          return;
+        } else {
+          res.innerText = `Unknown game '${gName}'. Type 'list' for available games.`;
+        }
+      } else if (cmd === 'score') {
+        res.innerText = JSON.stringify(highScores);
+      } else if (cmd === 'clear') {
+        output.innerHTML = '';
+        input.value = '';
+        return;
+      } else if (cmd === 'lock') {
+        closeTerminalModal();
+        lockPortal();
+        input.value = '';
+        return;
+      } else if (cmd === 'passcode') {
+        res.innerText = `Current Passcode Key: ${AUTH_PASSCODE}`;
+      } else {
+        res.innerText = `Command not recognized: '${cmd}'. Type 'help' for instructions.`;
+      }
+
+      output.appendChild(res);
+      output.scrollTop = output.scrollHeight;
+      input.value = '';
+    }
+
+    // Modal Helpers
+    function openDeployModal() { playSFX('click'); document.getElementById('deploy-modal').classList.remove('hidden'); }
+    function closeDeployModal() { document.getElementById('deploy-modal').classList.add('hidden'); }
+    function openHighScoresModal() {
+      playSFX('click');
+      const list = document.getElementById('leaderboard-list');
+      list.innerHTML = '';
+      for (const [k, v] of Object.entries(highScores)) {
+        list.innerHTML += `
+          <div class="flex items-center justify-between bg-ghDark p-3 rounded-lg border border-ghBorder">
+            <span class="text-white capitalize"><i class="fa-solid fa-gamepad mr-2 text-cyberCyan"></i>${k}</span>
+            <span class="text-ghGreenBright font-bold">${v} PTS</span>
+          </div>`;
+      }
+      document.getElementById('highscores-modal').classList.remove('hidden');
+    }
+    function closeHighScoresModal() { document.getElementById('highscores-modal').classList.add('hidden'); }
+    function resetHighScores() {
+      highScores = { snake: 0, invaders: 0, flap: 0, breakout: 0, runner: 0, grid: 0 };
+      saveScores();
+      closeHighScoresModal();
+    }
+
+
+    // Canvas Game Launcher Dispatcher
+    function launchGame(id) {
+      playSFX('click');
+      currentGameId = id;
+      const modal = document.getElementById('game-modal');
+      const titleEl = document.getElementById('game-title');
+      const highEl = document.getElementById('modal-high-score');
+      const liveScoreEl = document.getElementById('live-score');
+      
+      document.getElementById('game-overlay').classList.add('hidden');
+      liveScoreEl.innerText = '0';
+      highEl.innerText = highScores[id] || 0;
+      modal.classList.remove('hidden');
+
+      // Title mapped
+      const names = {
+        snake: '1. GIT-SNAKE',
+        invaders: '2. OCTO-INVADERS',
+        flap: '3. GIT-FLAP',
+        breakout: '4. GIT-BREAKOUT',
+        runner: '5. CYBER-RUNNER',
+        grid: '6. HACK-THE-GRID'
+      };
+      titleEl.innerText = names[id];
+
+      // Stop previous game loop
+      if (gameAnimationLoop) cancelAnimationFrame(gameAnimationLoop);
+
+      // Start specific canvas engine
+      if (id === 'snake') startGitSnake();
+      else if (id === 'invaders') startOctoInvaders();
+      else if (id === 'flap') startGitFlap();
+      else if (id === 'breakout') startGitBreakout();
+      else if (id === 'runner') startCyberRunner();
+      else if (id === 'grid') startHackTheGrid();
+    }
+
+    function closeGameModal() {
+      if (gameAnimationLoop) cancelAnimationFrame(gameAnimationLoop);
+      document.getElementById('game-modal').classList.add('hidden');
+    }
+
+    function restartCurrentGame() {
+      launchGame(currentGameId);
+    }
+
+    function triggerGameOver(finalScore) {
+      playSFX('explosion');
+      if (finalScore > highScores[currentGameId]) {
+        highScores[currentGameId] = finalScore;
+        saveScores();
+      }
+      document.getElementById('modal-high-score').innerText = highScores[currentGameId];
+      document.getElementById('overlay-desc').innerText = `Final Repository Score: ${finalScore} PTS`;
+      document.getElementById('game-overlay').classList.remove('hidden');
+    }
+
+    function updateLiveScore(s) {
+      document.getElementById('live-score').innerText = s;
+    }
+
+
+    // Touch Controls Event Dispatcher
+    function handleTouchInput(action) {
+      window.dispatchEvent(new CustomEvent('arcade-control', { detail: action }));
+    }
+
+
+    // =========================================================================
+    // GAME 1: GIT-SNAKE
+    // =========================================================================
+    function startGitSnake() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+      
+      const gridSize = 20;
+      const cols = canvas.width / gridSize;
+      const rows = canvas.height / gridSize;
+
+      let snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}];
+      let dir = {x: 1, y: 0};
+      let food = {x: 15, y: 10};
+      let score = 0;
+      let moveInterval = 100;
+      let lastMove = 0;
+
+      function spawnFood() {
+        food = {
+          x: Math.floor(Math.random() * cols),
+          y: Math.floor(Math.random() * rows)
+        };
+      }
+
+      function handleKey(e) {
+        if (e.key === 'ArrowUp' && dir.y !== 1) dir = {x: 0, y: -1};
+        else if (e.key === 'ArrowDown' && dir.y !== -1) dir = {x: 0, y: 1};
+        else if (e.key === 'ArrowLeft' && dir.x !== 1) dir = {x: -1, y: 0};
+        else if (e.key === 'ArrowRight' && dir.x !== -1) dir = {x: 1, y: 0};
+      }
+
+      function handleTouch(e) {
+        const act = e.detail;
+        if (act === 'UP' && dir.y !== 1) dir = {x: 0, y: -1};
+        else if (act === 'DOWN' && dir.y !== -1) dir = {x: 0, y: 1};
+        else if (act === 'LEFT' && dir.x !== 1) dir = {x: -1, y: 0};
+        else if (act === 'RIGHT' && dir.x !== -1) dir = {x: 1, y: 0};
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('arcade-control', handleTouch);
+
+      function loop(time) {
+        gameAnimationLoop = requestAnimationFrame(loop);
+
+        if (time - lastMove > moveInterval) {
+          lastMove = time;
+
+          // Head move
+          const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+
+          // Collisions
+          if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows) {
+            window.removeEventListener('keydown', handleKey);
+            window.removeEventListener('arcade-control', handleTouch);
+            triggerGameOver(score);
+            return;
+          }
+          for (let s of snake) {
+            if (s.x === head.x && s.y === head.y) {
+              window.removeEventListener('keydown', handleKey);
+              window.removeEventListener('arcade-control', handleTouch);
+              triggerGameOver(score);
+              return;
+            }
+          }
+
+          snake.unshift(head);
+
+          // Eat commit food
+          if (head.x === food.x && head.y === food.y) {
+            score += 10;
+            updateLiveScore(score);
+            playSFX('score');
+            spawnFood();
+            if (moveInterval > 50) moveInterval -= 2;
+          } else {
+            snake.pop();
+          }
+
+          // Render
+          ctx.fillStyle = '#0d1117';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Draw grid lines
+          ctx.strokeStyle = '#161b22';
+          for (let i = 0; i < canvas.width; i += gridSize) {
+            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
+          }
+          for (let j = 0; j < canvas.height; j += gridSize) {
+            ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
+          }
+
+          // Draw Snake
+          snake.forEach((part, idx) => {
+            ctx.fillStyle = idx === 0 ? '#3fb950' : '#2ea44f';
+            ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
+          });
+
+          // Draw Commit Star Food
+          ctx.fillStyle = '#00f0ff';
+          ctx.beginPath();
+          ctx.arc((food.x + 0.5) * gridSize, (food.y + 0.5) * gridSize, gridSize/2 - 2, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      spawnFood();
+      gameAnimationLoop = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 2: OCTO-INVADERS
+    // =========================================================================
+    function startOctoInvaders() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let player = { x: canvas.width / 2 - 20, y: canvas.height - 30, w: 40, h: 20, speed: 5 };
+      let bullets = [];
+      let enemies = [];
+      let score = 0;
+      let leftPressed = false;
+      let rightPressed = false;
+
+      // Spawn Bug Enemies
+      for (let r = 0; r < 3; r++) {
+        for (let c = 0; c < 8; c++) {
+          enemies.push({ x: 60 + c * 60, y: 40 + r * 40, w: 30, h: 20, alive: true });
+        }
+      }
+
+      let enemyDir = 1;
+      let enemyStepDown = false;
+
+      function handleKeyDown(e) {
+        if (e.key === 'ArrowLeft' || e.key === 'a') leftPressed = true;
+        if (e.key === 'ArrowRight' || e.key === 'd') rightPressed = true;
+        if (e.key === ' ' || e.key === 'ArrowUp') shoot();
+      }
+
+      function handleKeyUp(e) {
+        if (e.key === 'ArrowLeft' || e.key === 'a') leftPressed = false;
+        if (e.key === 'ArrowRight' || e.key === 'd') rightPressed = false;
+      }
+
+      function handleTouch(e) {
+        const act = e.detail;
+        if (act === 'LEFT') player.x = Math.max(0, player.x - 25);
+        if (act === 'RIGHT') player.x = Math.min(canvas.width - player.w, player.x + 25);
+        if (act === 'ACTION_A' || act === 'UP') shoot();
+      }
+
+      function shoot() {
+        bullets.push({ x: player.x + player.w / 2 - 2, y: player.y, w: 4, h: 10, speed: 7 });
+        playSFX('laser');
+      }
+
+      window.addEventListener('keydown', handleKeyDown);
+      window.addEventListener('keyup', handleKeyUp);
+      window.addEventListener('arcade-control', handleTouch);
+
+      function loop() {
+        gameAnimationLoop = requestAnimationFrame(loop);
+
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Move Player
+        if (leftPressed && player.x > 0) player.x -= player.speed;
+        if (rightPressed && player.x < canvas.width - player.w) player.x += player.speed;
+
+        // Draw Player Octocat Ship
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillRect(player.x, player.y, player.w, player.h);
+        ctx.fillRect(player.x + 15, player.y - 8, 10, 8);
+
+        // Move & Draw Bullets
+        ctx.fillStyle = '#3fb950';
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i];
+          b.y -= b.speed;
+          ctx.fillRect(b.x, b.y, b.w, b.h);
+
+          // Bullet - Enemy Collisions
+          for (let e of enemies) {
+            if (e.alive && b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h) {
+              e.alive = false;
+              bullets.splice(i, 1);
+              score += 20;
+              updateLiveScore(score);
+              playSFX('score');
+              break;
+            }
+          }
+
+          if (b && b.y < 0) bullets.splice(i, 1);
+        }
+
+        // Move & Draw Enemies
+        let hitEdge = false;
+        let aliveCount = 0;
+
+        for (let e of enemies) {
+          if (!e.alive) continue;
+          aliveCount++;
+
+          e.x += enemyDir * 1.5;
+          if (e.x > canvas.width - e.w || e.x < 0) hitEdge = true;
+
+          ctx.fillStyle = '#ff007f';
+          ctx.fillRect(e.x, e.y, e.w, e.h);
+          ctx.fillStyle = '#ffffff';
+          ctx.font = '10px JetBrains Mono';
+          ctx.fillText('BUG', e.x + 4, e.y + 14);
+
+          // Enemy reaches bottom
+          if (e.y + e.h >= player.y) {
+            window.removeEventListener('keydown', handleKeyDown);
+            window.removeEventListener('keyup', handleKeyUp);
+            window.removeEventListener('arcade-control', handleTouch);
+            triggerGameOver(score);
+            return;
+          }
+        }
+
+        if (hitEdge) {
+          enemyDir *= -1;
+          for (let e of enemies) e.y += 15;
+        }
+
+        // Win state check
+        if (aliveCount === 0) {
+          for (let r = 0; r < 3; r++) {
+            for (let c = 0; c < 8; c++) {
+              enemies.push({ x: 60 + c * 60, y: 40 + r * 40, w: 30, h: 20, alive: true });
+            }
+          }
+        }
+      }
+
+      gameAnimationLoop = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 3: GIT-FLAP / GIT-JUMP
+    // =========================================================================
+    function startGitFlap() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let octo = { x: 80, y: 200, radius: 12, velocity: 0, gravity: 0.45, jump: -7.5 };
+      let pipes = [];
+      let score = 0;
+      let frame = 0;
+
+      function flap() {
+        octo.velocity = octo.jump;
+        playSFX('jump');
+      }
+
+      function handleKey(e) {
+        if (e.key === ' ' || e.key === 'ArrowUp') flap();
+      }
+
+      function handleTouch() {
+        flap();
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('arcade-control', handleTouch);
+      canvas.addEventListener('click', flap);
+
+      function loop() {
+        gameAnimationLoop = requestAnimationFrame(loop);
+        frame++;
+
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Physics
+        octo.velocity += octo.gravity;
+        octo.y += octo.velocity;
+
+        // Ground/Ceiling check
+        if (octo.y + octo.radius > canvas.height || octo.y - octo.radius < 0) {
+          cleanup();
+          triggerGameOver(score);
+          return;
+        }
+
+        // Draw Octocat
+        ctx.fillStyle = '#a855f7';
+        ctx.beginPath();
+        ctx.arc(octo.x, octo.y, octo.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Spawn Pipes
+        if (frame % 90 === 0) {
+          const gap = 120;
+          const topH = Math.floor(Math.random() * (canvas.height - gap - 60)) + 30;
+          pipes.push({ x: canvas.width, top: topH, bottom: canvas.height - topH - gap, passed: false });
+        }
+
+        // Draw & Move Pipes
+        ctx.fillStyle = '#2ea44f';
+        for (let i = pipes.length - 1; i >= 0; i--) {
+          const p = pipes[i];
+          p.x -= 3;
+
+          // Top Pipe
+          ctx.fillRect(p.x, 0, 40, p.top);
+          // Bottom Pipe
+          ctx.fillRect(p.x, canvas.height - p.bottom, 40, p.bottom);
+
+          // Collision Check
+          if (
+            octo.x + octo.radius > p.x && 
+            octo.x - octo.radius < p.x + 40 &&
+            (octo.y - octo.radius < p.top || octo.y + octo.radius > canvas.height - p.bottom)
+          ) {
+            cleanup();
+            triggerGameOver(score);
+            return;
+          }
+
+          // Score point
+          if (!p.passed && p.x + 40 < octo.x) {
+            p.passed = true;
+            score += 1;
+            updateLiveScore(score);
+            playSFX('score');
+          }
+
+          if (p.x < -40) pipes.splice(i, 1);
+        }
+      }
+
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('arcade-control', handleTouch);
+        canvas.removeEventListener('click', flap);
+      }
+
+      gameAnimationLoop = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 4: GIT-BREAKOUT
+    // =========================================================================
+    function startGitBreakout() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let paddle = { x: canvas.width / 2 - 40, y: canvas.height - 20, w: 80, h: 12, speed: 7 };
+      let ball = { x: canvas.width / 2, y: canvas.height - 40, dx: 4, dy: -4, radius: 6 };
+      let bricks = [];
+      let score = 0;
+      let left = false, right = false;
+
+      const rows = 4, cols = 8;
+      const bW = 65, bH = 18, padding = 8, offsetTop = 40, offsetLeft = 10;
+
+      for (let r = 0; r < rows; r++) {
+        for (let c = 0; c < cols; c++) {
+          bricks.push({ x: offsetLeft + c * (bW + padding), y: offsetTop + r * (bH + padding), active: true });
+        }
+      }
+
+      function handleKey(e) {
+        if (e.key === 'ArrowLeft') left = (e.type === 'keydown');
+        if (e.key === 'ArrowRight') right = (e.type === 'keydown');
+      }
+
+      function handleTouch(e) {
+        const act = e.detail;
+        if (act === 'LEFT') paddle.x = Math.max(0, paddle.x - 30);
+        if (act === 'RIGHT') paddle.x = Math.min(canvas.width - paddle.w, paddle.x + 30);
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('keyup', handleKey);
+      window.addEventListener('arcade-control', handleTouch);
+
+      function loop() {
+        gameAnimationLoop = requestAnimationFrame(loop);
+
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Move Paddle
+        if (left && paddle.x > 0) paddle.x -= paddle.speed;
+        if (right && paddle.x < canvas.width - paddle.w) paddle.x += paddle.speed;
+
+        // Draw Paddle
+        ctx.fillStyle = '#eab308';
+        ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
+
+        // Move Ball
+        ball.x += ball.dx;
+        ball.y += ball.dy;
+
+        // Bounce Walls
+        if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) ball.dx *= -1;
+        if (ball.y - ball.radius < 0) ball.dy *= -1;
+
+        // Bounce Paddle
+        if (
+          ball.y + ball.radius >= paddle.y && 
+          ball.x >= paddle.x && 
+          ball.x <= paddle.x + paddle.w
+        ) {
+          ball.dy = -Math.abs(ball.dy);
+          playSFX('click');
+        }
+
+        // Game Over Bottom
+        if (ball.y + ball.radius > canvas.height) {
+          window.removeEventListener('keydown', handleKey);
+          window.removeEventListener('keyup', handleKey);
+          window.removeEventListener('arcade-control', handleTouch);
+          triggerGameOver(score);
+          return;
+        }
+
+        // Draw Ball
+        ctx.fillStyle = '#00f0ff';
+        ctx.beginPath();
+        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Draw & Break Bricks
+        bricks.forEach(b => {
+          if (!b.active) return;
+
+          ctx.fillStyle = '#3fb950';
+          ctx.fillRect(b.x, b.y, bW, bH);
+
+          if (
+            ball.x > b.x && ball.x < b.x + bW &&
+            ball.y - ball.radius < b.y + bH && ball.y + ball.radius > b.y
+          ) {
+            b.active = false;
+            ball.dy *= -1;
+            score += 15;
+            updateLiveScore(score);
+            playSFX('score');
+          }
+        });
+      }
+
+      gameAnimationLoop = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 5: CYBER-RUNNER
+    // =========================================================================
+    function startCyberRunner() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let runner = { x: 50, y: canvas.height - 50, w: 25, h: 40, vy: 0, jumping: false };
+      let obstacles = [];
+      let score = 0;
+      let frame = 0;
+      let speed = 6;
+
+      function jump() {
+        if (!runner.jumping) {
+          runner.vy = -12;
+          runner.jumping = true;
+          playSFX('jump');
+        }
+      }
+
+      function handleKey(e) {
+        if (e.key === ' ' || e.key === 'ArrowUp') jump();
+      }
+
+      function handleTouch() {
+        jump();
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('arcade-control', handleTouch);
+
+      function loop() {
+        gameAnimationLoop = requestAnimationFrame(loop);
+        frame++;
+
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Ground Line
+        ctx.strokeStyle = '#ef4444';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - 10);
+        ctx.lineTo(canvas.width, canvas.height - 10);
+        ctx.stroke();
+
+        // Runner Physics
+        runner.vy += 0.6;
+        runner.y += runner.vy;
+
+        if (runner.y >= canvas.height - 50) {
+          runner.y = canvas.height - 50;
+          runner.vy = 0;
+          runner.jumping = false;
+        }
+
+        // Draw Runner
+        ctx.fillStyle = '#ef4444';
+        ctx.fillRect(runner.x, runner.y, runner.w, runner.h);
+
+        // Spawn Obstacles
+        if (frame % 80 === 0) {
+          obstacles.push({ x: canvas.width, w: 20, h: 30 });
+          score += 10;
+          updateLiveScore(score);
+          if (speed < 12) speed += 0.1;
+        }
+
+        // Move Obstacles
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+          const obs = obstacles[i];
+          obs.x -= speed;
+
+          ctx.fillStyle = '#00f0ff';
+          ctx.fillRect(obs.x, canvas.height - 10 - obs.h, obs.w, obs.h);
+
+          // Collision
+          if (
+            runner.x < obs.x + obs.w &&
+            runner.x + runner.w > obs.x &&
+            runner.y + runner.h > canvas.height - 10 - obs.h
+          ) {
+            window.removeEventListener('keydown', handleKey);
+            window.removeEventListener('arcade-control', handleTouch);
+            triggerGameOver(score);
+            return;
+          }
+
+          if (obs.x < -20) obstacles.splice(i, 1);
+        }
+      }
+
+      gameAnimationLoop = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 6: HACK-THE-GRID
+    // =========================================================================
+    function startHackTheGrid() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let sequence = [];
+      let playerStep = 0;
+      let score = 0;
+      let isPlayingSequence = false;
+
+      const buttons = [
+        { id: 0, x: 150, y: 80, w: 120, h: 100, color: '#3fb950', active: false },
+        { id: 1, x: 330, y: 80, w: 120, h: 100, color: '#00f0ff', active: false },
+        { id: 2, x: 150, y: 210, w: 120, h: 100, color: '#a855f7', active: false },
+        { id: 3, x: 330, y: 210, w: 120, h: 100, color: '#eab308', active: false }
+      ];
+
+      function renderGrid() {
+        ctx.fillStyle = '#0d1117';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        buttons.forEach(b => {
+          ctx.fillStyle = b.active ? '#ffffff' : b.color;
+          ctx.fillRect(b.x, b.y, b.w, b.h);
+          ctx.strokeStyle = '#ffffff';
+          ctx.lineWidth = 2;
+          ctx.strokeRect(b.x, b.y, b.w, b.h);
+        });
+
+        ctx.fillStyle = '#ffffff';
+        ctx.font = '14px Orbitron';
+        ctx.fillText('CLICK BUTTONS TO REPEAT MEMORY PATTERN', 100, 40);
+      }
+
+      function flashButton(id) {
+        buttons[id].active = true;
+        playSFX('score');
+        renderGrid();
+        setTimeout(() => {
+          buttons[id].active = false;
+          renderGrid();
+        }, 300);
+      }
+
+      function nextRound() {
+        playerStep = 0;
+        sequence.push(Math.floor(Math.random() * 4));
+        isPlayingSequence = true;
+
+        let idx = 0;
+        const timer = setInterval(() => {
+          flashButton(sequence[idx]);
+          idx++;
+          if (idx >= sequence.length) {
+            clearInterval(timer);
+            isPlayingSequence = false;
+          }
+        }, 600);
+      }
+
+      function handleCanvasClick(e) {
+        if (isPlayingSequence) return;
+
+        const rect = canvas.getBoundingClientRect();
+        const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
+        const my = (e.clientY - rect.top) * (canvas.height / rect.height);
+
+        buttons.forEach(b => {
+          if (mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
+            flashButton(b.id);
+
+            if (b.id === sequence[playerStep]) {
+              playerStep++;
+              if (playerStep >= sequence.length) {
+                score += 100;
+                updateLiveScore(score);
+                setTimeout(nextRound, 800);
+              }
+            } else {
+              canvas.removeEventListener('click', handleCanvasClick);
+              triggerGameOver(score);
+            }
+          }
+        });
+      }
+
+      canvas.addEventListener('click', handleCanvasClick);
+      renderGrid();
+      setTimeout(nextRound, 500);
+    }
+
+
+    // Window Onload Initialization
+    window.onload = function() {
+      loadSavedScores();
+      initMatrixRain();
+
+      // Check if session was previously authenticated
+      if (localStorage.getItem('gh_arcade_authenticated') === 'true') {
+        document.getElementById('passcode-gate').classList.add('opacity-0', 'pointer-events-none');
+        document.getElementById('main-portal').classList.remove('hidden');
+        generateHeatmap();
+      }
+    };
+
+  </script>
+</body>
+</html>
