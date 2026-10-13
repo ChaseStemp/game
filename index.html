@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>GitHub Cyberpunk Arcade Portal</title>
+  <title>SUPERSTARS FRIENDS Gaming Vault</title>
 
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
-  
-  <!-- Font Awesome Icons -->
+
+  <!-- Font Awesome Icons CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Google Fonts: Orbitron & JetBrains Mono -->
+
+  <!-- Google Fonts: Orbitron, JetBrains Mono, Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;800&family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -22,14 +22,19 @@
       theme: {
         extend: {
           colors: {
-            ghDark: '#0d1117',
-            ghCard: '#161b22',
-            ghBorder: '#30363d',
+            ghDark: '#0b0f17',
+            ghCard: '#131924',
+            ghCardHover: '#1c2536',
+            ghBorder: '#273142',
             ghGreen: '#2ea44f',
             ghGreenBright: '#3fb950',
             cyberCyan: '#00f0ff',
             cyberPurple: '#a855f7',
-            cyberPink: '#ff007f'
+            cyberPink: '#ff007f',
+            starGold: '#f59e0b',
+            starEmerald: '#10b981',
+            starRuby: '#f43f5e',
+            starDiamond: '#3b82f6'
           },
           fontFamily: {
             sans: ['Inter', 'sans-serif'],
@@ -43,46 +48,38 @@
 
   <style>
     body {
-      background-color: #0d1117;
-      color: #c9d1d9;
+      background-color: #0b0f17;
+      color: #cbd5e1;
       font-family: 'Inter', sans-serif;
       overflow-x: hidden;
+      user-select: none;
     }
 
     /* Custom Scrollbar */
-    ::-webkit-scrollbar {
-      width: 8px;
-      height: 8px;
-    }
-    ::-webkit-scrollbar-track {
-      background: #0d1117;
-    }
-    ::-webkit-scrollbar-thumb {
-      background: #30363d;
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover {
-      background: #3fb950;
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0b0f17; }
+    ::-webkit-scrollbar-thumb { background: #273142; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #00f0ff; }
+
+    /* Glow Utilities */
+    .glow-gold { box-shadow: 0 0 18px rgba(245, 158, 11, 0.45); }
+    .glow-emerald { box-shadow: 0 0 18px rgba(16, 185, 129, 0.45); }
+    .glow-ruby { box-shadow: 0 0 18px rgba(244, 63, 94, 0.45); }
+    .glow-diamond { box-shadow: 0 0 18px rgba(59, 130, 246, 0.45); }
+    .glow-cyan { box-shadow: 0 0 18px rgba(0, 240, 255, 0.4); }
+    
+    .text-glow-cyan { text-shadow: 0 0 12px rgba(0, 240, 255, 0.8); }
+    .text-glow-gold { text-shadow: 0 0 12px rgba(245, 158, 11, 0.8); }
+
+    /* Scanlines effect for retro look */
+    .scanlines {
+      background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%),
+                  linear-gradient(90deg, rgba(255, 0, 0, 0.03), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.03));
+      background-size: 100% 4px, 6px 100%;
+      pointer-events: none;
     }
 
-    /* Neon Glow Utilities */
-    .glow-green {
-      box-shadow: 0 0 15px rgba(63, 185, 80, 0.4);
-    }
-    .glow-cyan {
-      box-shadow: 0 0 15px rgba(0, 240, 255, 0.4);
-    }
-    .glow-purple {
-      box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
-    }
-    .text-glow-cyan {
-      text-shadow: 0 0 10px rgba(0, 240, 255, 0.7);
-    }
-    .text-glow-green {
-      text-shadow: 0 0 10px rgba(63, 185, 80, 0.7);
-    }
-
-    /* Glitch Shake Animation */
+    /* Glitch shake keyframes */
     @keyframes glitchShake {
       0% { transform: translate(0); }
       20% { transform: translate(-4px, 4px); }
@@ -97,437 +94,433 @@
       box-shadow: 0 0 20px rgba(255, 0, 127, 0.6) !important;
     }
 
-    /* Scanlines Overlay Effect */
-    .scanlines {
-      background: linear-gradient(
-        rgba(18, 16, 16, 0) 50%, 
-        rgba(0, 0, 0, 0.25) 50%
-      ), linear-gradient(
-        90deg,
-        rgba(255, 0, 0, 0.03),
-        rgba(0, 255, 0, 0.01),
-        rgba(0, 0, 255, 0.03)
-      );
-      background-size: 100% 4px, 6px 100%;
-      pointer-events: none;
-    }
-
-    /* Heatmap cell grid styling */
-    .heatmap-cell {
-      transition: transform 0.15s ease, filter 0.15s ease;
-    }
-    .heatmap-cell:hover {
-      transform: scale(1.3);
-      z-index: 10;
-      filter: brightness(1.4);
-    }
+    /* Card flip style */
+    .perspective-1000 { perspective: 1000px; }
+    .transform-style-3d { transform-style: preserve-3d; }
+    .backface-hidden { backface-visibility: hidden; }
+    .rotate-y-180 { transform: rotateY(180deg); }
   </style>
 </head>
 
-<body class="h-full flex flex-col antialiased selection:bg-ghGreen selection:text-white">
+<body class="h-full flex flex-col antialiased selection:bg-cyberCyan selection:text-ghDark">
+
+  <!-- Floating Starfield Background Canvas -->
+  <canvas id="starfield-canvas" class="fixed inset-0 pointer-events-none z-0 opacity-40"></canvas>
 
   <!-- ========================================================================= -->
-  <!-- 1. AUTHENTICATION GATE (PASSCODE PROTECTED SCREEN) -->
+  <!-- 1. MULTI-USER LOGIN AUTHENTICATION GATE -->
   <!-- ========================================================================= -->
-  <div id="passcode-gate" class="fixed inset-0 z-50 flex items-center justify-center bg-ghDark px-4 transition-all duration-700">
-    <!-- Matrix Rain Canvas Background -->
-    <canvas id="matrix-canvas" class="absolute inset-0 w-full h-full opacity-30 pointer-events-none"></canvas>
-    
-    <!-- CRT Scanline layer -->
+  <div id="login-screen" class="relative z-10 min-h-screen flex items-center justify-center p-4">
     <div class="scanlines absolute inset-0 z-10"></div>
 
-    <!-- Security Gateway Dialog Card -->
-    <div id="gate-card" class="relative z-20 w-full max-w-md bg-ghCard/90 backdrop-blur-md border border-ghBorder rounded-2xl p-6 sm:p-8 shadow-2xl transition-all duration-300">
+    <div id="login-card" class="relative z-20 w-full max-w-lg bg-ghCard/90 backdrop-blur-xl border border-ghBorder rounded-3xl p-6 sm:p-8 shadow-2xl transition-all duration-300">
       
-      <!-- Top Cyber Badge -->
-      <div class="flex items-center justify-between mb-6 border-b border-ghBorder/60 pb-4">
-        <div class="flex items-center space-x-3">
-          <div class="w-3 h-3 rounded-full bg-red-500 animate-pulse" id="gate-status-led"></div>
-          <span class="font-mono text-xs text-gray-400 tracking-wider uppercase" id="gate-status-text">SECURE PORTAL // RESTRICTED</span>
-        </div>
-        <i class="fa-brands fa-github text-2xl text-cyberCyan"></i>
-      </div>
-
-      <!-- Icon & Header -->
+      <!-- Top Title Badge -->
       <div class="text-center mb-6">
-        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-ghDark border border-cyberCyan/40 text-cyberCyan text-2xl mb-3 glow-cyan">
-          <i class="fa-solid fa-terminal"></i>
+        <div class="inline-flex items-center justify-center w-16 h-16 rounded-2xl bg-ghDark border border-cyberCyan text-cyberCyan text-3xl mb-3 glow-cyan">
+          <i class="fa-solid fa-star text-starGold animate-pulse"></i>
         </div>
-        <h1 class="font-cyber text-2xl font-black text-white tracking-wide text-glow-cyan">GITHUB ARCADE</h1>
-        <p class="font-mono text-xs text-gray-400 mt-1">Authentication Required to Access Repository Arcade</p>
+        <h1 class="font-cyber font-black text-2xl sm:text-3xl text-white tracking-wider text-glow-cyan">SUPERSTARS FRIENDS</h1>
+        <p class="font-mono text-xs text-cyberCyan/80 mt-1">GAMING VAULT PORTAL // SELECT PROFILE</p>
       </div>
 
-      <!-- Passcode Input Form -->
-      <form id="passcode-form" class="space-y-4" onsubmit="event.preventDefault(); verifyPasscode();">
-        <div class="relative">
-          <label for="passcode-input" class="block font-mono text-xs text-gray-300 mb-1">ENTER PASSCODE KEY</label>
-          <div class="relative flex items-center">
+      <!-- Quick Friend Select Grid -->
+      <div class="mb-6">
+        <label class="block font-mono text-xs text-gray-400 mb-2 text-center uppercase tracking-wider">Choose Your Superstar Profile</label>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          
+          <!-- Chase -->
+          <button onclick="selectFriend('Chase')" id="friend-btn-Chase" class="friend-pill group bg-ghDark border border-ghBorder hover:border-starGold p-3 rounded-2xl flex flex-col items-center justify-center transition-all">
+            <div class="w-10 h-10 rounded-full bg-starGold/20 border border-starGold flex items-center justify-center text-starGold text-lg mb-1 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-shield-halved"></i>
+            </div>
+            <span class="font-cyber font-bold text-xs text-white">Chase</span>
+            <span class="font-mono text-[9px] text-starGold">Cyber Warrior</span>
+          </button>
+
+          <!-- Jade -->
+          <button onclick="selectFriend('Jade')" id="friend-btn-Jade" class="friend-pill group bg-ghDark border border-ghBorder hover:border-starEmerald p-3 rounded-2xl flex flex-col items-center justify-center transition-all">
+            <div class="w-10 h-10 rounded-full bg-starEmerald/20 border border-starEmerald flex items-center justify-center text-starEmerald text-lg mb-1 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-user-ninja"></i>
+            </div>
+            <span class="font-cyber font-bold text-xs text-white">Jade</span>
+            <span class="font-mono text-[9px] text-starEmerald">Shadow Hunter</span>
+          </button>
+
+          <!-- Ava -->
+          <button onclick="selectFriend('Ava')" id="friend-btn-Ava" class="friend-pill group bg-ghDark border border-ghBorder hover:border-starRuby p-3 rounded-2xl flex flex-col items-center justify-center transition-all">
+            <div class="w-10 h-10 rounded-full bg-starRuby/20 border border-starRuby flex items-center justify-center text-starRuby text-lg mb-1 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <span class="font-cyber font-bold text-xs text-white">Ava</span>
+            <span class="font-mono text-[9px] text-starRuby">Cafe Queen</span>
+          </button>
+
+          <!-- Rebecca -->
+          <button onclick="selectFriend('Rebecca')" id="friend-btn-Rebecca" class="friend-pill group bg-ghDark border border-ghBorder hover:border-starDiamond p-3 rounded-2xl flex flex-col items-center justify-center transition-all">
+            <div class="w-10 h-10 rounded-full bg-starDiamond/20 border border-starDiamond flex items-center justify-center text-starDiamond text-lg mb-1 group-hover:scale-110 transition-transform">
+              <i class="fa-solid fa-gem"></i>
+            </div>
+            <span class="font-cyber font-bold text-xs text-white">Rebecca</span>
+            <span class="font-mono text-[9px] text-starDiamond">The Leader</span>
+          </button>
+
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form onsubmit="event.preventDefault(); attemptLogin();" class="space-y-4">
+        <div>
+          <label class="block font-mono text-xs text-gray-300 mb-1">USERNAME</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
+            <input 
+              type="text" 
+              id="username-input" 
+              placeholder="Chase, Jade, Ava, Rebecca..." 
+              required
+              class="w-full bg-ghDark border border-ghBorder rounded-xl pl-10 pr-4 py-3 font-mono text-sm text-white focus:outline-none focus:border-cyberCyan focus:ring-1 focus:ring-cyberCyan transition-all"
+            >
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-mono text-xs text-gray-300 mb-1">SECRET PASSWORD</label>
+          <div class="relative">
+            <i class="fa-solid fa-key absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-sm"></i>
             <input 
               type="password" 
-              id="passcode-input" 
-              maxlength="10"
-              placeholder="••••••" 
-              autocomplete="off"
-              class="w-full bg-ghDark/90 border border-ghBorder rounded-xl px-4 py-3 font-mono text-center text-xl tracking-[0.4em] text-ghGreenBright placeholder-gray-600 focus:outline-none focus:border-cyberCyan focus:ring-1 focus:ring-cyberCyan transition-all"
+              id="password-input" 
+              placeholder="Enter password..." 
+              required
+              class="w-full bg-ghDark border border-ghBorder rounded-xl pl-10 pr-10 py-3 font-mono text-sm text-white focus:outline-none focus:border-cyberCyan focus:ring-1 focus:ring-cyberCyan transition-all"
             >
             <button 
               type="button" 
-              onclick="togglePasswordVisibility()"
-              class="absolute right-3 text-gray-500 hover:text-gray-300 transition-colors p-1"
-              title="Toggle view"
+              onclick="togglePasswordView()" 
+              class="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-500 hover:text-white"
             >
-              <i id="eye-icon" class="fa-solid fa-eye text-sm"></i>
+              <i id="login-eye-icon" class="fa-solid fa-eye text-sm"></i>
             </button>
           </div>
         </div>
 
-        <!-- Alert Notification Box -->
-        <div id="gate-alert" class="hidden font-mono text-xs rounded-lg p-3 text-center border transition-all"></div>
+        <!-- Alert Box -->
+        <div id="login-alert" class="hidden font-mono text-xs rounded-xl p-3 text-center border"></div>
 
-        <!-- Access Button -->
+        <!-- Submit Button -->
         <button 
           type="submit" 
-          id="unlock-btn"
-          class="w-full bg-gradient-to-r from-ghGreen to-emerald-600 hover:from-ghGreenBright hover:to-emerald-500 text-white font-cyber font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center space-x-2 glow-green"
+          class="w-full bg-gradient-to-r from-cyberCyan via-blue-600 to-cyberPurple hover:opacity-90 text-ghDark font-cyber font-black py-3.5 rounded-xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center space-x-2 glow-cyan"
         >
-          <i class="fa-solid fa-key text-sm"></i>
-          <span>AUTHENTICATE & ENTER</span>
+          <i class="fa-solid fa-rocket"></i>
+          <span>UNLOCK GAMING VAULT</span>
         </button>
       </form>
 
-      <!-- Footer Info -->
-      <div class="mt-6 pt-4 border-t border-ghBorder/40 text-center flex justify-between items-center font-mono text-[10px] text-gray-500">
-        <span>SECURITY VER: v4.10.12</span>
-        <button onclick="autoFillPasscode()" class="text-cyberCyan/70 hover:text-cyberCyan underline cursor-pointer">Hint / Auto-fill</button>
+      <!-- Footer Hints -->
+      <div class="mt-6 pt-4 border-t border-ghBorder/60 text-center font-mono text-[11px] text-gray-400">
+        <span>Click a friend profile above to auto-select username!</span>
       </div>
+
     </div>
   </div>
 
 
   <!-- ========================================================================= -->
-  <!-- 2. MAIN ARCADE DASHBOARD (REVEALED UPON AUTHENTICATION) -->
+  <!-- 2. MAIN ARCADE PORTAL DASHBOARD (REVEALED UPON LOGIN) -->
   <!-- ========================================================================= -->
-  <div id="main-portal" class="hidden min-h-screen flex flex-col bg-ghDark text-gray-200">
+  <div id="main-portal" class="hidden min-h-screen flex flex-col z-10 relative">
     
-    <!-- Top Navigation Bar -->
+    <!-- Top Navigation Header -->
     <header class="sticky top-0 z-40 bg-ghCard/90 backdrop-blur-md border-b border-ghBorder px-4 lg:px-8 py-3">
       <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
         
         <!-- Brand Logo -->
         <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
-          <div class="w-10 h-10 rounded-xl bg-ghDark border border-ghGreen flex items-center justify-center text-ghGreenBright glow-green">
-            <i class="fa-brands fa-github text-xl"></i>
+          <div class="w-10 h-10 rounded-xl bg-ghDark border border-cyberCyan flex items-center justify-center text-starGold glow-cyan">
+            <i class="fa-solid fa-star text-lg"></i>
           </div>
           <div>
-            <div class="font-cyber font-extrabold text-lg text-white tracking-wider leading-none flex items-center gap-2">
-              GITHUB ARCADE <span class="text-[10px] bg-ghGreen/20 text-ghGreenBright px-2 py-0.5 rounded-full border border-ghGreen/30 font-mono font-normal">v2.4</span>
+            <div class="font-cyber font-black text-lg text-white tracking-wider flex items-center gap-2">
+              SUPERSTARS FRIENDS <span class="text-[10px] bg-cyberCyan/20 text-cyberCyan px-2 py-0.5 rounded-full border border-cyberCyan/30 font-mono">VAULT v3.0</span>
             </div>
-            <span class="font-mono text-[10px] text-gray-400">CYBERPUNK ENGINE PORTAL</span>
+            <span class="font-mono text-[10px] text-gray-400">GITHUB CYBERPUNK ARCADE</span>
           </div>
         </div>
 
-        <!-- Search & Quick Navigation Bar -->
-        <div class="hidden md:flex flex-1 max-w-md mx-4">
-          <div class="relative w-full">
-            <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
-            <input 
-              type="text" 
-              id="game-search-input" 
-              onkeyup="filterGames()" 
-              placeholder="Search repositories & games..." 
-              class="w-full bg-ghDark border border-ghBorder rounded-lg pl-9 pr-4 py-1.5 font-mono text-xs text-gray-200 focus:outline-none focus:border-cyberCyan transition-all"
-            >
-          </div>
-        </div>
-
-        <!-- Header Controls & Utilities -->
+        <!-- Controls & Utilities -->
         <div class="flex items-center space-x-2 sm:space-x-3">
           
-          <!-- Sound Toggle Button -->
-          <button 
-            onclick="toggleAudio()" 
-            id="sound-toggle-btn"
-            title="Toggle Web Audio SFX"
-            class="p-2.5 rounded-lg bg-ghDark border border-ghBorder hover:border-cyberCyan text-gray-300 hover:text-cyberCyan transition-all text-xs flex items-center space-x-1.5"
-          >
+          <!-- Sound Toggle -->
+          <button onclick="toggleAudio()" id="sound-btn" class="p-2.5 rounded-xl bg-ghDark border border-ghBorder hover:border-cyberCyan text-gray-300 transition-all text-xs flex items-center space-x-1.5" title="Toggle Web Audio SFX">
             <i id="sound-icon" class="fa-solid fa-volume-high text-ghGreenBright"></i>
             <span class="hidden sm:inline font-mono">SFX</span>
           </button>
 
-          <!-- Terminal CLI Toggle -->
-          <button 
-            onclick="openTerminalModal()" 
-            title="Open Developer CLI (~/github-arcade)"
-            class="p-2.5 rounded-lg bg-ghDark border border-ghBorder hover:border-cyberCyan text-gray-300 hover:text-cyberCyan transition-all text-xs flex items-center space-x-1.5"
-          >
+          <!-- CLI Terminal -->
+          <button onclick="openTerminalModal()" class="p-2.5 rounded-xl bg-ghDark border border-ghBorder hover:border-cyberCyan text-gray-300 transition-all text-xs flex items-center space-x-1.5" title="Developer CLI Terminal">
             <i class="fa-solid fa-terminal text-cyberCyan"></i>
             <span class="hidden sm:inline font-mono">CLI</span>
           </button>
 
-          <!-- Deployment Helper Modal Button -->
-          <button 
-            onclick="openDeployModal()" 
-            class="hidden sm:flex items-center space-x-1.5 bg-cyberPurple/10 border border-cyberPurple/40 hover:bg-cyberPurple/20 text-cyberPurple font-mono text-xs px-3 py-2 rounded-lg transition-all"
-          >
-            <i class="fa-solid fa-cloud-arrow-up"></i>
-            <span>Deploy Site</span>
+          <!-- Leaderboard Button -->
+          <button onclick="openLeaderboardModal()" class="p-2.5 rounded-xl bg-ghDark border border-ghBorder hover:border-starGold text-starGold transition-all text-xs flex items-center space-x-1.5">
+            <i class="fa-solid fa-trophy"></i>
+            <span class="hidden sm:inline font-mono">Ranks</span>
           </button>
 
-          <!-- Lock Portal Button -->
-          <button 
-            onclick="lockPortal()" 
-            title="Lock Portal Session"
-            class="p-2.5 rounded-lg bg-red-950/40 border border-red-800/50 hover:bg-red-900/50 text-red-400 transition-all text-xs flex items-center space-x-1"
-          >
-            <i class="fa-solid fa-lock"></i>
-            <span class="hidden sm:inline font-mono">Lock</span>
+          <!-- Deploy Button -->
+          <button onclick="openDeployModal()" class="hidden sm:flex items-center space-x-1.5 bg-cyberPurple/20 border border-cyberPurple/50 hover:bg-cyberPurple/30 text-cyberPurple font-mono text-xs px-3 py-2 rounded-xl transition-all">
+            <i class="fa-solid fa-cloud-arrow-up"></i>
+            <span>GitHub Pages</span>
           </button>
+
+          <!-- Logout Button -->
+          <button onclick="logout()" class="p-2.5 rounded-xl bg-red-950/40 border border-red-800/50 hover:bg-red-900/60 text-red-400 transition-all text-xs flex items-center space-x-1.5">
+            <i class="fa-solid fa-power-off"></i>
+            <span class="hidden sm:inline font-mono">Switch User</span>
+          </button>
+
         </div>
 
       </div>
     </header>
 
-    <!-- Main Container -->
+    <!-- Main Content Container -->
     <main class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-8">
       
-      <!-- Profile & Git Stats Banner -->
-      <section class="bg-ghCard border border-ghBorder rounded-2xl p-5 sm:p-6 shadow-xl relative overflow-hidden">
-        <div class="absolute -right-10 -bottom-10 opacity-5 pointer-events-none text-cyberCyan text-9xl">
-          <i class="fa-brands fa-github"></i>
-        </div>
-
-        <div class="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+      <!-- User Profile Banner -->
+      <section id="user-banner" class="bg-ghCard border border-ghBorder rounded-3xl p-6 shadow-2xl relative overflow-hidden transition-all">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10">
           
-          <!-- User Profile & Streaks -->
-          <div class="flex items-center space-x-4">
-            <div class="relative">
-              <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-cyberCyan to-ghGreen p-0.5 glow-cyan">
-                <div class="w-full h-full bg-ghDark rounded-[14px] flex items-center justify-center text-2xl text-white">
-                  <i class="fa-solid fa-user-ninja"></i>
-                </div>
-              </div>
-              <span class="absolute -bottom-1 -right-1 bg-ghGreen text-ghDark font-mono font-bold text-[9px] px-1.5 py-0.2 rounded-full border border-ghDark">PRO</span>
+          <div class="flex items-center space-x-5">
+            <div id="user-avatar-box" class="w-20 h-20 rounded-2xl flex items-center justify-center text-3xl shadow-xl border">
+              <i id="user-avatar-icon" class="fa-solid fa-user"></i>
             </div>
-
             <div>
-              <div class="flex items-center space-x-2">
-                <h2 class="font-cyber font-bold text-xl text-white">CYBER_DEVELOPER</h2>
-                <span class="text-xs font-mono text-ghGreenBright bg-ghGreen/10 border border-ghGreen/30 px-2 py-0.5 rounded">● Online</span>
+              <div class="flex items-center space-x-3">
+                <h2 id="user-name-display" class="font-cyber font-black text-2xl text-white">USER_NAME</h2>
+                <span id="user-badge-tag" class="font-mono text-xs px-2.5 py-1 rounded-full border font-bold uppercase">BADGE</span>
               </div>
-              <p class="font-mono text-xs text-gray-400 mt-0.5">Master Contributor • Passcode Unlocked Level 5</p>
+              <p id="user-role-desc" class="font-mono text-xs text-gray-400 mt-1">Superstar Friends Vault Member</p>
               
-              <!-- Mini Stats Pills -->
-              <div class="flex items-center space-x-3 mt-2 font-mono text-xs">
-                <span class="text-yellow-400"><i class="fa-solid fa-star mr-1"></i><span id="stat-total-stars">1,482</span> Stars</span>
-                <span class="text-cyberCyan"><i class="fa-solid fa-fire mr-1"></i><span id="stat-streak">28</span> Day Streak</span>
-                <span class="text-cyberPurple"><i class="fa-solid fa-trophy mr-1"></i><span id="stat-total-score">0</span> High Score</span>
+              <!-- Stats Row -->
+              <div class="flex items-center space-x-4 mt-3 font-mono text-xs">
+                <span class="text-starGold font-bold"><i class="fa-solid fa-star mr-1"></i><span id="user-total-stars">0</span> Vault Stars</span>
+                <span class="text-cyberCyan font-bold"><i class="fa-solid fa-gamepad mr-1"></i><span id="user-total-high">0</span> Personal Record</span>
               </div>
             </div>
           </div>
 
-          <!-- Commit Activity Heatmap Visualizer -->
-          <div class="w-full lg:w-auto bg-ghDark/80 border border-ghBorder/80 rounded-xl p-3.5 overflow-x-auto">
-            <div class="flex items-center justify-between mb-2 font-mono text-[11px] text-gray-400">
-              <span class="flex items-center gap-1.5">
-                <i class="fa-solid fa-chart-simple text-ghGreenBright"></i> 
-                <span>2,048 commits in the last year</span>
-              </span>
-              <span class="text-[10px] text-gray-500">Click cells to add commits!</span>
-            </div>
-
-            <!-- Heatmap Grid (Generated by JS) -->
-            <div id="heatmap-grid" class="grid grid-rows-7 grid-flow-col gap-1 w-max"></div>
-
-            <!-- Legend -->
-            <div class="flex items-center justify-end space-x-2 mt-2 font-mono text-[10px] text-gray-500">
-              <span>Less</span>
-              <div class="w-2.5 h-2.5 rounded-sm bg-[#161b22]"></div>
-              <div class="w-2.5 h-2.5 rounded-sm bg-[#0e4429]"></div>
-              <div class="w-2.5 h-2.5 rounded-sm bg-[#006d32]"></div>
-              <div class="w-2.5 h-2.5 rounded-sm bg-[#26a641]"></div>
-              <div class="w-2.5 h-2.5 rounded-sm bg-[#39d353]"></div>
-              <span>More</span>
+          <!-- Quick Friends Leaderboard Pill Widget -->
+          <div class="bg-ghDark/80 border border-ghBorder rounded-2xl p-4 w-full md:w-auto min-w-[280px]">
+            <h4 class="font-cyber text-xs text-gray-400 mb-2.5 flex items-center justify-between">
+              <span>FRIENDS HIGH SCORES</span>
+              <i class="fa-solid fa-crown text-starGold"></i>
+            </h4>
+            <div id="mini-leaderboard" class="space-y-1.5 font-mono text-xs">
+              <!-- Rendered via JS -->
             </div>
           </div>
 
         </div>
       </section>
 
-      <!-- Category Filter Tabs -->
-      <div class="flex items-center justify-between border-b border-ghBorder pb-3 overflow-x-auto">
-        <div class="flex items-center space-x-2 font-mono text-xs min-w-max">
-          <button onclick="setCategory('ALL')" class="cat-btn active bg-ghGreen text-white px-3.5 py-1.5 rounded-lg font-bold transition-all" data-cat="ALL">
-            ALL REPOS (6)
+      <!-- Category Filter Tabs & Search -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-ghBorder pb-4">
+        
+        <!-- Category Buttons -->
+        <div class="flex items-center space-x-2 font-mono text-xs overflow-x-auto pb-2 sm:pb-0">
+          <button onclick="setCategory('ALL')" class="cat-btn active bg-cyberCyan text-ghDark font-bold px-4 py-2 rounded-xl transition-all" data-cat="ALL">
+            ALL GAMES (8)
           </button>
-          <button onclick="setCategory('ARCADE')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="ARCADE">
+          <button onclick="setCategory('ARCADE')" class="cat-btn bg-ghDark text-gray-400 hover:text-white border border-ghBorder px-4 py-2 rounded-xl transition-all" data-cat="ARCADE">
             ARCADE
           </button>
-          <button onclick="setCategory('ACTION')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="ACTION">
+          <button onclick="setCategory('ACTION')" class="cat-btn bg-ghDark text-gray-400 hover:text-white border border-ghBorder px-4 py-2 rounded-xl transition-all" data-cat="ACTION">
             ACTION
           </button>
-          <button onclick="setCategory('RETRO')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="RETRO">
-            RETRO
-          </button>
-          <button onclick="setCategory('PUZZLE')" class="cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder" data-cat="PUZZLE">
+          <button onclick="setCategory('PUZZLE')" class="cat-btn bg-ghDark text-gray-400 hover:text-white border border-ghBorder px-4 py-2 rounded-xl transition-all" data-cat="PUZZLE">
             PUZZLE
           </button>
         </div>
 
-        <button onclick="openHighScoresModal()" class="font-mono text-xs text-cyberCyan hover:underline flex items-center space-x-1 min-w-max ml-4">
-          <i class="fa-solid fa-crown text-yellow-400"></i>
-          <span>Leaderboard</span>
-        </button>
+        <!-- Search Bar -->
+        <div class="relative min-w-[240px]">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-500 text-xs"></i>
+          <input 
+            type="text" 
+            id="game-search" 
+            onkeyup="filterGames()" 
+            placeholder="Search game vault..." 
+            class="w-full bg-ghDark border border-ghBorder rounded-xl pl-9 pr-4 py-2 font-mono text-xs text-white focus:outline-none focus:border-cyberCyan transition-all"
+          >
+        </div>
+
       </div>
 
-      <!-- Games Grid -->
-      <section id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <!-- ========================================================================= -->
+      <!-- 8 ARCADE GAME CARDS GRID -->
+      <!-- ========================================================================= -->
+      <section id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         
-        <!-- Game 1: Git-Snake -->
-        <div class="game-card group bg-ghCard border border-ghBorder hover:border-ghGreen rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="snake" data-cat="ARCADE RETRO">
-          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#2ea44f_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-            <i class="fa-solid fa-staff-snake text-6xl text-ghGreenBright group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-ghGreenBright font-mono text-[10px] px-2.5 py-1 rounded-full">
-              repo: git-snake.js
+        <!-- Game 1: Cosmic Shooter -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-cyberCyan rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="cosmic" data-cat="ACTION ARCADE">
+          <div class="relative h-40 bg-gradient-to-br from-indigo-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-rocket text-5xl text-cyberCyan transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-cyberCyan/40 text-cyberCyan font-mono text-[10px] px-2 py-0.5 rounded-full">
+              SPACE SHOOTER
             </span>
           </div>
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-ghGreenBright transition-colors">1. Git-Snake</h3>
-              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>482</span>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">1. Cosmic Shooter</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Defeat alien space fleets, dodge lasers, and fight cosmic bosses!</p>
             </div>
-            <p class="font-mono text-xs text-gray-400 line-clamp-2">Eat commit stars, extend your git commit chain, and avoid merge conflict walls.</p>
-            <div class="flex items-center justify-between pt-2">
-              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-snake" class="text-white">0</strong></span>
-              <button onclick="launchGame('snake')" class="bg-ghGreen/20 hover:bg-ghGreen text-ghGreenBright hover:text-white border border-ghGreen/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>INITIALIZE</span>
-              </button>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-cosmic" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('cosmic')" class="bg-cyberCyan hover:bg-cyan-400 text-ghDark font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
             </div>
           </div>
         </div>
 
-        <!-- Game 2: Octo-Invaders -->
-        <div class="game-card group bg-ghCard border border-ghBorder hover:border-cyberCyan rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="invaders" data-cat="ACTION RETRO">
-          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#00f0ff_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-            <i class="fa-solid fa-bugs text-6xl text-cyberCyan group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-cyberCyan font-mono text-[10px] px-2.5 py-1 rounded-full">
-              repo: octo-invaders
+        <!-- Game 2: Cyber Racer -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-cyberPink rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="racer" data-cat="ACTION ARCADE">
+          <div class="relative h-40 bg-gradient-to-br from-pink-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-car-side text-5xl text-cyberPink transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-cyberPink/40 text-cyberPink font-mono text-[10px] px-2 py-0.5 rounded-full">
+              HIGHWAY DODGE
             </span>
           </div>
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-cyberCyan transition-colors">2. Octo-Invaders</h3>
-              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>391</span>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">2. Cyber Racer</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Drive neon lanes, dodge oncoming highway traffic, and grab boost stars!</p>
             </div>
-            <p class="font-mono text-xs text-gray-400 line-clamp-2">Defend the main branch! Shoot down incoming syntax bugs and 404 error invaders.</p>
-            <div class="flex items-center justify-between pt-2">
-              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-invaders" class="text-white">0</strong></span>
-              <button onclick="launchGame('invaders')" class="bg-cyberCyan/20 hover:bg-cyberCyan text-cyberCyan hover:text-ghDark border border-cyberCyan/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>INITIALIZE</span>
-              </button>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-racer" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('racer')" class="bg-cyberPink hover:bg-pink-500 text-white font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
             </div>
           </div>
         </div>
 
-        <!-- Game 3: Git-Flap -->
-        <div class="game-card group bg-ghCard border border-ghBorder hover:border-cyberPurple rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="flap" data-cat="ARCADE ACTION">
-          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#a855f7_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-            <i class="fa-solid fa-code-pull-request text-6xl text-cyberPurple group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-cyberPurple font-mono text-[10px] px-2.5 py-1 rounded-full">
-              repo: git-jump
+        <!-- Game 3: Flappy Superstar -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-cyberPurple rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="flappy" data-cat="ARCADE">
+          <div class="relative h-40 bg-gradient-to-br from-purple-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-crow text-5xl text-cyberPurple transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-cyberPurple/40 text-cyberPurple font-mono text-[10px] px-2 py-0.5 rounded-full">
+              SKY JUMPER
             </span>
           </div>
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-cyberPurple transition-colors">3. Git-Flap</h3>
-              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>512</span>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">3. Flappy Superstar</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Flap through neon pipe portals and collect superstar ring bonuses!</p>
             </div>
-            <p class="font-mono text-xs text-gray-400 line-clamp-2">Fly Octocat safely through PR pipeline gates and server deployment obstacles.</p>
-            <div class="flex items-center justify-between pt-2">
-              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-flap" class="text-white">0</strong></span>
-              <button onclick="launchGame('flap')" class="bg-cyberPurple/20 hover:bg-cyberPurple text-cyberPurple hover:text-white border border-cyberPurple/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>INITIALIZE</span>
-              </button>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-flappy" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('flappy')" class="bg-cyberPurple hover:bg-purple-500 text-white font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
             </div>
           </div>
         </div>
 
-        <!-- Game 4: Git-Breakout -->
-        <div class="game-card group bg-ghCard border border-ghBorder hover:border-yellow-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="breakout" data-cat="ARCADE RETRO">
-          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#eab308_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-            <i class="fa-solid fa-cubes-stacked text-6xl text-yellow-400 group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-yellow-400 font-mono text-[10px] px-2.5 py-1 rounded-full">
-              repo: code-breakout
+        <!-- Game 4: Neon Brick Breaker -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-starGold rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="breakout" data-cat="ARCADE PUZZLE">
+          <div class="relative h-40 bg-gradient-to-br from-yellow-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-cubes text-5xl text-starGold transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-starGold/40 text-starGold font-mono text-[10px] px-2 py-0.5 rounded-full">
+              BRICK SMASHER
             </span>
           </div>
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-yellow-400 transition-colors">4. Git-Breakout</h3>
-              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>298</span>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">4. Neon Breakout</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Smash colored bricks, unlock laser powerups, and catch multi-balls!</p>
             </div>
-            <p class="font-mono text-xs text-gray-400 line-clamp-2">Smash through code block bricks, catch powerups, and clear legacy code.</p>
-            <div class="flex items-center justify-between pt-2">
-              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-breakout" class="text-white">0</strong></span>
-              <button onclick="launchGame('breakout')" class="bg-yellow-500/20 hover:bg-yellow-500 text-yellow-400 hover:text-ghDark border border-yellow-500/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>INITIALIZE</span>
-              </button>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-breakout" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('breakout')" class="bg-starGold hover:bg-amber-400 text-ghDark font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
             </div>
           </div>
         </div>
 
-        <!-- Game 5: Cyber-Runner -->
-        <div class="game-card group bg-ghCard border border-ghBorder hover:border-red-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="runner" data-cat="ACTION">
-          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#ef4444_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-            <i class="fa-solid fa-person-running text-6xl text-red-500 group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-red-400 font-mono text-[10px] px-2.5 py-1 rounded-full">
-              repo: cyber-runner
+        <!-- Game 5: Cyber Snake -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-ghGreenBright rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="snake" data-cat="ARCADE PUZZLE">
+          <div class="relative h-40 bg-gradient-to-br from-emerald-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-staff-snake text-5xl text-ghGreenBright transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghGreenBright/40 text-ghGreenBright font-mono text-[10px] px-2 py-0.5 rounded-full">
+              GLOW SNAKE
             </span>
           </div>
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-red-400 transition-colors">5. Cyber-Runner</h3>
-              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>610</span>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">5. Cyber Snake</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Eat glowing star food, extend your neon tail, and avoid wall crashes!</p>
             </div>
-            <p class="font-mono text-xs text-gray-400 line-clamp-2">Endless side-scroller. Jump over firewall spikes and slide under security lasers.</p>
-            <div class="flex items-center justify-between pt-2">
-              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-runner" class="text-white">0</strong></span>
-              <button onclick="launchGame('runner')" class="bg-red-500/20 hover:bg-red-500 text-red-400 hover:text-white border border-red-500/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>INITIALIZE</span>
-              </button>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-snake" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('snake')" class="bg-ghGreenBright hover:bg-emerald-400 text-ghDark font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
             </div>
           </div>
         </div>
 
-        <!-- Game 6: Hack-The-Grid -->
-        <div class="game-card group bg-ghCard border border-ghBorder hover:border-blue-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1" data-id="grid" data-cat="PUZZLE">
-          <div class="relative h-44 bg-gradient-to-br from-gray-900 to-ghDark flex items-center justify-center p-4 border-b border-ghBorder overflow-hidden">
-            <div class="absolute inset-0 bg-[radial-gradient(#3b82f6_1px,transparent_1px)] [background-size:16px_16px] opacity-20"></div>
-            <i class="fa-solid fa-braille text-6xl text-blue-400 group-hover:scale-110 transition-transform duration-300"></i>
-            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-ghBorder text-blue-400 font-mono text-[10px] px-2.5 py-1 rounded-full">
-              repo: hack-the-grid
+        <!-- Game 6: Tower Stacker -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-starDiamond rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="stacker" data-cat="PUZZLE ARCADE">
+          <div class="relative h-40 bg-gradient-to-br from-blue-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-layer-group text-5xl text-starDiamond transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-starDiamond/40 text-starDiamond font-mono text-[10px] px-2 py-0.5 rounded-full">
+              BLOCK STACKER
             </span>
           </div>
-          <div class="p-5 space-y-3">
-            <div class="flex items-center justify-between">
-              <h3 class="font-cyber font-bold text-lg text-white group-hover:text-blue-400 transition-colors">6. Hack-The-Grid</h3>
-              <span class="font-mono text-xs text-yellow-400"><i class="fa-solid fa-star mr-1"></i>340</span>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">6. Tower Stacker</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Time block drops to build the tallest neon skyscraper in the galaxy!</p>
             </div>
-            <p class="font-mono text-xs text-gray-400 line-clamp-2">Memory light sequence puzzle. Memorize cyber node light patterns to breach security.</p>
-            <div class="flex items-center justify-between pt-2">
-              <span class="font-mono text-[11px] text-gray-500">High Score: <strong id="card-score-grid" class="text-white">0</strong></span>
-              <button onclick="launchGame('grid')" class="bg-blue-500/20 hover:bg-blue-500 text-blue-400 hover:text-white border border-blue-500/40 font-mono text-xs font-bold px-4 py-2 rounded-lg transition-all flex items-center space-x-1.5">
-                <i class="fa-solid fa-play text-xs"></i>
-                <span>INITIALIZE</span>
-              </button>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-stacker" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('stacker')" class="bg-starDiamond hover:bg-blue-400 text-white font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 7: Memory Card Match -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-starRuby rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="memory" data-cat="PUZZLE">
+          <div class="relative h-40 bg-gradient-to-br from-rose-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-clone text-5xl text-starRuby transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-starRuby/40 text-starRuby font-mono text-[10px] px-2 py-0.5 rounded-full">
+              MATCH CARDS
+            </span>
+          </div>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">7. Memory Match</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Test your memory matching Superstar Friends icons against the clock!</p>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-memory" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('memory')" class="bg-starRuby hover:bg-rose-500 text-white font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 8: Neon Runner -->
+        <div class="game-card bg-ghCard hover:bg-ghCardHover border border-ghBorder hover:border-amber-500 rounded-2xl overflow-hidden shadow-lg transition-all duration-300 hover:-translate-y-1 flex flex-col justify-between" data-id="runner" data-cat="ACTION">
+          <div class="relative h-40 bg-gradient-to-br from-amber-950 to-ghDark flex items-center justify-center border-b border-ghBorder overflow-hidden">
+            <i class="fa-solid fa-person-running text-5xl text-amber-400 transition-transform group-hover:scale-110"></i>
+            <span class="absolute top-3 right-3 bg-ghDark/80 backdrop-blur-md border border-amber-500/40 text-amber-400 font-mono text-[10px] px-2 py-0.5 rounded-full">
+              ENDLESS JUMPER
+            </span>
+          </div>
+          <div class="p-4 space-y-3 flex-1 flex flex-col justify-between">
+            <div>
+              <h3 class="font-cyber font-bold text-base text-white">8. Neon Runner</h3>
+              <p class="font-mono text-xs text-gray-400 mt-1">Jump and double-jump over security laser hurdles & spikes!</p>
+            </div>
+            <div class="flex items-center justify-between pt-2 border-t border-ghBorder/50 font-mono text-xs">
+              <span class="text-gray-400">Best: <strong id="best-runner" class="text-starGold">0</strong></span>
+              <button onclick="launchGame('runner')" class="bg-amber-500 hover:bg-amber-400 text-ghDark font-cyber font-bold px-3.5 py-1.5 rounded-lg transition-all">PLAY</button>
             </div>
           </div>
         </div>
@@ -536,15 +529,15 @@
 
     </main>
 
-    <!-- Dashboard Footer -->
-    <footer class="border-t border-ghBorder bg-ghCard/60 py-6 mt-12 text-center font-mono text-xs text-gray-500">
-      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3">
-        <div class="flex items-center space-x-2">
-          <i class="fa-brands fa-github text-base text-cyberCyan"></i>
-          <span>GitHub Cyberpunk Arcade &copy; 2026</span>
-        </div>
+    <!-- Footer -->
+    <footer class="border-t border-ghBorder bg-ghCard/60 py-6 mt-12 font-mono text-xs text-gray-500">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-3 text-center sm:text-left">
         <div>
-          <span>Passcode Auth Status: <strong class="text-ghGreenBright">VERIFIED (041012)</strong></span>
+          <span class="text-white font-bold">SUPERSTARS FRIENDS GAMING VAULT</span> &copy; 2026 // Chase • Jade • Ava • Rebecca
+        </div>
+        <div class="flex items-center space-x-2">
+          <i class="fa-brands fa-github text-cyberCyan text-base"></i>
+          <span>Hosted on GitHub Pages Ready</span>
         </div>
       </div>
     </footer>
@@ -553,117 +546,204 @@
 
 
   <!-- ========================================================================= -->
-  <!-- 3. GAME PLAYER ENGINE MODAL & CANVAS OVERLAY -->
+  <!-- 3. GAME ENGINE OVERLAY & CANVAS CONTAINER -->
   <!-- ========================================================================= -->
-  <div id="game-modal" class="fixed inset-0 z-50 hidden bg-ghDark/95 backdrop-blur-lg flex-col justify-between p-3 sm:p-6 overflow-y-auto">
+  <div id="game-modal" class="fixed inset-0 z-50 hidden bg-ghDark/95 backdrop-blur-xl flex-col justify-between p-3 sm:p-6 overflow-y-auto">
     
-    <!-- Modal Header Controls -->
+    <!-- Modal Header Bar -->
     <div class="flex items-center justify-between border-b border-ghBorder pb-3 max-w-5xl w-full mx-auto">
       <div class="flex items-center space-x-3">
         <span id="game-title" class="font-cyber font-bold text-xl text-white text-glow-cyan">GAME TITLE</span>
-        <span id="game-status-tag" class="font-mono text-xs bg-ghGreen/20 text-ghGreenBright border border-ghGreen/30 px-2 py-0.5 rounded">RUNNING</span>
+        <span id="game-player-badge" class="font-mono text-xs bg-ghDark border px-2.5 py-0.5 rounded-full text-white">PLAYER</span>
       </div>
 
-      <div class="flex items-center space-x-4 font-mono text-xs">
-        <div class="bg-ghCard border border-ghBorder px-3 py-1.5 rounded-lg flex items-center space-x-2">
+      <div class="flex items-center space-x-3 font-mono text-xs">
+        <div class="bg-ghCard border border-ghBorder px-3 py-1.5 rounded-xl flex items-center space-x-2">
           <span class="text-gray-400">SCORE:</span>
-          <span id="live-score" class="text-ghGreenBright font-bold text-sm">0</span>
+          <span id="game-live-score" class="text-ghGreenBright font-bold text-base">0</span>
         </div>
 
-        <div class="bg-ghCard border border-ghBorder px-3 py-1.5 rounded-lg flex items-center space-x-2">
+        <div class="bg-ghCard border border-ghBorder px-3 py-1.5 rounded-xl flex items-center space-x-2">
           <span class="text-gray-400">BEST:</span>
-          <span id="modal-high-score" class="text-yellow-400 font-bold text-sm">0</span>
+          <span id="game-best-score" class="text-starGold font-bold text-base">0</span>
         </div>
 
-        <button onclick="closeGameModal()" class="bg-red-900/40 hover:bg-red-800 text-red-300 p-2 rounded-lg border border-red-700/50 transition-all">
-          <i class="fa-solid fa-xmark text-base"></i>
+        <button onclick="closeGameModal()" class="bg-red-950/80 hover:bg-red-900 text-red-300 px-3 py-1.5 rounded-xl border border-red-700 transition-all font-mono">
+          <i class="fa-solid fa-xmark mr-1"></i>EXIT
         </button>
       </div>
     </div>
 
-    <!-- Main Game Canvas Container -->
+    <!-- Main Game Canvas / HTML Arena Area -->
     <div class="flex-1 flex flex-col items-center justify-center my-4 w-full max-w-5xl mx-auto">
       <div class="relative w-full max-w-2xl bg-black rounded-2xl border-2 border-ghBorder shadow-2xl overflow-hidden flex flex-col items-center justify-center">
         
-        <!-- CRT overlay lines inside game -->
         <div class="scanlines absolute inset-0 z-10 pointer-events-none"></div>
 
-        <!-- The Main Render Canvas -->
+        <!-- HTML Canvas Render Area -->
         <canvas id="game-canvas" width="600" height="400" class="w-full h-auto bg-black block"></canvas>
 
-        <!-- Game Overlay Controls / Game Over Screen -->
-        <div id="game-overlay" class="absolute inset-0 z-20 bg-ghDark/90 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center transition-all hidden">
+        <!-- Dynamic Container for Memory Match or HTML-based games -->
+        <div id="html-game-container" class="hidden w-full h-[400px] p-4 bg-ghDark flex items-center justify-center"></div>
+
+        <!-- Overlay for Pause or Game Over -->
+        <div id="game-overlay" class="absolute inset-0 z-20 bg-ghDark/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center hidden">
           <h2 id="overlay-title" class="font-cyber text-3xl font-black text-red-500 mb-2">GAME OVER</h2>
-          <p id="overlay-desc" class="font-mono text-sm text-gray-300 mb-6">Segmentation fault detected in repository space.</p>
+          <p id="overlay-desc" class="font-mono text-sm text-gray-300 mb-6">Final Score Recorded!</p>
 
           <div class="flex items-center space-x-4">
-            <button onclick="restartCurrentGame()" class="bg-ghGreen hover:bg-ghGreenBright text-ghDark font-cyber font-bold px-6 py-3 rounded-xl shadow-lg transition-all flex items-center space-x-2 glow-green">
+            <button onclick="restartGame()" class="bg-cyberCyan hover:bg-cyan-400 text-ghDark font-cyber font-bold px-6 py-3 rounded-xl shadow-lg transition-all flex items-center space-x-2">
               <i class="fa-solid fa-rotate-right"></i>
-              <span>RETRY // REBOOT</span>
+              <span>RETRY GAME</span>
             </button>
-            <button onclick="closeGameModal()" class="bg-ghCard border border-ghBorder hover:border-gray-500 text-gray-300 font-mono px-4 py-3 rounded-xl transition-all">
-              EXIT TO HUB
+            <button onclick="closeGameModal()" class="bg-ghCard border border-ghBorder text-gray-300 font-mono px-4 py-3 rounded-xl hover:text-white transition-all">
+              BACK TO VAULT
             </button>
           </div>
         </div>
 
       </div>
 
-      <!-- Touch Controls Bar (Mobile Friendly) -->
+      <!-- Mobile Touch Controls Bar -->
       <div id="touch-controls" class="w-full max-w-2xl mt-4 grid grid-cols-2 gap-4 sm:hidden">
         <div class="grid grid-cols-3 gap-1 bg-ghCard p-2 rounded-xl border border-ghBorder text-center">
           <div></div>
-          <button ontouchstart="handleTouchInput('UP')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">▲</button>
+          <button ontouchstart="sendTouchInput('UP')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">▲</button>
           <div></div>
-          <button ontouchstart="handleTouchInput('LEFT')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">◄</button>
-          <button ontouchstart="handleTouchInput('DOWN')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">▼</button>
-          <button ontouchstart="handleTouchInput('RIGHT')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">►</button>
+          <button ontouchstart="sendTouchInput('LEFT')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">◄</button>
+          <button ontouchstart="sendTouchInput('DOWN')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">▼</button>
+          <button ontouchstart="sendTouchInput('RIGHT')" class="bg-ghDark border border-ghBorder p-3 rounded text-cyberCyan font-bold active:bg-cyberCyan active:text-ghDark">►</button>
         </div>
 
-        <div class="flex items-center justify-center space-x-3 bg-ghCard p-2 rounded-xl border border-ghBorder">
-          <button ontouchstart="handleTouchInput('ACTION_A')" class="flex-1 h-full bg-ghGreen/30 border border-ghGreen text-ghGreenBright rounded-xl font-cyber font-bold active:bg-ghGreen active:text-ghDark">A (ACTION)</button>
-          <button ontouchstart="handleTouchInput('ACTION_B')" class="flex-1 h-full bg-cyberPurple/30 border border-cyberPurple text-cyberPurple rounded-xl font-cyber font-bold active:bg-cyberPurple active:text-white">B (JUMP)</button>
+        <div class="flex items-center justify-center space-x-2 bg-ghCard p-2 rounded-xl border border-ghBorder">
+          <button ontouchstart="sendTouchInput('ACTION_A')" class="flex-1 h-full bg-cyberCyan/20 border border-cyberCyan text-cyberCyan rounded-xl font-cyber font-bold active:bg-cyberCyan active:text-ghDark">FIRE / JUMP</button>
         </div>
       </div>
 
     </div>
 
-    <!-- Instructions Banner -->
+    <!-- Instructions Footer Hint -->
     <div class="max-w-5xl w-full mx-auto bg-ghCard border border-ghBorder rounded-xl p-3 text-center font-mono text-xs text-gray-400">
-      <span id="game-controls-hint"><i class="fa-solid fa-keyboard mr-2 text-cyberCyan"></i>Controls: Arrow Keys / WASD or Touch D-Pad to move. Spacebar for Action.</span>
+      <span id="game-controls-desc"><i class="fa-solid fa-keyboard mr-2 text-cyberCyan"></i>Controls: Arrow Keys / WASD to move. Spacebar to Jump or Shoot.</span>
     </div>
 
   </div>
 
 
   <!-- ========================================================================= -->
-  <!-- 4. DEVELOPER TERMINAL CLI MODAL -->
+  <!-- MODAL 1: FRIENDS LEADERBOARD -->
+  <!-- ========================================================================= -->
+  <div id="leaderboard-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-lg bg-ghCard border border-ghBorder rounded-3xl p-6 shadow-2xl space-y-5">
+      
+      <div class="flex items-center justify-between border-b border-ghBorder pb-4">
+        <div class="flex items-center space-x-2 text-starGold">
+          <i class="fa-solid fa-trophy text-2xl"></i>
+          <h3 class="font-cyber font-bold text-lg text-white">Superstars Leaderboard</h3>
+        </div>
+        <button onclick="closeLeaderboardModal()" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="full-leaderboard-list" class="space-y-3 font-mono text-xs">
+        <!-- Rendered via JS -->
+      </div>
+
+      <div class="pt-2 text-center">
+        <button onclick="closeLeaderboardModal()" class="w-full bg-cyberCyan text-ghDark font-cyber font-bold py-3 rounded-xl">CLOSE RANKINGS</button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 2: GITHUB PAGES DEPLOYMENT GUIDE -->
+  <!-- ========================================================================= -->
+  <div id="deploy-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl bg-ghCard border border-ghBorder rounded-3xl p-6 shadow-2xl space-y-6">
+      
+      <div class="flex items-center justify-between border-b border-ghBorder pb-4">
+        <div class="flex items-center space-x-3">
+          <i class="fa-brands fa-github text-3xl text-cyberPurple"></i>
+          <div>
+            <h3 class="font-cyber font-bold text-lg text-white">Deploy to GitHub Pages</h3>
+            <p class="font-mono text-xs text-gray-400">Host your Superstars Vault live on the web</p>
+          </div>
+        </div>
+        <button onclick="closeDeployModal()" class="text-gray-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 font-mono text-xs text-gray-300">
+        <div class="bg-ghDark p-3 rounded-xl border border-ghBorder flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">1</span>
+          <div>
+            <strong class="text-white block">Create GitHub Repo</strong>
+            Go to github.com and create a public repository named <code class="text-cyberCyan">superstars-gaming-vault</code>.
+          </div>
+        </div>
+
+        <div class="bg-ghDark p-3 rounded-xl border border-ghBorder flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">2</span>
+          <div>
+            <strong class="text-white block">Save Web Code</strong>
+            Save this file as <code class="text-cyberCyan">index.html</code> on your computer.
+          </div>
+        </div>
+
+        <div class="bg-ghDark p-3 rounded-xl border border-ghBorder flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">3</span>
+          <div>
+            <strong class="text-white block">Upload to Repository</strong>
+            Click "Upload files" in GitHub and commit <code class="text-cyberCyan">index.html</code> to the main branch.
+          </div>
+        </div>
+
+        <div class="bg-ghDark p-3 rounded-xl border border-ghBorder flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">4</span>
+          <div>
+            <strong class="text-white block">Enable GitHub Pages</strong>
+            In Repo Settings -> Pages, select <code class="text-cyberCyan">main</code> branch and click Save!
+          </div>
+        </div>
+      </div>
+
+      <button onclick="closeDeployModal()" class="w-full bg-cyberPurple hover:bg-purple-600 text-white font-cyber font-bold py-3 rounded-xl transition-all">
+        READY TO DEPLOY
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL 3: TERMINAL CLI -->
   <!-- ========================================================================= -->
   <div id="terminal-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-3xl bg-ghDark border border-cyberCyan/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[500px]">
+    <div class="w-full max-w-2xl bg-ghDark border border-cyberCyan/50 rounded-2xl shadow-2xl overflow-hidden flex flex-col h-[460px]">
       
-      <!-- Terminal Header -->
       <div class="bg-ghCard border-b border-ghBorder px-4 py-3 flex items-center justify-between">
         <div class="flex items-center space-x-2">
           <div class="w-3 h-3 rounded-full bg-red-500"></div>
           <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
           <div class="w-3 h-3 rounded-full bg-green-500"></div>
-          <span class="font-mono text-xs text-gray-400 ml-2">guest@github-arcade: ~</span>
+          <span class="font-mono text-xs text-gray-400 ml-2">superstars@vault-cli: ~</span>
         </div>
         <button onclick="closeTerminalModal()" class="text-gray-400 hover:text-white">
           <i class="fa-solid fa-xmark"></i>
         </button>
       </div>
 
-      <!-- Terminal Output Screen -->
       <div id="terminal-output" class="flex-1 p-4 font-mono text-xs text-ghGreenBright overflow-y-auto space-y-2">
-        <p class="text-cyberCyan">GitHub Arcade Terminal CLI [Version 2.4.0]</p>
-        <p class="text-gray-400">Type <span class="text-yellow-400">help</span> to view available system commands.</p>
+        <p class="text-cyberCyan">Superstars Friends Gaming Vault CLI [v3.0]</p>
+        <p class="text-gray-400">Type <span class="text-starGold">help</span> for system commands.</p>
       </div>
 
-      <!-- Terminal Input Line -->
-      <form onsubmit="event.preventDefault(); processTerminalCommand();" class="border-t border-ghBorder bg-ghCard px-4 py-3 flex items-center space-x-2">
-        <span class="font-mono text-xs text-cyberCyan">guest@github-arcade:~$</span>
+      <form onsubmit="event.preventDefault(); processCliCommand();" class="border-t border-ghBorder bg-ghCard px-4 py-3 flex items-center space-x-2">
+        <span class="font-mono text-xs text-cyberCyan">guest@vault:~$</span>
         <input 
           type="text" 
           id="terminal-input" 
@@ -678,148 +758,74 @@
 
 
   <!-- ========================================================================= -->
-  <!-- 5. GITHUB PAGES DEPLOYMENT HELPER MODAL -->
-  <!-- ========================================================================= -->
-  <div id="deploy-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-2xl bg-ghCard border border-ghBorder rounded-2xl p-6 shadow-2xl space-y-6">
-      
-      <div class="flex items-center justify-between border-b border-ghBorder pb-4">
-        <div class="flex items-center space-x-3">
-          <i class="fa-brands fa-github text-3xl text-cyberPurple"></i>
-          <div>
-            <h3 class="font-cyber font-bold text-lg text-white">Deploy to GitHub Pages</h3>
-            <p class="font-mono text-xs text-gray-400">Host your own live arcade website in 4 steps</p>
-          </div>
-        </div>
-        <button onclick="closeDeployModal()" class="text-gray-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <!-- Steps List -->
-      <div class="space-y-4 font-mono text-xs text-gray-300">
-        
-        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
-          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">1</div>
-          <div>
-            <strong class="text-white block mb-0.5">Create a GitHub Repository</strong>
-            Go to <a href="https://github.com/new" target="_blank" class="text-cyberCyan underline">github.com/new</a> and create a public repository named <code class="text-ghGreenBright">github-arcade</code>.
-          </div>
-        </div>
-
-        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
-          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">2</div>
-          <div>
-            <strong class="text-white block mb-0.5">Save Single File</strong>
-            Save this entire webpage source file as <code class="text-ghGreenBright">index.html</code> on your computer.
-          </div>
-        </div>
-
-        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
-          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">3</div>
-          <div>
-            <strong class="text-white block mb-0.5">Upload index.html</strong>
-            Click "Upload an existing file" in your repository and drop <code class="text-ghGreenBright">index.html</code> inside.
-          </div>
-        </div>
-
-        <div class="flex items-start space-x-3 bg-ghDark p-3 rounded-xl border border-ghBorder">
-          <div class="w-6 h-6 rounded-full bg-cyberPurple/20 text-cyberPurple flex items-center justify-center font-bold">4</div>
-          <div>
-            <strong class="text-white block mb-0.5">Enable Pages</strong>
-            Navigate to <strong>Settings -> Pages</strong>, set Source to <code class="text-ghGreenBright">main</code> branch, and hit Save!
-          </div>
-        </div>
-
-      </div>
-
-      <div class="pt-2 text-center">
-        <button onclick="closeDeployModal()" class="w-full bg-cyberPurple hover:bg-purple-600 text-white font-cyber font-bold py-3 rounded-xl transition-all">
-          GOT IT, READY TO HOST!
-        </button>
-      </div>
-
-    </div>
-  </div>
-
-
-  <!-- ========================================================================= -->
-  <!-- 6. HIGH SCORES & LEADERBOARD MODAL -->
-  <!-- ========================================================================= -->
-  <div id="highscores-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-    <div class="w-full max-w-lg bg-ghCard border border-ghBorder rounded-2xl p-6 shadow-2xl space-y-5">
-      
-      <div class="flex items-center justify-between border-b border-ghBorder pb-4">
-        <div class="flex items-center space-x-2 text-yellow-400">
-          <i class="fa-solid fa-trophy text-2xl"></i>
-          <h3 class="font-cyber font-bold text-lg text-white">Repository Leaderboard</h3>
-        </div>
-        <button onclick="closeHighScoresModal()" class="text-gray-400 hover:text-white">
-          <i class="fa-solid fa-xmark text-lg"></i>
-        </button>
-      </div>
-
-      <!-- High Scores Table -->
-      <div class="space-y-2 font-mono text-xs" id="leaderboard-list">
-        <!-- Filled dynamically -->
-      </div>
-
-      <div class="pt-2 text-center">
-        <button onclick="resetHighScores()" class="text-red-400 hover:text-red-300 font-mono text-xs underline">Reset Local High Scores</button>
-      </div>
-
-    </div>
-  </div>
-
-
-  <!-- ========================================================================= -->
-  <!-- JS SCRIPT LOGIC: AUTHENTICATION, WEB AUDIO, HEATMAP, CLI & 6 CANVASES -->
+  <!-- JAVASCRIPT LOGIC & ENGINE CODE -->
   <!-- ========================================================================= -->
   <script>
     
-    // Core Application State
-    const AUTH_PASSCODE = "041012";
-    let isAudioMuted = false;
-    let audioCtx = null;
-    let currentGameId = null;
-    let gameAnimationLoop = null;
-
-    // Local Storage High Scores Data Structure
-    let highScores = {
-      snake: 0,
-      invaders: 0,
-      flap: 0,
-      breakout: 0,
-      runner: 0,
-      grid: 0
+    // User Accounts Database
+    const SUPERSTARS_USERS = {
+      'Chase': {
+        pass: '041012',
+        role: 'Cyber Warrior',
+        icon: 'fa-shield-halved',
+        badgeColor: 'border-starGold text-starGold bg-starGold/10',
+        avatarBg: 'bg-gradient-to-tr from-amber-600 to-yellow-400 text-ghDark border-starGold',
+        desc: 'Specialist in defensive shields & high cosmic scores'
+      },
+      'Jade': {
+        pass: 'Hunter',
+        role: 'Shadow Hunter',
+        icon: 'fa-user-ninja',
+        badgeColor: 'border-starEmerald text-starEmerald bg-starEmerald/10',
+        avatarBg: 'bg-gradient-to-tr from-emerald-600 to-teal-400 text-ghDark border-starEmerald',
+        desc: 'Master of high-speed racer reflexes & stealth runs'
+      },
+      'Ava': {
+        pass: 'Cafe',
+        role: 'Cafe Queen',
+        icon: 'fa-crown',
+        badgeColor: 'border-starRuby text-starRuby bg-starRuby/10',
+        avatarBg: 'bg-gradient-to-tr from-rose-600 to-pink-400 text-white border-starRuby',
+        desc: 'Queen of memory matching & brick breaker powerups'
+      },
+      'Rebecca': {
+        pass: 'Leader',
+        role: 'The Leader',
+        icon: 'fa-gem',
+        badgeColor: 'border-starDiamond text-starDiamond bg-starDiamond/10',
+        avatarBg: 'bg-gradient-to-tr from-blue-600 to-cyan-400 text-white border-starDiamond',
+        desc: 'Strategic squad captain & tower stacking champion'
+      }
     };
 
-    // Load High Scores on Initialization
-    function loadSavedScores() {
-      const saved = localStorage.getItem('gh_arcade_scores');
+    // Global State
+    let activeUser = null;
+    let isAudioMuted = false;
+    let audioCtx = null;
+    let activeGameId = null;
+    let gameLoopFrame = null;
+
+    // Scores Database structure (Saved in LocalStorage)
+    let vaultScores = {
+      Chase: { cosmic: 450, racer: 620, flappy: 18, breakout: 380, snake: 140, stacker: 12, memory: 520, runner: 310 },
+      Jade: { cosmic: 320, racer: 890, flappy: 24, breakout: 290, snake: 210, stacker: 15, memory: 410, runner: 480 },
+      Ava: { cosmic: 280, racer: 510, flappy: 15, breakout: 640, snake: 180, stacker: 18, memory: 850, runner: 290 },
+      Rebecca: { cosmic: 590, racer: 740, flappy: 31, breakout: 510, snake: 260, stacker: 27, memory: 690, runner: 520 }
+    };
+
+    function loadScores() {
+      const saved = localStorage.getItem('superstars_vault_scores');
       if (saved) {
-        try { highScores = JSON.parse(saved); } catch(e){}
+        try { vaultScores = JSON.parse(saved); } catch(e){}
       }
-      updateScoreUI();
+      updateLeaderboardUI();
     }
 
     function saveScores() {
-      localStorage.setItem('gh_arcade_scores', JSON.stringify(highScores));
-      updateScoreUI();
+      localStorage.setItem('superstars_vault_scores', JSON.stringify(vaultScores));
+      updateLeaderboardUI();
     }
 
-    function updateScoreUI() {
-      let grandTotal = 0;
-      for (const [key, val] of Object.entries(highScores)) {
-        grandTotal += val;
-        const el = document.getElementById(`card-score-${key}`);
-        if (el) el.innerText = val;
-      }
-      const totalEl = document.getElementById('stat-total-score');
-      if (totalEl) totalEl.innerText = grandTotal;
-    }
-
-    // Web Audio API Sound Synthesizer
     function initAudio() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -840,61 +846,47 @@
       osc.connect(gain);
       gain.connect(audioCtx.destination);
 
-      if (type === 'unlock') {
-        osc.type = 'triangle';
-        osc.frequency.setValueAtTime(440, now);
-        osc.frequency.exponentialRampToValueAtTime(880, now + 0.25);
-        gain.gain.setValueAtTime(0.3, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
-      } else if (type === 'error') {
+      if (type === 'laser') {
         osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(160, now);
-        osc.frequency.linearRampToValueAtTime(70, now + 0.3);
-        gain.gain.setValueAtTime(0.4, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
-        osc.start(now);
-        osc.stop(now + 0.3);
-      } else if (type === 'laser') {
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(900, now);
-        osc.frequency.exponentialRampToValueAtTime(150, now + 0.12);
-        gain.gain.setValueAtTime(0.15, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
-        osc.start(now);
-        osc.stop(now + 0.12);
+        osc.frequency.setValueAtTime(850, now);
+        osc.frequency.exponentialRampToValueAtTime(120, now + 0.1);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+        osc.start(now); osc.stop(now + 0.1);
       } else if (type === 'jump') {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(220, now);
-        osc.frequency.exponentialRampToValueAtTime(580, now + 0.18);
+        osc.frequency.setValueAtTime(250, now);
+        osc.frequency.exponentialRampToValueAtTime(600, now + 0.15);
         gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
-        osc.start(now);
-        osc.stop(now + 0.18);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now); osc.stop(now + 0.15);
       } else if (type === 'score') {
         osc.type = 'sine';
-        osc.frequency.setValueAtTime(523.25, now);
-        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        osc.frequency.setValueAtTime(523, now);
+        osc.frequency.setValueAtTime(659, now + 0.08);
         gain.gain.setValueAtTime(0.2, now);
-        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-        osc.start(now);
-        osc.stop(now + 0.2);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.18);
+        osc.start(now); osc.stop(now + 0.18);
       } else if (type === 'explosion') {
         osc.type = 'square';
-        osc.frequency.setValueAtTime(120, now);
+        osc.frequency.setValueAtTime(150, now);
         osc.frequency.exponentialRampToValueAtTime(30, now + 0.25);
         gain.gain.setValueAtTime(0.3, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
-        osc.start(now);
-        osc.stop(now + 0.25);
+        osc.start(now); osc.stop(now + 0.25);
       } else if (type === 'click') {
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(400, now);
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
         gain.gain.setValueAtTime(0.1, now);
         gain.gain.exponentialRampToValueAtTime(0.01, now + 0.05);
-        osc.start(now);
-        osc.stop(now + 0.05);
+        osc.start(now); osc.stop(now + 0.05);
+      } else if (type === 'error') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(180, now);
+        osc.frequency.linearRampToValueAtTime(80, now + 0.25);
+        gain.gain.setValueAtTime(0.3, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now); osc.stop(now + 0.25);
       }
     }
 
@@ -909,158 +901,178 @@
       }
     }
 
-
-    // Password Gate Verification Logic
-    function verifyPasscode() {
-      const input = document.getElementById('passcode-input');
-      const gateCard = document.getElementById('gate-card');
-      const gateAlert = document.getElementById('gate-alert');
-      const val = input.value.trim();
-
-      if (val === AUTH_PASSCODE) {
-        // Access Granted
-        playSFX('unlock');
-        localStorage.setItem('gh_arcade_authenticated', 'true');
-        
-        // UI Green Glow
-        gateCard.classList.remove('animate-glitch');
-        gateAlert.className = "font-mono text-xs rounded-lg p-3 text-center border bg-ghGreen/20 text-ghGreenBright border-ghGreen/40 block";
-        gateAlert.innerHTML = '<i class="fa-solid fa-circle-check mr-2"></i>ACCESS GRANTED. DEPLOYING DASHBOARD...';
-
-        document.getElementById('gate-status-led').className = 'w-3 h-3 rounded-full bg-ghGreenBright animate-ping';
-        document.getElementById('gate-status-text').innerText = 'GRANTED // UNLOCKED';
-
-        setTimeout(() => {
-          document.getElementById('passcode-gate').classList.add('opacity-0', 'pointer-events-none');
-          document.getElementById('main-portal').classList.remove('hidden');
-          generateHeatmap();
-        }, 800);
-
-      } else {
-        // Access Denied Glitch Effect
-        playSFX('error');
-        gateCard.classList.remove('animate-glitch');
-        void gateCard.offsetWidth; // Trigger reflow
-        gateCard.classList.add('animate-glitch');
-
-        gateAlert.className = "font-mono text-xs rounded-lg p-3 text-center border bg-red-950/80 text-red-400 border-red-800 block";
-        gateAlert.innerHTML = '<i class="fa-solid fa-triangle-exclamation mr-2"></i>ACCESS DENIED: INVALID PASSCODE';
-        
-        input.value = '';
-        input.focus();
-      }
-    }
-
-    function autoFillPasscode() {
-      document.getElementById('passcode-input').value = AUTH_PASSCODE;
+    function selectFriend(name) {
       playSFX('click');
-      verifyPasscode();
+      document.getElementById('username-input').value = name;
+      document.getElementById('password-input').focus();
+
+      document.querySelectorAll('.friend-pill').forEach(pill => {
+        pill.classList.remove('ring-2', 'ring-cyberCyan');
+      });
+      const selectedPill = document.getElementById(`friend-btn-${name}`);
+      if (selectedPill) selectedPill.classList.add('ring-2', 'ring-cyberCyan');
     }
 
-    function togglePasswordVisibility() {
-      const input = document.getElementById('passcode-input');
-      const icon = document.getElementById('eye-icon');
-      if (input.type === 'password') {
-        input.type = 'text';
+    function togglePasswordView() {
+      const pInput = document.getElementById('password-input');
+      const icon = document.getElementById('login-eye-icon');
+      if (pInput.type === 'password') {
+        pInput.type = 'text';
         icon.className = 'fa-solid fa-eye-slash text-sm';
       } else {
-        input.type = 'password';
+        pInput.type = 'password';
         icon.className = 'fa-solid fa-eye text-sm';
       }
     }
 
-    function lockPortal() {
-      localStorage.removeItem('gh_arcade_authenticated');
+    function attemptLogin() {
+      const uInput = document.getElementById('username-input').value.trim();
+      const pInput = document.getElementById('password-input').value.trim();
+      const alertBox = document.getElementById('login-alert');
+      const card = document.getElementById('login-card');
+
+      // Check match
+      const matchedName = Object.keys(SUPERSTARS_USERS).find(
+        k => k.toLowerCase() === uInput.toLowerCase()
+      );
+
+      if (matchedName && SUPERSTARS_USERS[matchedName].pass === pInput) {
+        playSFX('score');
+        activeUser = matchedName;
+        localStorage.setItem('superstars_active_user', activeUser);
+
+        alertBox.className = "font-mono text-xs rounded-xl p-3 text-center border bg-ghGreen/20 text-ghGreenBright border-ghGreen/40 block";
+        alertBox.innerHTML = `<i class="fa-solid fa-circle-check mr-2"></i>WELCOME BACK ${activeUser.toUpperCase()}! OPENING VAULT...`;
+
+        setTimeout(() => {
+          document.getElementById('login-screen').classList.add('hidden');
+          document.getElementById('main-portal').classList.remove('hidden');
+          setupUserDashboard();
+        }, 600);
+
+      } else {
+        playSFX('error');
+        card.classList.remove('animate-glitch');
+        void card.offsetWidth;
+        card.classList.add('animate-glitch');
+
+        alertBox.className = "font-mono text-xs rounded-xl p-3 text-center border bg-red-950 text-red-400 border-red-800 block";
+        alertBox.innerHTML = `<i class="fa-solid fa-triangle-exclamation mr-2"></i>INVALID CREDENTIALS. CHECK PASSWORD!`;
+      }
+    }
+
+    function logout() {
       playSFX('click');
+      activeUser = null;
+      localStorage.removeItem('superstars_active_user');
       document.getElementById('main-portal').classList.add('hidden');
-      const gate = document.getElementById('passcode-gate');
-      gate.classList.remove('opacity-0', 'pointer-events-none');
-      document.getElementById('passcode-input').value = '';
-      document.getElementById('gate-alert').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('login-alert').classList.add('hidden');
+      document.getElementById('password-input').value = '';
     }
 
-    // Matrix Rain Effect for Security Screen Background
-    function initMatrixRain() {
-      const canvas = document.getElementById('matrix-canvas');
-      const ctx = canvas.getContext('2d');
+    function setupUserDashboard() {
+      if (!activeUser || !SUPERSTARS_USERS[activeUser]) return;
+      const u = SUPERSTARS_USERS[activeUser];
 
-      function resize() {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-      }
-      resize();
-      window.addEventListener('resize', resize);
+      document.getElementById('user-name-display').innerText = activeUser;
+      
+      const badgeEl = document.getElementById('user-badge-tag');
+      badgeEl.innerText = u.role;
+      badgeEl.className = `font-mono text-xs px-3 py-1 rounded-full border font-bold uppercase ${u.badgeColor}`;
 
-      const chars = '01041012GITHUBARCADE';
-      const fontSize = 14;
-      const columns = Math.floor(canvas.width / fontSize);
-      const drops = Array(columns).fill(1);
+      document.getElementById('user-role-desc').innerText = u.desc;
 
-      function draw() {
-        ctx.fillStyle = 'rgba(13, 17, 23, 0.08)';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      const avatarBox = document.getElementById('user-avatar-box');
+      avatarBox.className = `w-20 h-20 rounded-2xl flex items-center justify-center text-3xl shadow-xl border ${u.avatarBg}`;
+      document.getElementById('user-avatar-icon').className = `fa-solid ${u.icon}`;
 
-        ctx.fillStyle = '#2ea44f';
-        ctx.font = `${fontSize}px JetBrains Mono`;
-
-        for (let i = 0; i < drops.length; i++) {
-          const text = chars.charAt(Math.floor(Math.random() * chars.length));
-          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-            drops[i] = 0;
-          }
-          drops[i]++;
-        }
-      }
-      setInterval(draw, 33);
+      updateUserStatsUI();
     }
 
+    function updateUserStatsUI() {
+      if (!activeUser) return;
+      const userScores = vaultScores[activeUser] || {};
+      
+      let totalStars = 0;
+      let maxScore = 0;
 
-    // GitHub Commit Activity Heatmap Visualizer
-    function generateHeatmap() {
-      const grid = document.getElementById('heatmap-grid');
-      if (!grid || grid.children.length > 0) return;
+      for (const [game, score] of Object.entries(userScores)) {
+        totalStars += score;
+        if (score > maxScore) maxScore = score;
 
-      const bgColors = ['bg-[#161b22]', 'bg-[#0e4429]', 'bg-[#006d32]', 'bg-[#26a641]', 'bg-[#39d353]'];
-
-      // Generate 28 columns x 7 rows
-      for (let c = 0; c < 28; c++) {
-        for (let r = 0; r < 7; r++) {
-          const cell = document.createElement('div');
-          const level = Math.random() > 0.3 ? Math.floor(Math.random() * 5) : 0;
-          cell.className = `w-3 h-3 rounded-sm ${bgColors[level]} heatmap-cell cursor-pointer`;
-          
-          const commitCount = level * 3 + Math.floor(Math.random() * 3);
-          cell.title = `${commitCount} commits on Day ${c*7 + r}`;
-
-          // Interactive: Clicking a cell increments commit stats
-          cell.onclick = () => {
-            playSFX('score');
-            cell.className = `w-3 h-3 rounded-sm bg-[#39d353] heatmap-cell shadow-sm shadow-ghGreenBright`;
-            const stars = document.getElementById('stat-total-stars');
-            if (stars) stars.innerText = (parseInt(stars.innerText.replace(',', '')) + 1).toLocaleString();
-          };
-
-          grid.appendChild(cell);
-        }
+        const bestEl = document.getElementById(`best-${game}`);
+        if (bestEl) bestEl.innerText = score;
       }
+
+      document.getElementById('user-total-stars').innerText = totalStars.toLocaleString();
+      document.getElementById('user-total-high').innerText = maxScore.toLocaleString();
+
+      updateMiniLeaderboard();
     }
 
+    function updateMiniLeaderboard() {
+      const container = document.getElementById('mini-leaderboard');
+      if (!container) return;
+      container.innerHTML = '';
 
-    // Search and Category Filter
+      // Calculate total stars for each friend
+      const totals = Object.keys(SUPERSTARS_USERS).map(name => {
+        const uScores = vaultScores[name] || {};
+        const sum = Object.values(uScores).reduce((a, b) => a + b, 0);
+        return { name, sum, info: SUPERSTARS_USERS[name] };
+      }).sort((a, b) => b.sum - a.sum);
+
+      totals.forEach((item, idx) => {
+        container.innerHTML += `
+          <div class="flex items-center justify-between bg-ghDark px-3 py-1.5 rounded-lg border border-ghBorder/60">
+            <span class="flex items-center gap-2 text-white">
+              <span class="text-gray-500 font-bold">#${idx + 1}</span>
+              <i class="fa-solid ${item.info.icon} text-xs"></i>
+              <strong>${item.name}</strong>
+            </span>
+            <span class="text-starGold font-bold">${item.sum} ★</span>
+          </div>`;
+      });
+    }
+
+    function updateLeaderboardUI() {
+      updateUserStatsUI();
+      const fullList = document.getElementById('full-leaderboard-list');
+      if (!fullList) return;
+      fullList.innerHTML = '';
+
+      Object.keys(SUPERSTARS_USERS).forEach(name => {
+        const uScores = vaultScores[name] || {};
+        const total = Object.values(uScores).reduce((a,b) => a+b, 0);
+        const u = SUPERSTARS_USERS[name];
+
+        fullList.innerHTML += `
+          <div class="bg-ghDark p-3.5 rounded-2xl border border-ghBorder flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center text-lg ${u.avatarBg}">
+                <i class="fa-solid ${u.icon}"></i>
+              </div>
+              <div>
+                <div class="font-cyber font-bold text-sm text-white">${name}</div>
+                <span class="text-[10px] ${u.badgeColor} px-2 py-0.2 rounded-full border">${u.role}</span>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-starGold font-bold text-sm">${total} STARS</div>
+              <div class="text-gray-500 text-[10px]">Vault Rank</div>
+            </div>
+          </div>`;
+      });
+    }
+
     function filterGames() {
-      const q = document.getElementById('game-search-input').value.toLowerCase();
-      const cards = document.querySelectorAll('.game-card');
-
-      cards.forEach(card => {
-        const title = card.querySelector('h3').innerText.toLowerCase();
+      const q = document.getElementById('game-search').value.toLowerCase();
+      document.querySelectorAll('.game-card').forEach(card => {
+        const name = card.querySelector('h3').innerText.toLowerCase();
         const desc = card.querySelector('p').innerText.toLowerCase();
-        if (title.includes(q) || desc.includes(q)) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
+        if (name.includes(q) || desc.includes(q)) card.classList.remove('hidden');
+        else card.classList.add('hidden');
       });
     }
 
@@ -1068,36 +1080,28 @@
       playSFX('click');
       document.querySelectorAll('.cat-btn').forEach(btn => {
         if (btn.getAttribute('data-cat') === cat) {
-          btn.className = "cat-btn active bg-ghGreen text-white px-3.5 py-1.5 rounded-lg font-bold transition-all";
+          btn.className = "cat-btn active bg-cyberCyan text-ghDark font-bold px-4 py-2 rounded-xl transition-all";
         } else {
-          btn.className = "cat-btn bg-ghDark text-gray-400 hover:text-white px-3.5 py-1.5 rounded-lg transition-all border border-transparent hover:border-ghBorder";
+          btn.className = "cat-btn bg-ghDark text-gray-400 hover:text-white border border-ghBorder px-4 py-2 rounded-xl transition-all";
         }
       });
 
-      const cards = document.querySelectorAll('.game-card');
-      cards.forEach(card => {
+      document.querySelectorAll('.game-card').forEach(card => {
         const cats = card.getAttribute('data-cat');
-        if (cat === 'ALL' || cats.includes(cat)) {
-          card.classList.remove('hidden');
-        } else {
-          card.classList.add('hidden');
-        }
+        if (cat === 'ALL' || cats.includes(cat)) card.classList.remove('hidden');
+        else card.classList.add('hidden');
       });
     }
 
+    // Modal Triggers
+    function openLeaderboardModal() { playSFX('click'); updateLeaderboardUI(); document.getElementById('leaderboard-modal').classList.remove('hidden'); }
+    function closeLeaderboardModal() { document.getElementById('leaderboard-modal').classList.add('hidden'); }
+    function openDeployModal() { playSFX('click'); document.getElementById('deploy-modal').classList.remove('hidden'); }
+    function closeDeployModal() { document.getElementById('deploy-modal').classList.add('hidden'); }
+    function openTerminalModal() { playSFX('click'); document.getElementById('terminal-modal').classList.remove('hidden'); document.getElementById('terminal-input').focus(); }
+    function closeTerminalModal() { document.getElementById('terminal-modal').classList.add('hidden'); }
 
-    // Terminal CLI Drawer Engine
-    function openTerminalModal() {
-      playSFX('click');
-      document.getElementById('terminal-modal').classList.remove('hidden');
-      document.getElementById('terminal-input').focus();
-    }
-
-    function closeTerminalModal() {
-      document.getElementById('terminal-modal').classList.add('hidden');
-    }
-
-    function processTerminalCommand() {
+    function processCliCommand() {
       const input = document.getElementById('terminal-input');
       const output = document.getElementById('terminal-output');
       const cmd = input.value.trim().toLowerCase();
@@ -1105,47 +1109,34 @@
 
       const p = document.createElement('p');
       p.className = 'text-white';
-      p.innerText = `guest@github-arcade:~$ ${cmd}`;
+      p.innerText = `superstars@vault:~$ ${cmd}`;
       output.appendChild(p);
 
       const res = document.createElement('p');
       res.className = 'text-ghGreenBright';
 
       if (cmd === 'help') {
-        res.innerHTML = `Available Commands:<br>
-        - <span class="text-yellow-400">list</span>: List all 6 repository games<br>
-        - <span class="text-yellow-400">play &lt;id&gt;</span>: Play game (e.g. play snake)<br>
-        - <span class="text-yellow-400">score</span>: Show high score record<br>
-        - <span class="text-yellow-400">clear</span>: Clear terminal screen<br>
-        - <span class="text-yellow-400">lock</span>: Lock portal immediately<br>
-        - <span class="text-yellow-400">passcode</span>: Display current auth passcode`;
-      } else if (cmd === 'list') {
-        res.innerText = '1. snake  2. invaders  3. flap  4. breakout  5. runner  6. grid';
+        res.innerHTML = `Vault CLI Commands:<br>
+        - <span class="text-starGold">friends</span>: List all Superstar Friends<br>
+        - <span class="text-starGold">games</span>: List 8 vault games<br>
+        - <span class="text-starGold">play &lt;id&gt;</span>: Launch game (e.g. play cosmic)<br>
+        - <span class="text-starGold">clear</span>: Clear terminal screen`;
+      } else if (cmd === 'friends') {
+        res.innerText = 'Superstars: Chase (Cyber Warrior), Jade (Shadow Hunter), Ava (Cafe Queen), Rebecca (The Leader)';
+      } else if (cmd === 'games') {
+        res.innerText = '1. cosmic 2. racer 3. flappy 4. breakout 5. snake 6. stacker 7. memory 8. runner';
       } else if (cmd.startsWith('play ')) {
-        const gName = cmd.replace('play ', '').trim();
-        if (['snake', 'invaders', 'flap', 'breakout', 'runner', 'grid'].includes(gName)) {
-          closeTerminalModal();
-          launchGame(gName);
-          input.value = '';
-          return;
-        } else {
-          res.innerText = `Unknown game '${gName}'. Type 'list' for available games.`;
-        }
-      } else if (cmd === 'score') {
-        res.innerText = JSON.stringify(highScores);
+        const id = cmd.replace('play ', '').trim();
+        closeTerminalModal();
+        launchGame(id);
+        input.value = '';
+        return;
       } else if (cmd === 'clear') {
         output.innerHTML = '';
         input.value = '';
         return;
-      } else if (cmd === 'lock') {
-        closeTerminalModal();
-        lockPortal();
-        input.value = '';
-        return;
-      } else if (cmd === 'passcode') {
-        res.innerText = `Current Passcode Key: ${AUTH_PASSCODE}`;
       } else {
-        res.innerText = `Command not recognized: '${cmd}'. Type 'help' for instructions.`;
+        res.innerText = `Command not recognized '${cmd}'. Type 'help'`;
       }
 
       output.appendChild(res);
@@ -1153,291 +1144,186 @@
       input.value = '';
     }
 
-    // Modal Helpers
-    function openDeployModal() { playSFX('click'); document.getElementById('deploy-modal').classList.remove('hidden'); }
-    function closeDeployModal() { document.getElementById('deploy-modal').classList.add('hidden'); }
-    function openHighScoresModal() {
-      playSFX('click');
-      const list = document.getElementById('leaderboard-list');
-      list.innerHTML = '';
-      for (const [k, v] of Object.entries(highScores)) {
-        list.innerHTML += `
-          <div class="flex items-center justify-between bg-ghDark p-3 rounded-lg border border-ghBorder">
-            <span class="text-white capitalize"><i class="fa-solid fa-gamepad mr-2 text-cyberCyan"></i>${k}</span>
-            <span class="text-ghGreenBright font-bold">${v} PTS</span>
-          </div>`;
-      }
-      document.getElementById('highscores-modal').classList.remove('hidden');
-    }
-    function closeHighScoresModal() { document.getElementById('highscores-modal').classList.add('hidden'); }
-    function resetHighScores() {
-      highScores = { snake: 0, invaders: 0, flap: 0, breakout: 0, runner: 0, grid: 0 };
-      saveScores();
-      closeHighScoresModal();
+    // Touch Dispatcher
+    function sendTouchInput(act) {
+      window.dispatchEvent(new CustomEvent('arcade-control', { detail: act }));
     }
 
 
-    // Canvas Game Launcher Dispatcher
+    // =========================================================================
+    // GAME ENGINE LAUNCHER & ROUTER
+    // =========================================================================
     function launchGame(id) {
       playSFX('click');
-      currentGameId = id;
+      activeGameId = id;
+
       const modal = document.getElementById('game-modal');
       const titleEl = document.getElementById('game-title');
-      const highEl = document.getElementById('modal-high-score');
-      const liveScoreEl = document.getElementById('live-score');
+      const playerBadge = document.getElementById('game-player-badge');
+      const bestEl = document.getElementById('game-best-score');
       
       document.getElementById('game-overlay').classList.add('hidden');
-      liveScoreEl.innerText = '0';
-      highEl.innerText = highScores[id] || 0;
+      document.getElementById('game-live-score').innerText = '0';
+      
+      const userBest = (vaultScores[activeUser] && vaultScores[activeUser][id]) || 0;
+      bestEl.innerText = userBest;
+
+      playerBadge.innerText = activeUser ? `${activeUser.toUpperCase()}` : 'GUEST';
+      
+      const names = {
+        cosmic: '1. COSMIC SHOOTER',
+        racer: '2. CYBER RACER',
+        flappy: '3. FLAPPY SUPERSTAR',
+        breakout: '4. NEON BREAKOUT',
+        snake: '5. CYBER SNAKE',
+        stacker: '6. TOWER STACKER',
+        memory: '7. MEMORY MATCH',
+        runner: '8. NEON RUNNER'
+      };
+      titleEl.innerText = names[id] || 'SUPERSTARS GAME';
+
       modal.classList.remove('hidden');
 
-      // Title mapped
-      const names = {
-        snake: '1. GIT-SNAKE',
-        invaders: '2. OCTO-INVADERS',
-        flap: '3. GIT-FLAP',
-        breakout: '4. GIT-BREAKOUT',
-        runner: '5. CYBER-RUNNER',
-        grid: '6. HACK-THE-GRID'
-      };
-      titleEl.innerText = names[id];
+      if (gameLoopFrame) cancelAnimationFrame(gameLoopFrame);
 
-      // Stop previous game loop
-      if (gameAnimationLoop) cancelAnimationFrame(gameAnimationLoop);
-
-      // Start specific canvas engine
-      if (id === 'snake') startGitSnake();
-      else if (id === 'invaders') startOctoInvaders();
-      else if (id === 'flap') startGitFlap();
-      else if (id === 'breakout') startGitBreakout();
-      else if (id === 'runner') startCyberRunner();
-      else if (id === 'grid') startHackTheGrid();
+      // Reset Container Visibility
+      const canvas = document.getElementById('game-canvas');
+      const htmlBox = document.getElementById('html-game-container');
+      
+      if (id === 'memory') {
+        canvas.classList.add('hidden');
+        htmlBox.classList.remove('hidden');
+        startMemoryMatch();
+      } else {
+        canvas.classList.remove('hidden');
+        htmlBox.classList.add('hidden');
+        
+        if (id === 'cosmic') startCosmicShooter();
+        else if (id === 'racer') startCyberRacer();
+        else if (id === 'flappy') startFlappySuperstar();
+        else if (id === 'breakout') startNeonBreakout();
+        else if (id === 'snake') startCyberSnake();
+        else if (id === 'stacker') startTowerStacker();
+        else if (id === 'runner') startNeonRunner();
+      }
     }
 
     function closeGameModal() {
-      if (gameAnimationLoop) cancelAnimationFrame(gameAnimationLoop);
+      if (gameLoopFrame) cancelAnimationFrame(gameLoopFrame);
       document.getElementById('game-modal').classList.add('hidden');
     }
 
-    function restartCurrentGame() {
-      launchGame(currentGameId);
+    function restartGame() {
+      launchGame(activeGameId);
     }
 
-    function triggerGameOver(finalScore) {
+    function triggerGameOver(score) {
       playSFX('explosion');
-      if (finalScore > highScores[currentGameId]) {
-        highScores[currentGameId] = finalScore;
-        saveScores();
+      if (activeUser) {
+        if (!vaultScores[activeUser]) vaultScores[activeUser] = {};
+        if (score > (vaultScores[activeUser][activeGameId] || 0)) {
+          vaultScores[activeUser][activeGameId] = score;
+          saveScores();
+        }
       }
-      document.getElementById('modal-high-score').innerText = highScores[currentGameId];
-      document.getElementById('overlay-desc').innerText = `Final Repository Score: ${finalScore} PTS`;
+      document.getElementById('game-best-score').innerText = (vaultScores[activeUser] && vaultScores[activeUser][activeGameId]) || score;
+      document.getElementById('overlay-desc').innerText = `Final Score: ${score} Stars`;
       document.getElementById('game-overlay').classList.remove('hidden');
     }
 
-    function updateLiveScore(s) {
-      document.getElementById('live-score').innerText = s;
-    }
-
-
-    // Touch Controls Event Dispatcher
-    function handleTouchInput(action) {
-      window.dispatchEvent(new CustomEvent('arcade-control', { detail: action }));
+    function updateScore(s) {
+      document.getElementById('game-live-score').innerText = s;
     }
 
 
     // =========================================================================
-    // GAME 1: GIT-SNAKE
+    // GAME 1: COSMIC SHOOTER
     // =========================================================================
-    function startGitSnake() {
+    function startCosmicShooter() {
       const canvas = document.getElementById('game-canvas');
       const ctx = canvas.getContext('2d');
-      
-      const gridSize = 20;
-      const cols = canvas.width / gridSize;
-      const rows = canvas.height / gridSize;
 
-      let snake = [{x: 10, y: 10}, {x: 9, y: 10}, {x: 8, y: 10}];
-      let dir = {x: 1, y: 0};
-      let food = {x: 15, y: 10};
+      let ship = { x: canvas.width / 2 - 15, y: canvas.height - 40, w: 30, h: 25, speed: 6 };
+      let bullets = [];
+      let enemies = [];
+      let stars = [];
       let score = 0;
-      let moveInterval = 100;
-      let lastMove = 0;
+      let left = false, right = false, up = false, down = false;
 
-      function spawnFood() {
-        food = {
-          x: Math.floor(Math.random() * cols),
-          y: Math.floor(Math.random() * rows)
-        };
+      function spawnEnemy() {
+        enemies.push({
+          x: Math.random() * (canvas.width - 25),
+          y: -30,
+          w: 25,
+          h: 20,
+          speed: 1.5 + Math.random() * 2,
+          color: Math.random() > 0.5 ? '#ff007f' : '#a855f7'
+        });
       }
 
       function handleKey(e) {
-        if (e.key === 'ArrowUp' && dir.y !== 1) dir = {x: 0, y: -1};
-        else if (e.key === 'ArrowDown' && dir.y !== -1) dir = {x: 0, y: 1};
-        else if (e.key === 'ArrowLeft' && dir.x !== 1) dir = {x: -1, y: 0};
-        else if (e.key === 'ArrowRight' && dir.x !== -1) dir = {x: 1, y: 0};
+        if (e.key === 'ArrowLeft' || e.key === 'a') left = e.type === 'keydown';
+        if (e.key === 'ArrowRight' || e.key === 'd') right = e.type === 'keydown';
+        if (e.key === 'ArrowUp' || e.key === 'w') up = e.type === 'keydown';
+        if (e.key === 'ArrowDown' || e.key === 's') down = e.type === 'keydown';
+        if (e.type === 'keydown' && (e.key === ' ' || e.key === 'f')) shoot();
       }
 
       function handleTouch(e) {
         const act = e.detail;
-        if (act === 'UP' && dir.y !== 1) dir = {x: 0, y: -1};
-        else if (act === 'DOWN' && dir.y !== -1) dir = {x: 0, y: 1};
-        else if (act === 'LEFT' && dir.x !== 1) dir = {x: -1, y: 0};
-        else if (act === 'RIGHT' && dir.x !== -1) dir = {x: 1, y: 0};
-      }
-
-      window.addEventListener('keydown', handleKey);
-      window.addEventListener('arcade-control', handleTouch);
-
-      function loop(time) {
-        gameAnimationLoop = requestAnimationFrame(loop);
-
-        if (time - lastMove > moveInterval) {
-          lastMove = time;
-
-          // Head move
-          const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
-
-          // Collisions
-          if (head.x < 0 || head.x >= cols || head.y < 0 || head.y >= rows) {
-            window.removeEventListener('keydown', handleKey);
-            window.removeEventListener('arcade-control', handleTouch);
-            triggerGameOver(score);
-            return;
-          }
-          for (let s of snake) {
-            if (s.x === head.x && s.y === head.y) {
-              window.removeEventListener('keydown', handleKey);
-              window.removeEventListener('arcade-control', handleTouch);
-              triggerGameOver(score);
-              return;
-            }
-          }
-
-          snake.unshift(head);
-
-          // Eat commit food
-          if (head.x === food.x && head.y === food.y) {
-            score += 10;
-            updateLiveScore(score);
-            playSFX('score');
-            spawnFood();
-            if (moveInterval > 50) moveInterval -= 2;
-          } else {
-            snake.pop();
-          }
-
-          // Render
-          ctx.fillStyle = '#0d1117';
-          ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-          // Draw grid lines
-          ctx.strokeStyle = '#161b22';
-          for (let i = 0; i < canvas.width; i += gridSize) {
-            ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, canvas.height); ctx.stroke();
-          }
-          for (let j = 0; j < canvas.height; j += gridSize) {
-            ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(canvas.width, j); ctx.stroke();
-          }
-
-          // Draw Snake
-          snake.forEach((part, idx) => {
-            ctx.fillStyle = idx === 0 ? '#3fb950' : '#2ea44f';
-            ctx.fillRect(part.x * gridSize + 1, part.y * gridSize + 1, gridSize - 2, gridSize - 2);
-          });
-
-          // Draw Commit Star Food
-          ctx.fillStyle = '#00f0ff';
-          ctx.beginPath();
-          ctx.arc((food.x + 0.5) * gridSize, (food.y + 0.5) * gridSize, gridSize/2 - 2, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      spawnFood();
-      gameAnimationLoop = requestAnimationFrame(loop);
-    }
-
-
-    // =========================================================================
-    // GAME 2: OCTO-INVADERS
-    // =========================================================================
-    function startOctoInvaders() {
-      const canvas = document.getElementById('game-canvas');
-      const ctx = canvas.getContext('2d');
-
-      let player = { x: canvas.width / 2 - 20, y: canvas.height - 30, w: 40, h: 20, speed: 5 };
-      let bullets = [];
-      let enemies = [];
-      let score = 0;
-      let leftPressed = false;
-      let rightPressed = false;
-
-      // Spawn Bug Enemies
-      for (let r = 0; r < 3; r++) {
-        for (let c = 0; c < 8; c++) {
-          enemies.push({ x: 60 + c * 60, y: 40 + r * 40, w: 30, h: 20, alive: true });
-        }
-      }
-
-      let enemyDir = 1;
-      let enemyStepDown = false;
-
-      function handleKeyDown(e) {
-        if (e.key === 'ArrowLeft' || e.key === 'a') leftPressed = true;
-        if (e.key === 'ArrowRight' || e.key === 'd') rightPressed = true;
-        if (e.key === ' ' || e.key === 'ArrowUp') shoot();
-      }
-
-      function handleKeyUp(e) {
-        if (e.key === 'ArrowLeft' || e.key === 'a') leftPressed = false;
-        if (e.key === 'ArrowRight' || e.key === 'd') rightPressed = false;
-      }
-
-      function handleTouch(e) {
-        const act = e.detail;
-        if (act === 'LEFT') player.x = Math.max(0, player.x - 25);
-        if (act === 'RIGHT') player.x = Math.min(canvas.width - player.w, player.x + 25);
-        if (act === 'ACTION_A' || act === 'UP') shoot();
+        if (act === 'LEFT') ship.x = Math.max(0, ship.x - 20);
+        if (act === 'RIGHT') ship.x = Math.min(canvas.width - ship.w, ship.x + 20);
+        if (act === 'ACTION_A') shoot();
       }
 
       function shoot() {
-        bullets.push({ x: player.x + player.w / 2 - 2, y: player.y, w: 4, h: 10, speed: 7 });
+        bullets.push({ x: ship.x + ship.w / 2 - 2, y: ship.y, w: 4, h: 10, speed: 8 });
         playSFX('laser');
       }
 
-      window.addEventListener('keydown', handleKeyDown);
-      window.addEventListener('keyup', handleKeyUp);
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('keyup', handleKey);
       window.addEventListener('arcade-control', handleTouch);
 
       function loop() {
-        gameAnimationLoop = requestAnimationFrame(loop);
+        gameLoopFrame = requestAnimationFrame(loop);
 
-        ctx.fillStyle = '#0d1117';
+        ctx.fillStyle = '#0b0f17';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Move Player
-        if (leftPressed && player.x > 0) player.x -= player.speed;
-        if (rightPressed && player.x < canvas.width - player.w) player.x += player.speed;
+        // Move ship
+        if (left && ship.x > 0) ship.x -= ship.speed;
+        if (right && ship.x < canvas.width - ship.w) ship.x += ship.speed;
+        if (up && ship.y > 0) ship.y -= ship.speed;
+        if (down && ship.y < canvas.height - ship.h) ship.y += ship.speed;
 
-        // Draw Player Octocat Ship
+        // Draw Player Ship
         ctx.fillStyle = '#00f0ff';
-        ctx.fillRect(player.x, player.y, player.w, player.h);
-        ctx.fillRect(player.x + 15, player.y - 8, 10, 8);
+        ctx.beginPath();
+        ctx.moveTo(ship.x + ship.w/2, ship.y);
+        ctx.lineTo(ship.x + ship.w, ship.y + ship.h);
+        ctx.lineTo(ship.x, ship.y + ship.h);
+        ctx.closePath();
+        ctx.fill();
 
-        // Move & Draw Bullets
+        // Spawn Enemies
+        if (Math.random() < 0.04) spawnEnemy();
+
+        // Update Bullets
         ctx.fillStyle = '#3fb950';
         for (let i = bullets.length - 1; i >= 0; i--) {
           const b = bullets[i];
           b.y -= b.speed;
           ctx.fillRect(b.x, b.y, b.w, b.h);
 
-          // Bullet - Enemy Collisions
-          for (let e of enemies) {
-            if (e.alive && b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h) {
-              e.alive = false;
+          // Bullet enemy collision
+          for (let j = enemies.length - 1; j >= 0; j--) {
+            const e = enemies[j];
+            if (b.x > e.x && b.x < e.x + e.w && b.y > e.y && b.y < e.y + e.h) {
+              enemies.splice(j, 1);
               bullets.splice(i, 1);
               score += 20;
-              updateLiveScore(score);
+              updateScore(score);
               playSFX('score');
               break;
             }
@@ -1446,66 +1332,167 @@
           if (b && b.y < 0) bullets.splice(i, 1);
         }
 
-        // Move & Draw Enemies
-        let hitEdge = false;
-        let aliveCount = 0;
+        // Update Enemies
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          const e = enemies[i];
+          e.y += e.speed;
 
-        for (let e of enemies) {
-          if (!e.alive) continue;
-          aliveCount++;
-
-          e.x += enemyDir * 1.5;
-          if (e.x > canvas.width - e.w || e.x < 0) hitEdge = true;
-
-          ctx.fillStyle = '#ff007f';
+          ctx.fillStyle = e.color;
           ctx.fillRect(e.x, e.y, e.w, e.h);
-          ctx.fillStyle = '#ffffff';
-          ctx.font = '10px JetBrains Mono';
-          ctx.fillText('BUG', e.x + 4, e.y + 14);
 
-          // Enemy reaches bottom
-          if (e.y + e.h >= player.y) {
-            window.removeEventListener('keydown', handleKeyDown);
-            window.removeEventListener('keyup', handleKeyUp);
-            window.removeEventListener('arcade-control', handleTouch);
+          // Ship collision
+          if (
+            ship.x < e.x + e.w &&
+            ship.x + ship.w > e.x &&
+            ship.y < e.y + e.h &&
+            ship.y + ship.h > e.y
+          ) {
+            cleanup();
             triggerGameOver(score);
             return;
           }
-        }
 
-        if (hitEdge) {
-          enemyDir *= -1;
-          for (let e of enemies) e.y += 15;
-        }
-
-        // Win state check
-        if (aliveCount === 0) {
-          for (let r = 0; r < 3; r++) {
-            for (let c = 0; c < 8; c++) {
-              enemies.push({ x: 60 + c * 60, y: 40 + r * 40, w: 30, h: 20, alive: true });
-            }
-          }
+          if (e.y > canvas.height) enemies.splice(i, 1);
         }
       }
 
-      gameAnimationLoop = requestAnimationFrame(loop);
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('keyup', handleKey);
+        window.removeEventListener('arcade-control', handleTouch);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
     }
 
 
     // =========================================================================
-    // GAME 3: GIT-FLAP / GIT-JUMP
+    // GAME 2: CYBER RACER
     // =========================================================================
-    function startGitFlap() {
+    function startCyberRacer() {
       const canvas = document.getElementById('game-canvas');
       const ctx = canvas.getContext('2d');
 
-      let octo = { x: 80, y: 200, radius: 12, velocity: 0, gravity: 0.45, jump: -7.5 };
+      const lanes = [120, 240, 360, 480];
+      let currentLane = 1; // 0 to 3
+      let playerY = canvas.height - 60;
+      let obstacles = [];
+      let stars = [];
+      let score = 0;
+      let speed = 5;
+
+      function handleKey(e) {
+        if (e.type === 'keydown') {
+          if ((e.key === 'ArrowLeft' || e.key === 'a') && currentLane > 0) currentLane--;
+          if ((e.key === 'ArrowRight' || e.key === 'd') && currentLane < 3) currentLane++;
+        }
+      }
+
+      function handleTouch(e) {
+        const act = e.detail;
+        if (act === 'LEFT' && currentLane > 0) currentLane--;
+        if (act === 'RIGHT' && currentLane < 3) currentLane++;
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('arcade-control', handleTouch);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+
+        ctx.fillStyle = '#0b0f17';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Lanes
+        ctx.strokeStyle = '#273142';
+        ctx.setLineDash([20, 20]);
+        for (let i = 1; i < 4; i++) {
+          ctx.beginPath();
+          ctx.moveTo(i * 150, 0);
+          ctx.lineTo(i * 150, canvas.height);
+          ctx.stroke();
+        }
+        ctx.setLineDash([]);
+
+        // Player Car
+        const playerX = lanes[currentLane] - 20;
+        ctx.fillStyle = '#ff007f';
+        ctx.fillRect(playerX, playerY, 40, 50);
+        ctx.fillStyle = '#00f0ff';
+        ctx.fillRect(playerX + 5, playerY + 10, 30, 15);
+
+        // Spawn Traffic & Stars
+        if (Math.random() < 0.03) {
+          const l = Math.floor(Math.random() * 4);
+          obstacles.push({ lane: l, y: -60, color: '#f59e0b' });
+        }
+        if (Math.random() < 0.02) {
+          const l = Math.floor(Math.random() * 4);
+          stars.push({ lane: l, y: -30 });
+        }
+
+        // Draw & Move Stars
+        for (let i = stars.length - 1; i >= 0; i--) {
+          const s = stars[i];
+          s.y += speed;
+
+          ctx.fillStyle = '#f59e0b';
+          ctx.beginPath();
+          ctx.arc(lanes[s.lane], s.y, 10, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Catch star
+          if (s.lane === currentLane && Math.abs(s.y - playerY) < 30) {
+            stars.splice(i, 1);
+            score += 50;
+            updateScore(score);
+            playSFX('score');
+          } else if (s.y > canvas.height) stars.splice(i, 1);
+        }
+
+        // Draw & Move Traffic
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+          const o = obstacles[i];
+          o.y += speed;
+
+          ctx.fillStyle = o.color;
+          ctx.fillRect(lanes[o.lane] - 20, o.y, 40, 50);
+
+          // Crash check
+          if (o.lane === currentLane && Math.abs(o.y - playerY) < 45) {
+            window.removeEventListener('keydown', handleKey);
+            window.removeEventListener('arcade-control', handleTouch);
+            triggerGameOver(score);
+            return;
+          }
+
+          if (o.y > canvas.height) {
+            obstacles.splice(i, 1);
+            score += 10;
+            updateScore(score);
+            if (speed < 12) speed += 0.05;
+          }
+        }
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 3: FLAPPY SUPERSTAR
+    // =========================================================================
+    function startFlappySuperstar() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let bird = { x: 80, y: 200, vy: 0, gravity: 0.4, jump: -7 };
       let pipes = [];
       let score = 0;
       let frame = 0;
 
       function flap() {
-        octo.velocity = octo.jump;
+        bird.vy = bird.jump;
         playSFX('jump');
       }
 
@@ -1513,114 +1500,102 @@
         if (e.key === ' ' || e.key === 'ArrowUp') flap();
       }
 
-      function handleTouch() {
-        flap();
-      }
-
       window.addEventListener('keydown', handleKey);
-      window.addEventListener('arcade-control', handleTouch);
+      window.addEventListener('arcade-control', flap);
       canvas.addEventListener('click', flap);
 
       function loop() {
-        gameAnimationLoop = requestAnimationFrame(loop);
+        gameLoopFrame = requestAnimationFrame(loop);
         frame++;
 
-        ctx.fillStyle = '#0d1117';
+        ctx.fillStyle = '#0b0f17';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Physics
-        octo.velocity += octo.gravity;
-        octo.y += octo.velocity;
+        // Bird Physics
+        bird.vy += bird.gravity;
+        bird.y += bird.vy;
 
-        // Ground/Ceiling check
-        if (octo.y + octo.radius > canvas.height || octo.y - octo.radius < 0) {
+        if (bird.y > canvas.height || bird.y < 0) {
           cleanup();
           triggerGameOver(score);
           return;
         }
 
-        // Draw Octocat
+        // Draw Bird
         ctx.fillStyle = '#a855f7';
         ctx.beginPath();
-        ctx.arc(octo.x, octo.y, octo.radius, 0, Math.PI * 2);
+        ctx.arc(bird.x, bird.y, 14, 0, Math.PI * 2);
         ctx.fill();
 
         // Spawn Pipes
-        if (frame % 90 === 0) {
+        if (frame % 85 === 0) {
           const gap = 120;
           const topH = Math.floor(Math.random() * (canvas.height - gap - 60)) + 30;
           pipes.push({ x: canvas.width, top: topH, bottom: canvas.height - topH - gap, passed: false });
         }
 
-        // Draw & Move Pipes
-        ctx.fillStyle = '#2ea44f';
+        // Move & Draw Pipes
+        ctx.fillStyle = '#00f0ff';
         for (let i = pipes.length - 1; i >= 0; i--) {
           const p = pipes[i];
           p.x -= 3;
 
-          // Top Pipe
-          ctx.fillRect(p.x, 0, 40, p.top);
-          // Bottom Pipe
-          ctx.fillRect(p.x, canvas.height - p.bottom, 40, p.bottom);
+          ctx.fillRect(p.x, 0, 45, p.top);
+          ctx.fillRect(p.x, canvas.height - p.bottom, 45, p.bottom);
 
-          // Collision Check
+          // Collision
           if (
-            octo.x + octo.radius > p.x && 
-            octo.x - octo.radius < p.x + 40 &&
-            (octo.y - octo.radius < p.top || octo.y + octo.radius > canvas.height - p.bottom)
+            bird.x + 14 > p.x && bird.x - 14 < p.x + 45 &&
+            (bird.y - 14 < p.top || bird.y + 14 > canvas.height - p.bottom)
           ) {
             cleanup();
             triggerGameOver(score);
             return;
           }
 
-          // Score point
-          if (!p.passed && p.x + 40 < octo.x) {
+          if (!p.passed && p.x + 45 < bird.x) {
             p.passed = true;
             score += 1;
-            updateLiveScore(score);
+            updateScore(score);
             playSFX('score');
           }
 
-          if (p.x < -40) pipes.splice(i, 1);
+          if (p.x < -45) pipes.splice(i, 1);
         }
       }
 
       function cleanup() {
         window.removeEventListener('keydown', handleKey);
-        window.removeEventListener('arcade-control', handleTouch);
+        window.removeEventListener('arcade-control', flap);
         canvas.removeEventListener('click', flap);
       }
 
-      gameAnimationLoop = requestAnimationFrame(loop);
+      gameLoopFrame = requestAnimationFrame(loop);
     }
 
 
     // =========================================================================
-    // GAME 4: GIT-BREAKOUT
+    // GAME 4: NEON BRICK BREAKER
     // =========================================================================
-    function startGitBreakout() {
+    function startNeonBreakout() {
       const canvas = document.getElementById('game-canvas');
       const ctx = canvas.getContext('2d');
 
       let paddle = { x: canvas.width / 2 - 40, y: canvas.height - 20, w: 80, h: 12, speed: 7 };
-      let ball = { x: canvas.width / 2, y: canvas.height - 40, dx: 4, dy: -4, radius: 6 };
+      let ball = { x: canvas.width / 2, y: canvas.height - 40, dx: 4, dy: -4, r: 6 };
       let bricks = [];
       let score = 0;
       let left = false, right = false;
 
-      const rows = 4, cols = 8;
-      const bW = 65, bH = 18, padding = 8, offsetTop = 40, offsetLeft = 10;
-
-      for (let r = 0; r < rows; r++) {
-        for (let c = 0; c < cols; c++) {
-          bricks.push({ x: offsetLeft + c * (bW + padding), y: offsetTop + r * (bH + padding), active: true });
+      for (let r = 0; r < 4; r++) {
+        for (let c = 0; c < 8; c++) {
+          bricks.push({ x: 15 + c * 72, y: 40 + r * 22, w: 64, h: 16, active: true });
         }
       }
 
       function handleKey(e) {
-        if (e.key === 'ArrowLeft') left = (e.type === 'keydown');
-        if (e.key === 'ArrowRight') right = (e.type === 'keydown');
+        if (e.key === 'ArrowLeft') left = e.type === 'keydown';
+        if (e.key === 'ArrowRight') right = e.type === 'keydown';
       }
 
       function handleTouch(e) {
@@ -1634,30 +1609,25 @@
       window.addEventListener('arcade-control', handleTouch);
 
       function loop() {
-        gameAnimationLoop = requestAnimationFrame(loop);
+        gameLoopFrame = requestAnimationFrame(loop);
 
-        ctx.fillStyle = '#0d1117';
+        ctx.fillStyle = '#0b0f17';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Move Paddle
         if (left && paddle.x > 0) paddle.x -= paddle.speed;
         if (right && paddle.x < canvas.width - paddle.w) paddle.x += paddle.speed;
 
-        // Draw Paddle
-        ctx.fillStyle = '#eab308';
+        ctx.fillStyle = '#f59e0b';
         ctx.fillRect(paddle.x, paddle.y, paddle.w, paddle.h);
 
-        // Move Ball
         ball.x += ball.dx;
         ball.y += ball.dy;
 
-        // Bounce Walls
-        if (ball.x + ball.radius > canvas.width || ball.x - ball.radius < 0) ball.dx *= -1;
-        if (ball.y - ball.radius < 0) ball.dy *= -1;
+        if (ball.x + ball.r > canvas.width || ball.x - ball.r < 0) ball.dx *= -1;
+        if (ball.y - ball.r < 0) ball.dy *= -1;
 
-        // Bounce Paddle
         if (
-          ball.y + ball.radius >= paddle.y && 
+          ball.y + ball.r >= paddle.y && 
           ball.x >= paddle.x && 
           ball.x <= paddle.x + paddle.w
         ) {
@@ -1665,8 +1635,7 @@
           playSFX('click');
         }
 
-        // Game Over Bottom
-        if (ball.y + ball.radius > canvas.height) {
+        if (ball.y + ball.r > canvas.height) {
           window.removeEventListener('keydown', handleKey);
           window.removeEventListener('keyup', handleKey);
           window.removeEventListener('arcade-control', handleTouch);
@@ -1674,48 +1643,287 @@
           return;
         }
 
-        // Draw Ball
         ctx.fillStyle = '#00f0ff';
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+        ctx.arc(ball.x, ball.y, ball.r, 0, Math.PI * 2);
         ctx.fill();
 
-        // Draw & Break Bricks
         bricks.forEach(b => {
           if (!b.active) return;
-
-          ctx.fillStyle = '#3fb950';
-          ctx.fillRect(b.x, b.y, bW, bH);
+          ctx.fillStyle = '#10b981';
+          ctx.fillRect(b.x, b.y, b.w, b.h);
 
           if (
-            ball.x > b.x && ball.x < b.x + bW &&
-            ball.y - ball.radius < b.y + bH && ball.y + ball.radius > b.y
+            ball.x > b.x && ball.x < b.x + b.w &&
+            ball.y - ball.r < b.y + b.h && ball.y + ball.r > b.y
           ) {
             b.active = false;
             ball.dy *= -1;
-            score += 15;
-            updateLiveScore(score);
+            score += 25;
+            updateScore(score);
             playSFX('score');
           }
         });
       }
 
-      gameAnimationLoop = requestAnimationFrame(loop);
+      gameLoopFrame = requestAnimationFrame(loop);
     }
 
 
     // =========================================================================
-    // GAME 5: CYBER-RUNNER
+    // GAME 5: CYBER SNAKE
     // =========================================================================
-    function startCyberRunner() {
+    function startCyberSnake() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const g = 20;
+      let snake = [{x: 10, y: 10}, {x: 9, y: 10}];
+      let dir = {x: 1, y: 0};
+      let food = {x: 15, y: 10};
+      let score = 0;
+      let lastMove = 0;
+
+      function handleKey(e) {
+        if (e.key === 'ArrowUp' && dir.y !== 1) dir = {x: 0, y: -1};
+        if (e.key === 'ArrowDown' && dir.y !== -1) dir = {x: 0, y: 1};
+        if (e.key === 'ArrowLeft' && dir.x !== 1) dir = {x: -1, y: 0};
+        if (e.key === 'ArrowRight' && dir.x !== -1) dir = {x: 1, y: 0};
+      }
+
+      function handleTouch(e) {
+        const act = e.detail;
+        if (act === 'UP' && dir.y !== 1) dir = {x: 0, y: -1};
+        if (act === 'DOWN' && dir.y !== -1) dir = {x: 0, y: 1};
+        if (act === 'LEFT' && dir.x !== 1) dir = {x: -1, y: 0};
+        if (act === 'RIGHT' && dir.x !== -1) dir = {x: 1, y: 0};
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('arcade-control', handleTouch);
+
+      function loop(time) {
+        gameLoopFrame = requestAnimationFrame(loop);
+
+        if (time - lastMove > 90) {
+          lastMove = time;
+
+          const head = {x: snake[0].x + dir.x, y: snake[0].y + dir.y};
+
+          if (head.x < 0 || head.x >= canvas.width/g || head.y < 0 || head.y >= canvas.height/g) {
+            cleanup();
+            triggerGameOver(score);
+            return;
+          }
+
+          for (let s of snake) {
+            if (s.x === head.x && s.y === head.y) {
+              cleanup();
+              triggerGameOver(score);
+              return;
+            }
+          }
+
+          snake.unshift(head);
+
+          if (head.x === food.x && head.y === food.y) {
+            score += 10;
+            updateScore(score);
+            playSFX('score');
+            food = {
+              x: Math.floor(Math.random() * (canvas.width/g)),
+              y: Math.floor(Math.random() * (canvas.height/g))
+            };
+          } else {
+            snake.pop();
+          }
+
+          ctx.fillStyle = '#0b0f17';
+          ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+          // Food
+          ctx.fillStyle = '#f59e0b';
+          ctx.fillRect(food.x * g + 2, food.y * g + 2, g - 4, g - 4);
+
+          // Snake
+          snake.forEach((p, idx) => {
+            ctx.fillStyle = idx === 0 ? '#3fb950' : '#10b981';
+            ctx.fillRect(p.x * g + 1, p.y * g + 1, g - 2, g - 2);
+          });
+        }
+      }
+
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('arcade-control', handleTouch);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 6: TOWER STACKER
+    // =========================================================================
+    function startTowerStacker() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let stack = [{ x: 200, w: 200, y: canvas.height - 30 }];
+      let activeBlock = { x: 0, w: 200, y: canvas.height - 60, dir: 1, speed: 4 };
+      let score = 0;
+
+      function dropBlock() {
+        const prev = stack[stack.length - 1];
+        const diff = activeBlock.x - prev.x;
+
+        if (Math.abs(diff) >= activeBlock.w) {
+          // Missed stack completely
+          window.removeEventListener('keydown', handleKey);
+          window.removeEventListener('arcade-control', dropBlock);
+          canvas.removeEventListener('click', dropBlock);
+          triggerGameOver(score);
+          return;
+        }
+
+        // Slice block width
+        const newW = activeBlock.w - Math.abs(diff);
+        const newX = diff > 0 ? activeBlock.x : prev.x;
+
+        stack.push({ x: newX, w: newW, y: activeBlock.y });
+        score += 10;
+        updateScore(score);
+        playSFX('click');
+
+        // Spawn next block
+        activeBlock = {
+          x: 0,
+          w: newW,
+          y: activeBlock.y - 30,
+          dir: 1,
+          speed: Math.min(10, 4 + stack.length * 0.3)
+        };
+      }
+
+      function handleKey(e) {
+        if (e.key === ' ' || e.key === 'ArrowUp') dropBlock();
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('arcade-control', dropBlock);
+      canvas.addEventListener('click', dropBlock);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+
+        ctx.fillStyle = '#0b0f17';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Move Active Block
+        activeBlock.x += activeBlock.speed * activeBlock.dir;
+        if (activeBlock.x + activeBlock.w > canvas.width || activeBlock.x < 0) {
+          activeBlock.dir *= -1;
+        }
+
+        // Shift camera view if tower gets tall
+        let offset = 0;
+        if (activeBlock.y < 150) {
+          offset = 150 - activeBlock.y;
+        }
+
+        // Draw Stack
+        stack.forEach((b, idx) => {
+          ctx.fillStyle = idx % 2 === 0 ? '#3b82f6' : '#00f0ff';
+          ctx.fillRect(b.x, b.y + offset, b.w, 28);
+        });
+
+        // Draw Moving Block
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillRect(activeBlock.x, activeBlock.y + offset, activeBlock.w, 28);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 7: MEMORY CARD MATCH
+    // =========================================================================
+    function startMemoryMatch() {
+      const box = document.getElementById('html-game-container');
+      box.innerHTML = '';
+
+      const icons = [
+        'fa-shield-halved', 'fa-user-ninja', 'fa-crown', 'fa-gem',
+        'fa-rocket', 'fa-car-side', 'fa-star', 'fa-bolt'
+      ];
+      let cards = [...icons, ...icons].sort(() => Math.random() - 0.5);
+
+      let flipped = [];
+      let matchedCount = 0;
+      let score = 0;
+
+      const grid = document.createElement('div');
+      grid.className = 'grid grid-cols-4 gap-3 w-full max-w-md h-full items-center justify-center';
+
+      cards.forEach((icon, idx) => {
+        const card = document.createElement('button');
+        card.className = 'bg-ghCard border border-ghBorder hover:border-cyberCyan rounded-xl h-20 flex items-center justify-center text-2xl text-cyberCyan transition-all';
+        card.innerHTML = '<i class="fa-solid fa-question text-gray-600"></i>';
+
+        card.onclick = () => {
+          if (flipped.length >= 2 || card.disabled) return;
+          playSFX('click');
+
+          card.innerHTML = `<i class="fa-solid ${icon}"></i>`;
+          card.classList.add('bg-ghDark', 'border-cyberCyan');
+          flipped.push({ card, icon, idx });
+
+          if (flipped.length === 2) {
+            if (flipped[0].icon === flipped[1].icon && flipped[0].idx !== flipped[1].idx) {
+              playSFX('score');
+              flipped[0].card.disabled = true;
+              flipped[1].card.disabled = true;
+              flipped[0].card.classList.add('border-ghGreenBright', 'text-ghGreenBright');
+              flipped[1].card.classList.add('border-ghGreenBright', 'text-ghGreenBright');
+              matchedCount += 2;
+              score += 100;
+              updateScore(score);
+              flipped = [];
+
+              if (matchedCount === cards.length) {
+                setTimeout(() => triggerGameOver(score), 600);
+              }
+            } else {
+              setTimeout(() => {
+                flipped.forEach(f => {
+                  f.card.innerHTML = '<i class="fa-solid fa-question text-gray-600"></i>';
+                  f.card.classList.remove('bg-ghDark', 'border-cyberCyan');
+                });
+                flipped = [];
+              }, 700);
+            }
+          }
+        };
+
+        grid.appendChild(card);
+      });
+
+      box.appendChild(grid);
+    }
+
+
+    // =========================================================================
+    // GAME 8: NEON RUNNER
+    // =========================================================================
+    function startNeonRunner() {
       const canvas = document.getElementById('game-canvas');
       const ctx = canvas.getContext('2d');
 
       let runner = { x: 50, y: canvas.height - 50, w: 25, h: 40, vy: 0, jumping: false };
-      let obstacles = [];
+      let hurdles = [];
       let score = 0;
       let frame = 0;
-      let speed = 6;
 
       function jump() {
         if (!runner.jumping) {
@@ -1729,23 +1937,18 @@
         if (e.key === ' ' || e.key === 'ArrowUp') jump();
       }
 
-      function handleTouch() {
-        jump();
-      }
-
       window.addEventListener('keydown', handleKey);
-      window.addEventListener('arcade-control', handleTouch);
+      window.addEventListener('arcade-control', jump);
 
       function loop() {
-        gameAnimationLoop = requestAnimationFrame(loop);
+        gameLoopFrame = requestAnimationFrame(loop);
         frame++;
 
-        ctx.fillStyle = '#0d1117';
+        ctx.fillStyle = '#0b0f17';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-        // Ground Line
-        ctx.strokeStyle = '#ef4444';
-        ctx.lineWidth = 2;
+        // Ground
+        ctx.strokeStyle = '#f59e0b';
         ctx.beginPath();
         ctx.moveTo(0, canvas.height - 10);
         ctx.lineTo(canvas.width, canvas.height - 10);
@@ -1762,149 +1965,91 @@
         }
 
         // Draw Runner
-        ctx.fillStyle = '#ef4444';
+        ctx.fillStyle = '#f59e0b';
         ctx.fillRect(runner.x, runner.y, runner.w, runner.h);
 
-        // Spawn Obstacles
-        if (frame % 80 === 0) {
-          obstacles.push({ x: canvas.width, w: 20, h: 30 });
-          score += 10;
-          updateLiveScore(score);
-          if (speed < 12) speed += 0.1;
+        // Spawn Hurdles
+        if (frame % 85 === 0) {
+          hurdles.push({ x: canvas.width, w: 20, h: 30 });
+          score += 15;
+          updateScore(score);
         }
 
-        // Move Obstacles
-        for (let i = obstacles.length - 1; i >= 0; i--) {
-          const obs = obstacles[i];
-          obs.x -= speed;
+        // Draw & Move Hurdles
+        for (let i = hurdles.length - 1; i >= 0; i--) {
+          const h = hurdles[i];
+          h.x -= 6;
 
-          ctx.fillStyle = '#00f0ff';
-          ctx.fillRect(obs.x, canvas.height - 10 - obs.h, obs.w, obs.h);
+          ctx.fillStyle = '#ff007f';
+          ctx.fillRect(h.x, canvas.height - 10 - h.h, h.w, h.h);
 
           // Collision
           if (
-            runner.x < obs.x + obs.w &&
-            runner.x + runner.w > obs.x &&
-            runner.y + runner.h > canvas.height - 10 - obs.h
+            runner.x < h.x + h.w &&
+            runner.x + runner.w > h.x &&
+            runner.y + runner.h > canvas.height - 10 - h.h
           ) {
             window.removeEventListener('keydown', handleKey);
-            window.removeEventListener('arcade-control', handleTouch);
+            window.removeEventListener('arcade-control', jump);
             triggerGameOver(score);
             return;
           }
 
-          if (obs.x < -20) obstacles.splice(i, 1);
+          if (h.x < -20) hurdles.splice(i, 1);
         }
       }
 
-      gameAnimationLoop = requestAnimationFrame(loop);
+      gameLoopFrame = requestAnimationFrame(loop);
     }
 
 
-    // =========================================================================
-    // GAME 6: HACK-THE-GRID
-    // =========================================================================
-    function startHackTheGrid() {
-      const canvas = document.getElementById('game-canvas');
+    // Starfield Background animation
+    function initStarfield() {
+      const canvas = document.getElementById('starfield-canvas');
       const ctx = canvas.getContext('2d');
 
-      let sequence = [];
-      let playerStep = 0;
-      let score = 0;
-      let isPlayingSequence = false;
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
 
-      const buttons = [
-        { id: 0, x: 150, y: 80, w: 120, h: 100, color: '#3fb950', active: false },
-        { id: 1, x: 330, y: 80, w: 120, h: 100, color: '#00f0ff', active: false },
-        { id: 2, x: 150, y: 210, w: 120, h: 100, color: '#a855f7', active: false },
-        { id: 3, x: 330, y: 210, w: 120, h: 100, color: '#eab308', active: false }
-      ];
+      const stars = Array.from({ length: 80 }, () => ({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 2,
+        alpha: Math.random()
+      }));
 
-      function renderGrid() {
-        ctx.fillStyle = '#0d1117';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+      function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        stars.forEach(s => {
+          ctx.fillStyle = `rgba(255, 255, 255, ${s.alpha})`;
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fill();
 
-        buttons.forEach(b => {
-          ctx.fillStyle = b.active ? '#ffffff' : b.color;
-          ctx.fillRect(b.x, b.y, b.w, b.h);
-          ctx.strokeStyle = '#ffffff';
-          ctx.lineWidth = 2;
-          ctx.strokeRect(b.x, b.y, b.w, b.h);
+          s.y += 0.2;
+          if (s.y > canvas.height) s.y = 0;
         });
-
-        ctx.fillStyle = '#ffffff';
-        ctx.font = '14px Orbitron';
-        ctx.fillText('CLICK BUTTONS TO REPEAT MEMORY PATTERN', 100, 40);
+        requestAnimationFrame(draw);
       }
-
-      function flashButton(id) {
-        buttons[id].active = true;
-        playSFX('score');
-        renderGrid();
-        setTimeout(() => {
-          buttons[id].active = false;
-          renderGrid();
-        }, 300);
-      }
-
-      function nextRound() {
-        playerStep = 0;
-        sequence.push(Math.floor(Math.random() * 4));
-        isPlayingSequence = true;
-
-        let idx = 0;
-        const timer = setInterval(() => {
-          flashButton(sequence[idx]);
-          idx++;
-          if (idx >= sequence.length) {
-            clearInterval(timer);
-            isPlayingSequence = false;
-          }
-        }, 600);
-      }
-
-      function handleCanvasClick(e) {
-        if (isPlayingSequence) return;
-
-        const rect = canvas.getBoundingClientRect();
-        const mx = (e.clientX - rect.left) * (canvas.width / rect.width);
-        const my = (e.clientY - rect.top) * (canvas.height / rect.height);
-
-        buttons.forEach(b => {
-          if (mx >= b.x && mx <= b.x + b.w && my >= b.y && my <= b.y + b.h) {
-            flashButton(b.id);
-
-            if (b.id === sequence[playerStep]) {
-              playerStep++;
-              if (playerStep >= sequence.length) {
-                score += 100;
-                updateLiveScore(score);
-                setTimeout(nextRound, 800);
-              }
-            } else {
-              canvas.removeEventListener('click', handleCanvasClick);
-              triggerGameOver(score);
-            }
-          }
-        });
-      }
-
-      canvas.addEventListener('click', handleCanvasClick);
-      renderGrid();
-      setTimeout(nextRound, 500);
+      draw();
     }
 
-
-    // Window Onload Initialization
+    // Startup Onload Handler
     window.onload = function() {
-      loadSavedScores();
-      initMatrixRain();
+      loadScores();
+      initStarfield();
 
-      // Check if session was previously authenticated
-      if (localStorage.getItem('gh_arcade_authenticated') === 'true') {
-        document.getElementById('passcode-gate').classList.add('opacity-0', 'pointer-events-none');
+      // Check if user was active
+      const savedUser = localStorage.getItem('superstars_active_user');
+      if (savedUser && SUPERSTARS_USERS[savedUser]) {
+        activeUser = savedUser;
+        document.getElementById('login-screen').classList.add('hidden');
         document.getElementById('main-portal').classList.remove('hidden');
-        generateHeatmap();
+        setupUserDashboard();
       }
     };
 
