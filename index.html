@@ -1,1 +1,1670 @@
 
+<!DOCTYPE html>
+<html lang="en" class="dark h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>SUPERSTARS FRIENDS — Modern Gaming Portal</title>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            surface: {
+              950: '#090d16',
+              900: '#0f172a',
+              850: '#151d30',
+              800: '#1e293b',
+              700: '#334155'
+            },
+            accent: {
+              indigo: '#6366f1',
+              violet: '#8b5cf6',
+              cyan: '#06b6d4',
+              emerald: '#10b981',
+              amber: '#f59e0b',
+              rose: '#f43f5e'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            display: ['Plus Jakarta Sans', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Modern Dark Styles */
+    :root {
+      color-scheme: dark;
+    }
+
+    body {
+      background-color: #090d16;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Ambient Subtle Mesh Background */
+    .ambient-bg {
+      background: 
+        radial-gradient(circle at 15% 15%, rgba(99, 102, 241, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 25%, rgba(139, 92, 246, 0.07) 0%, transparent 35%),
+        radial-gradient(circle at 50% 75%, rgba(6, 182, 212, 0.06) 0%, transparent 45%);
+    }
+
+    /* Glassmorphism Cards */
+    .glass-panel {
+      background: rgba(15, 23, 42, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-panel-interactive {
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-panel-interactive:hover {
+      transform: translateY(-3px);
+      border-color: rgba(99, 102, 241, 0.35);
+      box-shadow: 0 16px 36px -12px rgba(99, 102, 241, 0.2);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #090d16; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 9999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #6366f1; }
+
+    /* Touch Controls */
+    .touch-btn {
+      touch-action: manipulation;
+    }
+  </style>
+</head>
+
+<body class="h-full flex flex-col antialiased selection:bg-accent-indigo selection:text-white ambient-bg">
+
+  <!-- WRAPPER CONTAINER -->
+  <div class="relative z-10 flex flex-col min-h-screen">
+
+    <!-- TOP NAVIGATION HEADER -->
+    <header class="sticky top-0 z-40 glass-panel border-b border-white/10 px-4 lg:px-8 py-3.5">
+      <div class="max-w-7xl mx-auto flex items-center justify-between gap-4">
+        
+        <!-- Logo -->
+        <div class="flex items-center space-x-3 cursor-pointer" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-accent-indigo via-accent-violet to-accent-cyan flex items-center justify-center text-white text-lg font-extrabold shadow-lg shadow-accent-indigo/25">
+            <i class="fa-solid fa-star text-white"></i>
+          </div>
+          <div>
+            <h1 class="font-display font-extrabold text-lg tracking-tight text-white flex items-center gap-2">
+              SUPERSTARS <span class="text-[10px] font-sans font-semibold px-2 py-0.5 rounded-md bg-accent-indigo/15 text-accent-indigo border border-accent-indigo/30 uppercase tracking-wide">FRIENDS</span>
+            </h1>
+            <p class="text-[11px] text-slate-400 font-medium">Modern Arcade & Speedrun Hub</p>
+          </div>
+        </div>
+
+        <!-- Live Search Bar -->
+        <div class="hidden md:flex flex-1 max-w-sm mx-4">
+          <div class="relative w-full">
+            <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+            <input 
+              type="text" 
+              id="game-search-input" 
+              onkeyup="filterGames()" 
+              placeholder="Search games (OvO Parkour, Dash, Arena...)..." 
+              class="w-full bg-surface-950/80 border border-white/10 rounded-xl pl-9 pr-4 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-accent-indigo transition-all"
+            >
+          </div>
+        </div>
+
+        <!-- Action Utility Items -->
+        <div class="flex items-center space-x-2 sm:space-x-3">
+          <!-- Audio Toggle -->
+          <button onclick="toggleAudio()" id="sound-btn" class="p-2.5 rounded-xl bg-surface-950/80 border border-white/10 hover:border-accent-indigo text-slate-300 transition-all text-xs flex items-center space-x-2" title="Toggle Sound SFX">
+            <i id="sound-icon" class="fa-solid fa-volume-high text-accent-indigo"></i>
+            <span class="hidden sm:inline font-medium">SFX</span>
+          </button>
+
+          <!-- Friends Leaderboard Trigger -->
+          <button onclick="openLeaderboardModal()" class="p-2.5 rounded-xl bg-surface-950/80 border border-white/10 hover:border-accent-amber text-accent-amber transition-all text-xs flex items-center space-x-2">
+            <i class="fa-solid fa-trophy"></i>
+            <span class="hidden sm:inline font-medium">Leaderboard</span>
+          </button>
+
+          <!-- GitHub Deploy Modal Trigger -->
+          <button onclick="openDeployModal()" class="flex items-center space-x-2 bg-gradient-to-r from-accent-indigo to-accent-violet text-white font-semibold text-xs px-3.5 py-2.5 rounded-xl shadow-md hover:opacity-95 transition-all">
+            <i class="fa-brands fa-github text-sm"></i>
+            <span class="hidden sm:inline">GitHub Pages</span>
+          </button>
+        </div>
+
+      </div>
+    </header>
+
+    <!-- MAIN BODY SECTION -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 lg:px-8 py-6 space-y-8">
+
+      <!-- FEATURED HERO BANNER: OvO PARKOUR ULTRA SPEED EDITION -->
+      <section class="relative rounded-3xl overflow-hidden glass-panel p-6 lg:p-10 border border-white/10 shadow-2xl">
+        <div class="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+          
+          <div class="space-y-4 max-w-xl">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="bg-accent-indigo/15 text-accent-indigo border border-accent-indigo/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">FEATURED TITLE</span>
+              <span class="bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30 text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">PRECISION PARKOUR</span>
+            </div>
+
+            <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight leading-tight">
+              OvO Parkour: Speed Edition
+            </h2>
+
+            <p class="text-sm text-slate-300 leading-relaxed">
+              Master fluid stickman movement mechanics! Execute precision wall-jumps, slides under low clearance spikes, air dive ground-pounds, and race the timer across multi-stage obstacle courses.
+            </p>
+
+            <div class="flex flex-wrap items-center gap-4 pt-2">
+              <button onclick="launchGame('ovo')" class="bg-gradient-to-r from-accent-indigo to-accent-violet hover:from-indigo-500 hover:to-violet-500 text-white font-display font-bold px-6 py-3.5 rounded-2xl transition-all shadow-lg shadow-accent-indigo/30 flex items-center space-x-2.5 text-sm">
+                <i class="fa-solid fa-play text-xs"></i>
+                <span>PLAY OvO NOW</span>
+              </button>
+
+              <div class="flex items-center space-x-4 text-xs font-mono text-slate-400 bg-surface-950/60 border border-white/10 px-4 py-3 rounded-2xl">
+                <div><i class="fa-solid fa-stopwatch text-accent-indigo mr-1.5"></i> Best: <strong id="hero-ovo-best" class="text-white">--:--</strong></div>
+                <span>•</span>
+                <div><i class="fa-solid fa-layer-group text-accent-cyan mr-1.5"></i> 3 Levels</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Hero Graphic Card Preview -->
+          <div onclick="launchGame('ovo')" class="w-full lg:w-80 h-48 rounded-2xl bg-gradient-to-br from-surface-950 via-surface-900 to-surface-850 border border-white/10 flex flex-col items-center justify-center relative overflow-hidden group cursor-pointer shadow-inner">
+            <div class="absolute inset-0 bg-accent-indigo/5 group-hover:bg-accent-indigo/10 transition-colors"></div>
+            <div class="w-16 h-16 rounded-full bg-accent-indigo/20 border border-accent-indigo/40 flex items-center justify-center text-accent-indigo group-hover:scale-110 transition-transform duration-300">
+              <i class="fa-solid fa-person-running text-3xl"></i>
+            </div>
+            <span class="mt-3 text-xs font-medium text-slate-300">Click to Launch Engine</span>
+            <div class="absolute bottom-3 text-[10px] text-accent-indigo font-mono">WASD / Arrow Keys + Down to Slide</div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- CATEGORY NAVIGATION TABS -->
+      <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 border-b border-white/10 pb-4">
+        <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0 text-xs">
+          <button onclick="setCategory('ALL')" class="cat-pill active bg-accent-indigo text-white font-bold px-4 py-2 rounded-xl transition-all" data-cat="ALL">
+            All Games (6)
+          </button>
+          <button onclick="setCategory('Parkour')" class="cat-pill bg-surface-900 text-slate-400 hover:text-white border border-white/10 px-4 py-2 rounded-xl transition-all" data-cat="Parkour">
+            Parkour
+          </button>
+          <button onclick="setCategory('Action')" class="cat-pill bg-surface-900 text-slate-400 hover:text-white border border-white/10 px-4 py-2 rounded-xl transition-all" data-cat="Action">
+            Action
+          </button>
+          <button onclick="setCategory('Arcade')" class="cat-pill bg-surface-900 text-slate-400 hover:text-white border border-white/10 px-4 py-2 rounded-xl transition-all" data-cat="Arcade">
+            Arcade
+          </button>
+          <button onclick="setCategory('Puzzle')" class="cat-pill bg-surface-900 text-slate-400 hover:text-white border border-white/10 px-4 py-2 rounded-xl transition-all" data-cat="Puzzle">
+            Puzzle
+          </button>
+        </div>
+
+        <div class="text-xs text-slate-400 font-mono">
+          <i class="fa-solid fa-users text-accent-amber mr-1"></i> Friends Online: <strong class="text-white">Chase, Jade, Ava, Rebecca</strong>
+        </div>
+      </div>
+
+      <!-- MODERN GAME CARDS GRID (6 Playable Games) -->
+      <section id="games-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Game 1: OvO Parkour -->
+        <div class="game-card glass-panel glass-panel-interactive rounded-2xl overflow-hidden flex flex-col justify-between" data-id="ovo" data-cat="Parkour Action">
+          <div class="relative h-44 bg-gradient-to-br from-indigo-950/40 via-surface-900 to-surface-950 flex items-center justify-center border-b border-white/10">
+            <i class="fa-solid fa-person-running text-5xl text-accent-indigo"></i>
+            <span class="absolute top-3 right-3 bg-surface-950/80 border border-accent-indigo/30 text-accent-indigo font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+              POPULAR
+            </span>
+          </div>
+          <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span>Parkour • Speedrun</span>
+                <span class="text-amber-400"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white">1. OvO Parkour: Speed Edition</h3>
+              <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Precision stickman physics. Wall jumps, sliding, dive pounds, trampolines, spikes, and time trials!</p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <span class="text-slate-400">Best Time: <strong id="best-ovo" class="text-accent-amber font-mono">--:--</strong></span>
+              <button onclick="launchGame('ovo')" class="bg-accent-indigo hover:bg-indigo-500 text-white font-semibold px-4 py-2 rounded-xl transition-all">Play Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 2: Velocity Dash -->
+        <div class="game-card glass-panel glass-panel-interactive rounded-2xl overflow-hidden flex flex-col justify-between" data-id="velocity" data-cat="Parkour Action">
+          <div class="relative h-44 bg-gradient-to-br from-violet-950/40 via-surface-900 to-surface-950 flex items-center justify-center border-b border-white/10">
+            <i class="fa-solid fa-[#06b6d4] fa-bolt text-5xl text-accent-violet"></i>
+            <span class="absolute top-3 right-3 bg-surface-950/80 border border-accent-violet/30 text-accent-violet font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+              HOT
+            </span>
+          </div>
+          <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span>Speed Runner</span>
+                <span class="text-amber-400"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white">2. Velocity Dash</h3>
+              <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Momentum-based neon dash course. Time double-jumps and ground-slides over high-speed laser hazards.</p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <span class="text-slate-400">Best Score: <strong id="best-velocity" class="text-accent-amber font-mono">0</strong></span>
+              <button onclick="launchGame('velocity')" class="bg-accent-violet hover:bg-violet-500 text-white font-semibold px-4 py-2 rounded-xl transition-all">Play Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 3: Superstars Arena -->
+        <div class="game-card glass-panel glass-panel-interactive rounded-2xl overflow-hidden flex flex-col justify-between" data-id="arena" data-cat="Action Arcade">
+          <div class="relative h-44 bg-gradient-to-br from-cyan-950/40 via-surface-900 to-surface-950 flex items-center justify-center border-b border-white/10">
+            <i class="fa-solid fa-crosshairs text-5xl text-accent-cyan"></i>
+            <span class="absolute top-3 right-3 bg-surface-950/80 border border-accent-cyan/30 text-accent-cyan font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+              NEW
+            </span>
+          </div>
+          <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span>Arena Shooter</span>
+                <span class="text-amber-400"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white">3. Superstars Arena</h3>
+              <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Top-down survival shooter. Blast enemy bot waves, collect plasma weapon powerups, and survive!</p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <span class="text-slate-400">Best Score: <strong id="best-arena" class="text-accent-amber font-mono">0</strong></span>
+              <button onclick="launchGame('arena')" class="bg-accent-cyan hover:bg-cyan-500 text-surface-950 font-bold px-4 py-2 rounded-xl transition-all">Play Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 4: Stack Master -->
+        <div class="game-card glass-panel glass-panel-interactive rounded-2xl overflow-hidden flex flex-col justify-between" data-id="stack" data-cat="Puzzle Arcade">
+          <div class="relative h-44 bg-gradient-to-br from-emerald-950/40 via-surface-900 to-surface-950 flex items-center justify-center border-b border-white/10">
+            <i class="fa-solid fa-layer-group text-5xl text-accent-emerald"></i>
+            <span class="absolute top-3 right-3 bg-surface-950/80 border border-accent-emerald/30 text-accent-emerald font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+              POPULAR
+            </span>
+          </div>
+          <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span>Stack Physics</span>
+                <span class="text-amber-400"><i class="fa-solid fa-star"></i> 4.7</span>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white">4. Stack Master</h3>
+              <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Precision timing block stacker. Trim overhangs, trigger perfect combo multipliers, and reach space!</p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <span class="text-slate-400">Best Tower: <strong id="best-stack" class="text-accent-amber font-mono">0</strong></span>
+              <button onclick="launchGame('stack')" class="bg-accent-emerald hover:bg-emerald-500 text-surface-950 font-bold px-4 py-2 rounded-xl transition-all">Play Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 5: Rhythm Dash -->
+        <div class="game-card glass-panel glass-panel-interactive rounded-2xl overflow-hidden flex flex-col justify-between" data-id="rhythm" data-cat="Arcade Parkour">
+          <div class="relative h-44 bg-gradient-to-br from-rose-950/40 via-surface-900 to-surface-950 flex items-center justify-center border-b border-white/10">
+            <i class="fa-solid fa-music text-5xl text-accent-rose"></i>
+            <span class="absolute top-3 right-3 bg-surface-950/80 border border-accent-rose/30 text-accent-rose font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+              HOT
+            </span>
+          </div>
+          <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span>Rhythm Platformer</span>
+                <span class="text-amber-400"><i class="fa-solid fa-star"></i> 4.8</span>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white">5. Rhythm Dash</h3>
+              <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Beat-synced jumping adventure powered by Web Audio synth beats. Avoid spikes and reach 100%!</p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <span class="text-slate-400">Completion: <strong id="best-rhythm" class="text-accent-amber font-mono">0%</strong></span>
+              <button onclick="launchGame('rhythm')" class="bg-accent-rose hover:bg-rose-500 text-white font-semibold px-4 py-2 rounded-xl transition-all">Play Now</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Game 6: Cosmic Defender -->
+        <div class="game-card glass-panel glass-panel-interactive rounded-2xl overflow-hidden flex flex-col justify-between" data-id="cosmic" data-cat="Action Arcade">
+          <div class="relative h-44 bg-gradient-to-br from-amber-950/40 via-surface-900 to-surface-950 flex items-center justify-center border-b border-white/10">
+            <i class="fa-solid fa-rocket text-5xl text-accent-amber"></i>
+            <span class="absolute top-3 right-3 bg-surface-950/80 border border-accent-amber/30 text-accent-amber font-bold text-[10px] px-2.5 py-0.5 rounded-full">
+              NEW
+            </span>
+          </div>
+          <div class="p-5 space-y-4 flex-1 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs text-slate-400 mb-1">
+                <span>Space Shooter</span>
+                <span class="text-amber-400"><i class="fa-solid fa-star"></i> 4.9</span>
+              </div>
+              <h3 class="font-display font-bold text-lg text-white">6. Cosmic Defender</h3>
+              <p class="text-xs text-slate-400 mt-1.5 leading-relaxed">Modern vertical galaxy defender. Upgrade dual lasers, collect energy shields, and defeat bosses!</p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-white/10 text-xs">
+              <span class="text-slate-400">Best Score: <strong id="best-cosmic" class="text-accent-amber font-mono">0</strong></span>
+              <button onclick="launchGame('cosmic')" class="bg-accent-amber hover:bg-amber-500 text-surface-950 font-bold px-4 py-2 rounded-xl transition-all">Play Now</button>
+            </div>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-white/10 bg-surface-950/60 py-6 mt-12 text-xs text-slate-400">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-center sm:text-left">
+        <div>
+          <span class="text-white font-bold">SUPERSTARS FRIENDS</span> &copy; 2026 — Modern Playable Browser Arcade
+        </div>
+        <div class="flex items-center space-x-3">
+          <span class="text-slate-400"><i class="fa-solid fa-shield-halved text-accent-emerald mr-1"></i>No Passwords Required</span>
+          <span>•</span>
+          <a href="#" onclick="openDeployModal(); return false;" class="text-accent-indigo hover:underline">Host on GitHub Pages</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- GAME MODAL & CANVAS CONTAINER -->
+  <!-- ========================================================================= -->
+  <div id="game-modal" class="fixed inset-0 z-50 hidden bg-surface-950/95 backdrop-blur-2xl flex flex-col justify-between p-3 sm:p-6 overflow-y-auto">
+    
+    <!-- Modal Header -->
+    <div class="flex items-center justify-between border-b border-white/10 pb-3 max-w-5xl w-full mx-auto">
+      <div class="flex items-center space-x-3">
+        <h2 id="game-title" class="font-display font-bold text-xl text-white">GAME TITLE</h2>
+        <span id="game-badge" class="text-[10px] font-bold bg-accent-indigo/20 text-accent-indigo border border-accent-indigo/30 px-2.5 py-0.5 rounded-full uppercase">
+          ARCADE
+        </span>
+      </div>
+
+      <div class="flex items-center space-x-3 text-xs font-mono">
+        <div class="bg-surface-900 border border-white/10 px-3 py-1.5 rounded-xl flex items-center space-x-2">
+          <span class="text-slate-400">SCORE / TIME:</span>
+          <span id="game-live-score" class="text-accent-indigo font-bold text-sm">0</span>
+        </div>
+
+        <div class="bg-surface-900 border border-white/10 px-3 py-1.5 rounded-xl flex items-center space-x-2">
+          <span class="text-slate-400">RECORD:</span>
+          <span id="game-best-score" class="text-accent-amber font-bold text-sm">0</span>
+        </div>
+
+        <button onclick="toggleFullscreen()" class="p-2 bg-surface-900 border border-white/10 rounded-xl hover:text-accent-indigo transition-all" title="Toggle Fullscreen">
+          <i class="fa-solid fa-expand"></i>
+        </button>
+
+        <button onclick="closeGameModal()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 px-3 py-1.5 rounded-xl border border-rose-500/40 transition-all font-sans font-medium">
+          <i class="fa-solid fa-xmark mr-1"></i>Close
+        </button>
+      </div>
+    </div>
+
+    <!-- Main Game Canvas Target -->
+    <div class="flex-1 flex flex-col items-center justify-center my-3 w-full max-w-5xl mx-auto">
+      <div id="canvas-wrapper" class="relative w-full max-w-2xl bg-black rounded-2xl border border-white/10 shadow-2xl overflow-hidden flex flex-col items-center justify-center">
+        
+        <canvas id="game-canvas" width="640" height="400" class="w-full h-auto bg-black block"></canvas>
+
+        <!-- Overlay Screen (Pause / Game Over / Victory) -->
+        <div id="game-overlay" class="absolute inset-0 z-20 bg-surface-950/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center hidden">
+          <h3 id="overlay-title" class="font-display text-3xl font-extrabold text-rose-400 mb-2">GAME OVER</h3>
+          <p id="overlay-desc" class="text-sm text-slate-300 mb-6 font-mono">Final Score: 0</p>
+
+          <div class="flex items-center space-x-4">
+            <button onclick="restartCurrentGame()" class="bg-accent-indigo hover:bg-indigo-500 text-white font-display font-bold px-6 py-3 rounded-xl shadow-lg transition-all flex items-center space-x-2">
+              <i class="fa-solid fa-rotate-right"></i>
+              <span>Play Again</span>
+            </button>
+            <button onclick="closeGameModal()" class="bg-surface-900 border border-white/10 text-slate-300 font-medium px-4 py-3 rounded-xl hover:text-white transition-all">
+              Hub Menu
+            </button>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Touch Controls for Mobile Devices -->
+      <div id="touch-controls" class="w-full max-w-2xl mt-4 grid grid-cols-2 gap-4 sm:hidden">
+        <div class="grid grid-cols-3 gap-1 bg-surface-900 p-2 rounded-xl border border-white/10 text-center">
+          <div></div>
+          <button ontouchstart="sendTouchInput('UP')" class="touch-btn bg-surface-950 border border-white/10 p-3 rounded-lg text-accent-indigo font-bold active:bg-accent-indigo active:text-white">▲</button>
+          <div></div>
+          <button ontouchstart="sendTouchInput('LEFT')" class="touch-btn bg-surface-950 border border-white/10 p-3 rounded-lg text-accent-indigo font-bold active:bg-accent-indigo active:text-white">◄</button>
+          <button ontouchstart="sendTouchInput('DOWN')" class="touch-btn bg-surface-950 border border-white/10 p-3 rounded-lg text-accent-indigo font-bold active:bg-accent-indigo active:text-white">▼</button>
+          <button ontouchstart="sendTouchInput('RIGHT')" class="touch-btn bg-surface-950 border border-white/10 p-3 rounded-lg text-accent-indigo font-bold active:bg-accent-indigo active:text-white">►</button>
+        </div>
+
+        <div class="flex items-center justify-center bg-surface-900 p-2 rounded-xl border border-white/10">
+          <button ontouchstart="sendTouchInput('ACTION')" class="touch-btn w-full h-full bg-accent-indigo/20 border border-accent-indigo text-accent-indigo rounded-xl font-display font-bold active:bg-accent-indigo active:text-white">
+            ACTION / JUMP
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controls Legend Bar -->
+    <div class="max-w-5xl w-full mx-auto bg-surface-900 border border-white/10 rounded-xl p-3 text-center text-xs text-slate-400">
+      <span id="controls-help-text"><i class="fa-solid fa-keyboard mr-2 text-accent-indigo"></i>Controls: Arrow Keys / WASD. Spacebar for Jump/Action. Down/S for Slide.</span>
+    </div>
+
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: FRIENDS LEADERBOARD -->
+  <!-- ========================================================================= -->
+  <div id="leaderboard-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-xl glass-panel rounded-3xl p-6 shadow-2xl space-y-5">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center space-x-2 text-accent-amber">
+          <i class="fa-solid fa-trophy text-xl"></i>
+          <h3 class="font-display font-bold text-lg text-white">SUPERSTARS FRIENDS Leaderboard</h3>
+        </div>
+        <button onclick="closeLeaderboardModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Category Filter Tabs for Leaderboard -->
+      <div class="flex items-center space-x-2 text-xs border-b border-white/10 pb-3">
+        <button onclick="renderLeaderboardTab('ovo')" id="tab-lb-ovo" class="px-3 py-1.5 rounded-lg bg-accent-indigo text-white font-semibold">OvO Speedrun</button>
+        <button onclick="renderLeaderboardTab('arena')" id="tab-lb-arena" class="px-3 py-1.5 rounded-lg bg-surface-900 text-slate-400">Arena Score</button>
+        <button onclick="renderLeaderboardTab('stack')" id="tab-lb-stack" class="px-3 py-1.5 rounded-lg bg-surface-900 text-slate-400">Stack Height</button>
+      </div>
+
+      <div id="leaderboard-scores-list" class="space-y-2.5 font-mono text-xs">
+        <!-- Dynamic Leaderboard Items -->
+      </div>
+
+      <button onclick="closeLeaderboardModal()" class="w-full bg-accent-indigo hover:bg-indigo-500 text-white font-display font-bold py-3 rounded-xl transition-all">
+        Back to Hub
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- MODAL: GITHUB PAGES DEPLOYMENT GUIDE -->
+  <!-- ========================================================================= -->
+  <div id="deploy-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+    <div class="w-full max-w-2xl glass-panel rounded-3xl p-6 lg:p-8 shadow-2xl space-y-6">
+      
+      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-accent-violet/20 border border-accent-violet/40 flex items-center justify-center text-accent-violet text-xl">
+            <i class="fa-brands fa-github"></i>
+          </div>
+          <div>
+            <h3 class="font-display font-bold text-lg text-white">Deploy Free to GitHub Pages</h3>
+            <p class="text-xs text-slate-400">Host your Superstars Friends Gaming Hub online</p>
+          </div>
+        </div>
+        <button onclick="closeDeployModal()" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="space-y-3 text-xs text-slate-300 font-sans">
+        <div class="bg-surface-950 p-4 rounded-2xl border border-white/10 flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-accent-indigo/20 text-accent-indigo flex items-center justify-center font-bold text-xs shrink-0">1</span>
+          <div>
+            <strong class="text-white block">Create GitHub Repository</strong>
+            Go to <code class="text-accent-indigo">github.com</code> and create a public repo named <code class="text-accent-indigo">superstars-friends</code>.
+          </div>
+        </div>
+
+        <div class="bg-surface-950 p-4 rounded-2xl border border-white/10 flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-accent-indigo/20 text-accent-indigo flex items-center justify-center font-bold text-xs shrink-0">2</span>
+          <div>
+            <strong class="text-white block">Save Web File</strong>
+            Save this complete source file on your desktop as <code class="text-accent-indigo">index.html</code>.
+          </div>
+        </div>
+
+        <div class="bg-surface-950 p-4 rounded-2xl border border-white/10 flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-accent-indigo/20 text-accent-indigo flex items-center justify-center font-bold text-xs shrink-0">3</span>
+          <div>
+            <strong class="text-white block">Upload to GitHub</strong>
+            In your GitHub repository, click <strong>Add file -> Upload files</strong>, drag <code class="text-accent-indigo">index.html</code>, and click <strong>Commit changes</strong>.
+          </div>
+        </div>
+
+        <div class="bg-surface-950 p-4 rounded-2xl border border-white/10 flex items-start space-x-3">
+          <span class="w-6 h-6 rounded-full bg-accent-indigo/20 text-accent-indigo flex items-center justify-center font-bold text-xs shrink-0">4</span>
+          <div>
+            <strong class="text-white block">Enable Pages</strong>
+            Navigate to <strong>Settings -> Pages</strong>, set the Branch to <code class="text-accent-indigo">main</code>, and click <strong>Save</strong>!
+          </div>
+        </div>
+      </div>
+
+      <button onclick="closeDeployModal()" class="w-full bg-accent-indigo text-white font-display font-bold py-3.5 rounded-xl transition-all">
+        Awesome, Got It!
+      </button>
+
+    </div>
+  </div>
+
+
+  <!-- ========================================================================= -->
+  <!-- CORE JAVASCRIPT & ENGINES -->
+  <!-- ========================================================================= -->
+  <script>
+    
+    // Global Hub State
+    let isAudioMuted = false;
+    let audioCtx = null;
+    let activeGameId = null;
+    let gameLoopFrame = null;
+
+    // Local High Scores + Friends Roster
+    let hubScores = {
+      ovo: 0,        // Speedrun time ms
+      velocity: 0,   // Score
+      arena: 0,      // Score
+      stack: 0,      // Max stack height
+      rhythm: 0,     // Completion %
+      cosmic: 0      // Score
+    };
+
+    const friendsLeaderboard = {
+      ovo: [
+        { name: "Rebecca", time: 39800, isUser: false },
+        { name: "Chase", time: 42150, isUser: false },
+        { name: "Jade", time: 48300, isUser: false },
+        { name: "Ava", time: 51100, isUser: false }
+      ],
+      arena: [
+        { name: "Rebecca", score: 6400, isUser: false },
+        { name: "Ava", score: 5100, isUser: false },
+        { name: "Chase", score: 4200, isUser: false },
+        { name: "Jade", score: 3850, isUser: false }
+      ],
+      stack: [
+        { name: "Rebecca", height: 41, isUser: false },
+        { name: "Jade", height: 34, isUser: false },
+        { name: "Chase", height: 28, isUser: false },
+        { name: "Ava", height: 22, isUser: false }
+      ]
+    };
+
+    function loadScores() {
+      const saved = localStorage.getItem('superstars_modern_hub_scores');
+      if (saved) {
+        try { hubScores = { ...hubScores, ...JSON.parse(saved) }; } catch(e){}
+      }
+      updateScoresUI();
+    }
+
+    function saveScores() {
+      localStorage.setItem('superstars_modern_hub_scores', JSON.stringify(hubScores));
+      updateScoresUI();
+    }
+
+    function updateScoresUI() {
+      document.getElementById('best-ovo').innerText = hubScores.ovo > 0 ? formatTimeMs(hubScores.ovo) : '--:--';
+      document.getElementById('hero-ovo-best').innerText = hubScores.ovo > 0 ? formatTimeMs(hubScores.ovo) : '--:--';
+      document.getElementById('best-velocity').innerText = (hubScores.velocity || 0).toLocaleString();
+      document.getElementById('best-arena').innerText = (hubScores.arena || 0).toLocaleString();
+      document.getElementById('best-stack').innerText = (hubScores.stack || 0) + ' blocks';
+      document.getElementById('best-rhythm').innerText = (hubScores.rhythm || 0) + '%';
+      document.getElementById('best-cosmic').innerText = (hubScores.cosmic || 0).toLocaleString();
+    }
+
+    function formatTimeMs(ms) {
+      const sec = Math.floor(ms / 1000);
+      const m = Math.floor(sec / 60);
+      const s = sec % 60;
+      const milli = Math.floor((ms % 1000) / 10);
+      return `${m < 10 ? '0'+m : m}:${s < 10 ? '0'+s : s}.${milli < 10 ? '0'+milli : milli}`;
+    }
+
+    // Web Audio Synthesizer Engine
+    function initAudio() {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+    }
+
+    function playSFX(type) {
+      if (isAudioMuted) return;
+      initAudio();
+      if (!audioCtx) return;
+
+      const now = audioCtx.currentTime;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+
+      if (type === 'jump') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(200, now);
+        osc.frequency.exponentialRampToValueAtTime(550, now + 0.12);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.12);
+        osc.start(now); osc.stop(now + 0.12);
+      } else if (type === 'slide') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(320, now);
+        osc.frequency.linearRampToValueAtTime(120, now + 0.15);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.15);
+        osc.start(now); osc.stop(now + 0.15);
+      } else if (type === 'score' || type === 'coin') {
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(523.25, now);
+        osc.frequency.setValueAtTime(659.25, now + 0.08);
+        gain.gain.setValueAtTime(0.15, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.16);
+        osc.start(now); osc.stop(now + 0.16);
+      } else if (type === 'hit' || type === 'death') {
+        osc.type = 'sawtooth';
+        osc.frequency.setValueAtTime(240, now);
+        osc.frequency.exponentialRampToValueAtTime(40, now + 0.25);
+        gain.gain.setValueAtTime(0.25, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+        osc.start(now); osc.stop(now + 0.25);
+      } else if (type === 'win') {
+        osc.type = 'triangle';
+        osc.frequency.setValueAtTime(440, now);
+        osc.frequency.setValueAtTime(554.37, now + 0.1);
+        osc.frequency.setValueAtTime(659.25, now + 0.2);
+        gain.gain.setValueAtTime(0.2, now);
+        gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+        osc.start(now); osc.stop(now + 0.4);
+      }
+    }
+
+    function toggleAudio() {
+      isAudioMuted = !isAudioMuted;
+      const icon = document.getElementById('sound-icon');
+      if (isAudioMuted) {
+        icon.className = 'fa-solid fa-volume-xmark text-rose-400';
+      } else {
+        icon.className = 'fa-solid fa-volume-high text-accent-indigo';
+        playSFX('score');
+      }
+    }
+
+    // Live Card Filtering
+    function filterGames() {
+      const query = document.getElementById('game-search-input').value.toLowerCase();
+      document.querySelectorAll('.game-card').forEach(card => {
+        const title = card.querySelector('h3').innerText.toLowerCase();
+        const desc = card.querySelector('p').innerText.toLowerCase();
+        if (title.includes(query) || desc.includes(query)) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+      });
+    }
+
+    function setCategory(cat) {
+      playSFX('score');
+      document.querySelectorAll('.cat-pill').forEach(pill => {
+        if (pill.getAttribute('data-cat') === cat) {
+          pill.className = "cat-pill active bg-accent-indigo text-white font-bold px-4 py-2 rounded-xl transition-all";
+        } else {
+          pill.className = "cat-pill bg-surface-900 text-slate-400 hover:text-white border border-white/10 px-4 py-2 rounded-xl transition-all";
+        }
+      });
+
+      document.querySelectorAll('.game-card').forEach(card => {
+        const cats = card.getAttribute('data-cat');
+        if (cat === 'ALL' || cats.includes(cat)) card.classList.remove('hidden');
+        else card.classList.add('hidden');
+      });
+    }
+
+    // Modal Controls & Leaderboard Tabs
+    function openLeaderboardModal() {
+      playSFX('score');
+      renderLeaderboardTab('ovo');
+      document.getElementById('leaderboard-modal').classList.remove('hidden');
+    }
+
+    function closeLeaderboardModal() { document.getElementById('leaderboard-modal').classList.add('hidden'); }
+    function openDeployModal() { playSFX('score'); document.getElementById('deploy-modal').classList.remove('hidden'); }
+    function closeDeployModal() { document.getElementById('deploy-modal').classList.add('hidden'); }
+
+    function renderLeaderboardTab(tab) {
+      ['ovo', 'arena', 'stack'].forEach(t => {
+        const btn = document.getElementById(`tab-lb-${t}`);
+        if (t === tab) {
+          btn.className = "px-3 py-1.5 rounded-lg bg-accent-indigo text-white font-semibold";
+        } else {
+          btn.className = "px-3 py-1.5 rounded-lg bg-surface-900 text-slate-400";
+        }
+      });
+
+      const list = document.getElementById('leaderboard-scores-list');
+      let items = [...friendsLeaderboard[tab]];
+
+      // Add local player score to list
+      if (tab === 'ovo' && hubScores.ovo > 0) {
+        items.push({ name: "YOU (Local)", time: hubScores.ovo, isUser: true });
+        items.sort((a,b) => a.time - b.time);
+      } else if (tab === 'arena' && hubScores.arena > 0) {
+        items.push({ name: "YOU (Local)", score: hubScores.arena, isUser: true });
+        items.sort((a,b) => b.score - a.score);
+      } else if (tab === 'stack' && hubScores.stack > 0) {
+        items.push({ name: "YOU (Local)", height: hubScores.stack, isUser: true });
+        items.sort((a,b) => b.height - a.height);
+      }
+
+      let html = '';
+      items.forEach((item, idx) => {
+        const val = tab === 'ovo' ? formatTimeMs(item.time) : (tab === 'arena' ? item.score.toLocaleString() + ' pts' : item.height + ' blocks');
+        html += `
+          <div class="p-3 rounded-xl border flex items-center justify-between ${item.isUser ? 'bg-accent-indigo/20 border-accent-indigo/50 text-white font-bold' : 'bg-surface-950 border-white/10 text-slate-300'}">
+            <div class="flex items-center space-x-3">
+              <span class="w-6 h-6 rounded-full ${idx === 0 ? 'bg-amber-500 text-surface-950 font-bold' : 'bg-surface-800 text-slate-400'} flex items-center justify-center text-xs font-mono">${idx + 1}</span>
+              <span>${item.name}</span>
+            </div>
+            <span class="font-mono text-accent-amber">${val}</span>
+          </div>
+        `;
+      });
+      list.innerHTML = html;
+    }
+
+    function toggleFullscreen() {
+      const wrapper = document.getElementById('canvas-wrapper');
+      if (!document.fullscreenElement) {
+        wrapper.requestFullscreen().catch(()=>{});
+      } else {
+        document.exitFullscreen().catch(()=>{});
+      }
+    }
+
+    function sendTouchInput(act) {
+      window.dispatchEvent(new CustomEvent('hub-touch', { detail: act }));
+    }
+
+    function updateLiveScore(val) {
+      document.getElementById('game-live-score').innerText = val;
+    }
+
+    function triggerGameOver(scoreVal, isTime = false) {
+      playSFX('death');
+      
+      if (isTime) {
+        if (hubScores.ovo === 0 || scoreVal < hubScores.ovo) {
+          hubScores.ovo = scoreVal;
+          saveScores();
+        }
+        document.getElementById('game-best-score').innerText = formatTimeMs(hubScores.ovo);
+        document.getElementById('overlay-title').innerText = "LEVEL CLEARED!";
+        document.getElementById('overlay-title').className = "font-display text-3xl font-extrabold text-accent-emerald mb-2";
+        document.getElementById('overlay-desc').innerText = `Time: ${formatTimeMs(scoreVal)}`;
+      } else {
+        if (scoreVal > (hubScores[activeGameId] || 0)) {
+          hubScores[activeGameId] = scoreVal;
+          saveScores();
+        }
+        document.getElementById('game-best-score').innerText = activeGameId === 'rhythm' ? hubScores.rhythm + '%' : (activeGameId === 'stack' ? hubScores.stack + ' blocks' : hubScores[activeGameId]);
+        document.getElementById('overlay-title').innerText = "GAME OVER";
+        document.getElementById('overlay-title').className = "font-display text-3xl font-extrabold text-rose-400 mb-2";
+        document.getElementById('overlay-desc').innerText = `Final Score: ${scoreVal}`;
+      }
+
+      document.getElementById('game-overlay').classList.remove('hidden');
+    }
+
+    function closeGameModal() {
+      if (gameLoopFrame) cancelAnimationFrame(gameLoopFrame);
+      document.getElementById('game-modal').classList.add('hidden');
+    }
+
+    function restartCurrentGame() {
+      launchGame(activeGameId);
+    }
+
+    // Keyboard Shortcuts (ESC to close)
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeGameModal();
+        closeLeaderboardModal();
+        closeDeployModal();
+      }
+    });
+
+
+    // =========================================================================
+    // LAUNCHER & GAME ENGINES ROUTER
+    // =========================================================================
+    function launchGame(id) {
+      playSFX('score');
+      activeGameId = id;
+
+      document.getElementById('game-modal').classList.remove('hidden');
+      document.getElementById('game-overlay').classList.add('hidden');
+      
+      const titles = {
+        ovo: '1. OvO Parkour: Speed Edition',
+        velocity: '2. Velocity Dash',
+        arena: '3. Superstars Arena',
+        stack: '4. Stack Master',
+        rhythm: '5. Rhythm Dash',
+        cosmic: '6. Cosmic Defender'
+      };
+
+      const categories = {
+        ovo: 'PRECISION PARKOUR',
+        velocity: 'SPEED RUNNER',
+        arena: 'BOT ARENA',
+        stack: 'STACK PHYSICS',
+        rhythm: 'RHYTHM PLATFORMER',
+        cosmic: 'SPACE SHOOTER'
+      };
+      
+      const helpTexts = {
+        ovo: 'Arrow Keys / WASD: Move. Up/W: Jump & Wall Jump. Down/S: Slide (Ground) or Air Dive / Ground-Pound.',
+        velocity: 'Spacebar / Up Arrow: Jump & Double Jump. Down / S: Ground Slide.',
+        arena: 'WASD / Arrow Keys: Move Player. Mouse: Aim & Shoot plasma laser blasts.',
+        stack: 'Spacebar / Tap: Drop block onto the stack. Trim excess sides!',
+        rhythm: 'Spacebar / Up Arrow / Click: Jump over hazards in sync with the beat.',
+        cosmic: 'WASD / Arrow Keys / Touch: Move Ship. Spacebar: Fire Lasers.'
+      };
+
+      document.getElementById('game-title').innerText = titles[id] || 'GAME';
+      document.getElementById('game-badge').innerText = categories[id] || 'ARCADE';
+      document.getElementById('controls-help-text').innerText = helpTexts[id] || '';
+
+      const bestVal = id === 'ovo' ? (hubScores.ovo > 0 ? formatTimeMs(hubScores.ovo) : '--:--') : (id === 'rhythm' ? hubScores.rhythm + '%' : (id === 'stack' ? hubScores.stack + ' blocks' : hubScores[id] || 0));
+      document.getElementById('game-best-score').innerText = bestVal;
+      updateLiveScore('0');
+
+      if (gameLoopFrame) cancelAnimationFrame(gameLoopFrame);
+
+      if (id === 'ovo') startOvOParkour();
+      else if (id === 'velocity') startVelocityDash();
+      else if (id === 'arena') startSuperstarsArena();
+      else if (id === 'stack') startStackMaster();
+      else if (id === 'rhythm') startRhythmDash();
+      else if (id === 'cosmic') startCosmicDefender();
+    }
+
+
+    // =========================================================================
+    // GAME 1: OvO PARKOUR: SPEED EDITION (PRECISION STICKMAN ENGINE)
+    // =========================================================================
+    function startOvOParkour() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let startTime = Date.now();
+      let elapsedTime = 0;
+      let levelIndex = 0;
+
+      let player = {
+        x: 40, y: 300,
+        vx: 0, vy: 0,
+        w: 16, h: 28,
+        normalH: 28, slideH: 14,
+        grounded: false,
+        sliding: false,
+        wallSliding: false,
+        wallDir: 0
+      };
+
+      let keys = {};
+
+      const levels = [
+        // Level 1: Intro Jumps & Low Slide Ceilings
+        {
+          platforms: [
+            {x: 0, y: 350, w: 220, h: 50},
+            {x: 270, y: 350, w: 140, h: 50},
+            {x: 270, y: 220, w: 200, h: 20}, // Low ceiling requiring slide
+            {x: 440, y: 350, w: 200, h: 50}
+          ],
+          spikes: [
+            {x: 220, y: 380, w: 50, h: 20}
+          ],
+          trampolines: [],
+          flag: {x: 580, y: 305, w: 20, h: 45}
+        },
+        // Level 2: Wall Shafts & Trampolines
+        {
+          platforms: [
+            {x: 0, y: 350, w: 120, h: 50},
+            {x: 180, y: 140, w: 30, h: 260}, // Wall shaft left
+            {x: 270, y: 140, w: 30, h: 260}, // Wall shaft right
+            {x: 380, y: 320, w: 240, h: 80}
+          ],
+          spikes: [
+            {x: 120, y: 380, w: 260, h: 20}
+          ],
+          trampolines: [
+            {x: 310, y: 340, w: 40, h: 10}
+          ],
+          flag: {x: 560, y: 275, w: 20, h: 45}
+        },
+        // Level 3: Precision Gauntlet
+        {
+          platforms: [
+            {x: 0, y: 350, w: 100, h: 50},
+            {x: 160, y: 300, w: 80, h: 20},
+            {x: 290, y: 250, w: 80, h: 20},
+            {x: 420, y: 200, w: 80, h: 20},
+            {x: 530, y: 320, w: 110, h: 80}
+          ],
+          spikes: [
+            {x: 100, y: 380, w: 430, h: 20}
+          ],
+          trampolines: [
+            {x: 240, y: 290, w: 30, h: 10}
+          ],
+          flag: {x: 580, y: 275, w: 20, h: 45}
+        }
+      ];
+
+      function handleKey(e) { keys[e.code] = e.type === 'keydown'; }
+      function handleTouch(e) {
+        const act = e.detail;
+        if (act === 'UP') keys['ArrowUp'] = true;
+        if (act === 'DOWN') keys['ArrowDown'] = true;
+        if (act === 'LEFT') { keys['ArrowLeft'] = true; keys['ArrowRight'] = false; }
+        if (act === 'RIGHT') { keys['ArrowRight'] = true; keys['ArrowLeft'] = false; }
+        if (act === 'ACTION') keys['ArrowUp'] = true;
+        setTimeout(() => { keys['ArrowUp'] = false; keys['ArrowDown'] = false; }, 200);
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('keyup', handleKey);
+      window.addEventListener('hub-touch', handleTouch);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+
+        elapsedTime = Date.now() - startTime;
+        updateLiveScore(formatTimeMs(elapsedTime));
+
+        const lvl = levels[levelIndex];
+
+        // Sliding & Diving Mechanics
+        if (keys['ArrowDown'] || keys['KeyS']) {
+          if (player.grounded && !player.sliding) {
+            player.sliding = true;
+            player.h = player.slideH;
+            player.y += (player.normalH - player.slideH);
+            playSFX('slide');
+          } else if (!player.grounded) {
+            player.vy += 2.0; // Air dive / ground pound
+          }
+        } else {
+          if (player.sliding) {
+            player.sliding = false;
+            player.y -= (player.normalH - player.slideH);
+            player.h = player.normalH;
+          }
+        }
+
+        // Horizontal Acceleration
+        const accel = player.sliding ? 0.25 : 0.85;
+        const maxSpeed = player.sliding ? 6.8 : 4.8;
+
+        if (keys['ArrowRight'] || keys['KeyD']) {
+          if (player.vx < maxSpeed) player.vx += accel;
+        } else if (keys['ArrowLeft'] || keys['KeyA']) {
+          if (player.vx > -maxSpeed) player.vx -= accel;
+        } else {
+          player.vx *= 0.82;
+        }
+
+        // Jump & Wall Jump
+        if (keys['ArrowUp'] || keys['KeyW'] || keys['Space']) {
+          if (player.grounded) {
+            player.vy = -9.6;
+            player.grounded = false;
+            playSFX('jump');
+          } else if (player.wallSliding) {
+            player.vy = -9.2;
+            player.vx = player.wallDir * -6.5;
+            player.wallSliding = false;
+            playSFX('jump');
+          }
+        }
+
+        // Gravity
+        player.vy += 0.46;
+        player.x += player.vx;
+        player.y += player.vy;
+
+        player.grounded = false;
+        player.wallSliding = false;
+
+        // Platform Collisions
+        lvl.platforms.forEach(p => {
+          if (
+            player.x < p.x + p.w &&
+            player.x + player.w > p.x &&
+            player.y < p.y + p.h &&
+            player.y + player.h > p.y
+          ) {
+            const overlapX = Math.min((player.x + player.w) - p.x, (p.x + p.w) - player.x);
+            const overlapY = Math.min((player.y + player.h) - p.y, (p.y + p.h) - player.y);
+
+            if (overlapY < overlapX) {
+              if (player.vy > 0 && player.y + player.h - player.vy <= p.y + 12) {
+                player.y = p.y - player.h;
+                player.vy = 0;
+                player.grounded = true;
+              } else if (player.vy < 0) {
+                player.y = p.y + p.h;
+                player.vy = 0;
+              }
+            } else {
+              if (player.vx > 0) {
+                player.x = p.x - player.w;
+                player.wallSliding = !player.grounded;
+                player.wallDir = 1;
+              } else if (player.vx < 0) {
+                player.x = p.x + p.w;
+                player.wallSliding = !player.grounded;
+                player.wallDir = -1;
+              }
+            }
+          }
+        });
+
+        // Trampolines
+        lvl.trampolines.forEach(t => {
+          if (
+            player.x < t.x + t.w &&
+            player.x + player.w > t.x &&
+            player.y + player.h >= t.y &&
+            player.y + player.h <= t.y + t.h + 10
+          ) {
+            player.vy = -13.5;
+            playSFX('jump');
+          }
+        });
+
+        // Spikes Collision
+        lvl.spikes.forEach(s => {
+          if (
+            player.x < s.x + s.w &&
+            player.x + player.w > s.x &&
+            player.y < s.y + s.h &&
+            player.y + player.h > s.y
+          ) {
+            player.x = 40; player.y = 300; player.vx = 0; player.vy = 0;
+            playSFX('hit');
+          }
+        });
+
+        // Finish Flag
+        if (
+          player.x < lvl.flag.x + lvl.flag.w &&
+          player.x + player.w > lvl.flag.x &&
+          player.y < lvl.flag.y + lvl.flag.h &&
+          player.y + player.h > lvl.flag.y
+        ) {
+          if (levelIndex < levels.length - 1) {
+            levelIndex++;
+            player.x = 40; player.y = 300; player.vx = 0; player.vy = 0;
+            playSFX('win');
+          } else {
+            cleanup();
+            playSFX('win');
+            triggerGameOver(elapsedTime, true);
+            return;
+          }
+        }
+
+        // Fall Death
+        if (player.y > canvas.height + 40) {
+          player.x = 40; player.y = 300; player.vx = 0; player.vy = 0;
+          playSFX('hit');
+        }
+
+        // Render Frame
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Platforms
+        ctx.fillStyle = '#1e293b';
+        ctx.strokeStyle = '#6366f1';
+        ctx.lineWidth = 2;
+        lvl.platforms.forEach(p => {
+          ctx.fillRect(p.x, p.y, p.w, p.h);
+          ctx.strokeRect(p.x, p.y, p.w, p.h);
+        });
+
+        // Trampolines
+        ctx.fillStyle = '#06b6d4';
+        lvl.trampolines.forEach(t => {
+          ctx.fillRect(t.x, t.y, t.w, t.h);
+        });
+
+        // Spikes
+        ctx.fillStyle = '#f43f5e';
+        lvl.spikes.forEach(s => {
+          ctx.beginPath();
+          ctx.moveTo(s.x, s.y + s.h);
+          ctx.lineTo(s.x + s.w/2, s.y);
+          ctx.lineTo(s.x + s.w, s.y + s.h);
+          ctx.closePath();
+          ctx.fill();
+        });
+
+        // Finish Flag
+        ctx.fillStyle = '#10b981';
+        ctx.fillRect(lvl.flag.x, lvl.flag.y, 4, lvl.flag.h);
+        ctx.beginPath();
+        ctx.moveTo(lvl.flag.x + 4, lvl.flag.y);
+        ctx.lineTo(lvl.flag.x + lvl.flag.w, lvl.flag.y + 10);
+        ctx.lineTo(lvl.flag.x + 4, lvl.flag.y + 20);
+        ctx.closePath();
+        ctx.fill();
+
+        // Player Stickman
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(player.x, player.y, player.w, player.h);
+        ctx.fillStyle = '#6366f1';
+        ctx.fillRect(player.x + (player.vx >= 0 ? 10 : 2), player.y + 4, 4, 4);
+      }
+
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('keyup', handleKey);
+        window.removeEventListener('hub-touch', handleTouch);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 2: VELOCITY DASH (SPEED RUNNER ENGINE)
+    // =========================================================================
+    function startVelocityDash() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let runner = { x: 70, y: 280, vy: 0, jumpsLeft: 2, grounded: false, sliding: false };
+      let obstacles = [];
+      let score = 0;
+      let frame = 0;
+
+      function jump() {
+        if (runner.jumpsLeft > 0) {
+          runner.vy = -8.5;
+          runner.jumpsLeft--;
+          runner.grounded = false;
+          playSFX('jump');
+        }
+      }
+
+      function slide(isDown) {
+        runner.sliding = isDown;
+        if (isDown) playSFX('slide');
+      }
+
+      function handleKey(e) {
+        if (e.code === 'Space' || e.code === 'ArrowUp' || e.code === 'KeyW') jump();
+        if (e.code === 'ArrowDown' || e.code === 'KeyS') slide(e.type === 'keydown');
+      }
+
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('keyup', handleKey);
+      window.addEventListener('hub-touch', jump);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+        frame++;
+        score += 2;
+        updateLiveScore(score);
+
+        // Physics
+        runner.vy += 0.45;
+        runner.y += runner.vy;
+
+        const floorY = 320;
+        if (runner.y >= floorY) {
+          runner.y = floorY;
+          runner.vy = 0;
+          runner.grounded = true;
+          runner.jumpsLeft = 2;
+        }
+
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Track line
+        ctx.fillStyle = '#8b5cf6';
+        ctx.fillRect(0, 344, canvas.width, 56);
+
+        // Obstacles
+        if (frame % 80 === 0) {
+          const type = Math.random() > 0.4 ? 'spike' : 'laser';
+          obstacles.push({ x: canvas.width, type: type, w: 24, h: type === 'spike' ? 24 : 50, y: type === 'spike' ? 320 : 250 });
+        }
+
+        for (let i = obstacles.length - 1; i >= 0; i--) {
+          const o = obstacles[i];
+          o.x -= 6;
+
+          if (o.type === 'spike') {
+            ctx.fillStyle = '#f43f5e';
+            ctx.beginPath();
+            ctx.moveTo(o.x, 344);
+            ctx.lineTo(o.x + 12, 344 - 24);
+            ctx.lineTo(o.x + 24, 344);
+            ctx.closePath();
+            ctx.fill();
+          } else {
+            ctx.fillStyle = '#06b6d4';
+            ctx.fillRect(o.x, o.y, o.w, o.h);
+          }
+
+          // Hitbox
+          const rH = runner.sliding ? 14 : 24;
+          const rY = runner.sliding ? runner.y + 10 : runner.y;
+
+          if (
+            runner.x + 20 > o.x &&
+            runner.x < o.x + o.w &&
+            rY + rH > o.y &&
+            rY < o.y + o.h
+          ) {
+            cleanup();
+            triggerGameOver(score);
+            return;
+          }
+
+          if (o.x < -40) obstacles.splice(i, 1);
+        }
+
+        // Runner Sprite
+        ctx.fillStyle = '#8b5cf6';
+        const rH = runner.sliding ? 14 : 24;
+        const rY = runner.sliding ? runner.y + 10 : runner.y;
+        ctx.fillRect(runner.x, rY, 20, rH);
+      }
+
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('keyup', handleKey);
+        window.removeEventListener('hub-touch', jump);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 3: SUPERSTARS ARENA (TOP-DOWN BOT ARENA SHOOTER)
+    // =========================================================================
+    function startSuperstarsArena() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let p = { x: 320, y: 200, speed: 4.0, radius: 14 };
+      let bullets = [];
+      let enemies = [];
+      let keys = {};
+      let score = 0;
+      let frame = 0;
+
+      function handleKey(e) { keys[e.code] = e.type === 'keydown'; }
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('keyup', handleKey);
+
+      canvas.addEventListener('click', (e) => {
+        const rect = canvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left;
+        const my = e.clientY - rect.top;
+        const angle = Math.atan2(my - p.y, mx - p.x);
+
+        bullets.push({ x: p.x, y: p.y, vx: Math.cos(angle) * 8, vy: Math.sin(angle) * 8 });
+        playSFX('jump');
+      });
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+        frame++;
+
+        // Movement
+        if (keys['KeyW'] || keys['ArrowUp']) p.y = Math.max(14, p.y - p.speed);
+        if (keys['KeyS'] || keys['ArrowDown']) p.y = Math.min(canvas.height - 14, p.y + p.speed);
+        if (keys['KeyA'] || keys['ArrowLeft']) p.x = Math.max(14, p.x - p.speed);
+        if (keys['KeyD'] || keys['ArrowRight']) p.x = Math.min(canvas.width - 14, p.x + p.speed);
+
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Spawn Enemies
+        if (frame % 45 === 0) {
+          const side = Math.floor(Math.random() * 4);
+          let ex = side === 0 ? 0 : (side === 1 ? canvas.width : Math.random() * canvas.width);
+          let ey = side === 2 ? 0 : (side === 3 ? canvas.height : Math.random() * canvas.height);
+          enemies.push({ x: ex, y: ey, radius: 12, speed: 1.8 + Math.random() * 0.8 });
+        }
+
+        // Bullets update
+        for (let i = bullets.length - 1; i >= 0; i--) {
+          const b = bullets[i];
+          b.x += b.vx; b.y += b.vy;
+
+          ctx.fillStyle = '#06b6d4';
+          ctx.beginPath(); ctx.arc(b.x, b.y, 4, 0, Math.PI*2); ctx.fill();
+
+          if (b.x < 0 || b.x > canvas.width || b.y < 0 || b.y > canvas.height) bullets.splice(i, 1);
+        }
+
+        // Enemies update
+        for (let i = enemies.length - 1; i >= 0; i--) {
+          const e = enemies[i];
+          const angle = Math.atan2(p.y - e.y, p.x - e.x);
+          e.x += Math.cos(angle) * e.speed;
+          e.y += Math.sin(angle) * e.speed;
+
+          ctx.fillStyle = '#f43f5e';
+          ctx.beginPath(); ctx.arc(e.x, e.y, e.radius, 0, Math.PI*2); ctx.fill();
+
+          // Bullet Hits
+          for (let j = bullets.length - 1; j >= 0; j--) {
+            const b = bullets[j];
+            const dist = Math.hypot(b.x - e.x, b.y - e.y);
+            if (dist < e.radius + 4) {
+              enemies.splice(i, 1);
+              bullets.splice(j, 1);
+              score += 100;
+              updateLiveScore(score);
+              playSFX('score');
+              break;
+            }
+          }
+
+          // Player Collision
+          if (Math.hypot(p.x - e.x, p.y - e.y) < p.radius + e.radius) {
+            cleanup();
+            triggerGameOver(score);
+            return;
+          }
+        }
+
+        // Draw Player
+        ctx.fillStyle = '#6366f1';
+        ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI*2); ctx.fill();
+      }
+
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('keyup', handleKey);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 4: STACK MASTER (TOWER PHYSICS ENGINE)
+    // =========================================================================
+    function startStackMaster() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let stack = [{ x: 220, w: 200, y: 360 }];
+      let current = { x: 0, w: 200, y: 330, dir: 1, speed: 4 };
+      let count = 0;
+
+      function drop() {
+        const prev = stack[stack.length - 1];
+        const diff = current.x - prev.x;
+
+        if (Math.abs(diff) >= current.w) {
+          triggerGameOver(count);
+          return;
+        }
+
+        const newW = current.w - Math.abs(diff);
+        const newX = diff > 0 ? current.x : prev.x;
+
+        stack.push({ x: newX, w: newW, y: current.y });
+        count++;
+        updateLiveScore(count + ' blocks');
+        playSFX('score');
+
+        // Reset current moving block higher
+        current.w = newW;
+        current.x = 0;
+        current.y -= 25;
+        current.speed += 0.2;
+
+        if (stack.length > 10) {
+          stack.forEach(b => b.y += 25);
+          current.y += 25;
+        }
+      }
+
+      function handleAction() { drop(); }
+      window.addEventListener('keydown', (e) => { if (e.code === 'Space') drop(); });
+      window.addEventListener('hub-touch', handleAction);
+      canvas.addEventListener('click', handleAction);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+
+        current.x += current.speed * current.dir;
+        if (current.x + current.w > canvas.width || current.x < 0) current.dir *= -1;
+
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Render Stack
+        stack.forEach((b, idx) => {
+          ctx.fillStyle = idx % 2 === 0 ? '#10b981' : '#06b6d4';
+          ctx.fillRect(b.x, b.y, b.w, 22);
+        });
+
+        // Render Current Block
+        ctx.fillStyle = '#f59e0b';
+        ctx.fillRect(current.x, current.y, current.w, 22);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 5: RHYTHM DASH
+    // =========================================================================
+    function startRhythmDash() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let cube = { y: 300, vy: 0, grounded: true };
+      let progress = 0;
+
+      function jump() {
+        if (cube.grounded) {
+          cube.vy = -9;
+          cube.grounded = false;
+          playSFX('jump');
+        }
+      }
+
+      window.addEventListener('keydown', (e) => { if (e.code === 'Space' || e.code === 'ArrowUp') jump(); });
+      window.addEventListener('hub-touch', jump);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+
+        progress += 0.5;
+        const comp = Math.min(100, Math.floor(progress));
+        updateLiveScore(comp + '%');
+
+        if (comp >= 100) { playSFX('win'); triggerGameOver(100); return; }
+
+        cube.vy += 0.5;
+        cube.y += cube.vy;
+        if (cube.y >= 300) { cube.y = 300; cube.vy = 0; cube.grounded = true; }
+
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillRect(0, 324, canvas.width, 76);
+
+        // Pulsating obstacle spikes
+        ctx.fillStyle = '#ffffff';
+        const spikeX = (canvas.width - (progress * 15) % canvas.width);
+        ctx.beginPath();
+        ctx.moveTo(spikeX, 324);
+        ctx.lineTo(spikeX + 15, 324 - 30);
+        ctx.lineTo(spikeX + 30, 324);
+        ctx.closePath();
+        ctx.fill();
+
+        if (spikeX > 70 && spikeX < 110 && cube.y > 270) {
+          triggerGameOver(comp); return;
+        }
+
+        ctx.fillStyle = '#f43f5e';
+        ctx.fillRect(80, cube.y, 24, 24);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // =========================================================================
+    // GAME 6: COSMIC DEFENDER (SPACE SHOOTER)
+    // =========================================================================
+    function startCosmicDefender() {
+      const canvas = document.getElementById('game-canvas');
+      const ctx = canvas.getContext('2d');
+
+      let ship = { x: 300, y: 340, speed: 5 };
+      let lasers = [];
+      let aliens = [];
+      let keys = {};
+      let score = 0;
+      let frame = 0;
+
+      function handleKey(e) { keys[e.code] = e.type === 'keydown'; }
+      window.addEventListener('keydown', handleKey);
+      window.addEventListener('keyup', handleKey);
+
+      function loop() {
+        gameLoopFrame = requestAnimationFrame(loop);
+        frame++;
+
+        if (keys['ArrowLeft'] || keys['KeyA']) ship.x = Math.max(20, ship.x - ship.speed);
+        if (keys['ArrowRight'] || keys['KeyD']) ship.x = Math.min(canvas.width - 20, ship.x + ship.speed);
+
+        if (keys['Space'] && frame % 10 === 0) {
+          lasers.push({ x: ship.x, y: ship.y });
+          playSFX('jump');
+        }
+
+        ctx.fillStyle = '#090d16';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        // Lasers
+        ctx.fillStyle = '#f59e0b';
+        for (let i = lasers.length - 1; i >= 0; i--) {
+          const l = lasers[i];
+          l.y -= 7;
+          ctx.fillRect(l.x - 2, l.y, 4, 12);
+          if (l.y < 0) lasers.splice(i, 1);
+        }
+
+        // Spawn Aliens
+        if (frame % 40 === 0) {
+          aliens.push({ x: Math.random() * (canvas.width - 40) + 20, y: -20 });
+        }
+
+        // Aliens
+        ctx.fillStyle = '#8b5cf6';
+        for (let i = aliens.length - 1; i >= 0; i--) {
+          const a = aliens[i];
+          a.y += 2.2;
+          ctx.fillRect(a.x - 15, a.y, 30, 20);
+
+          // Hit detection
+          for (let j = lasers.length - 1; j >= 0; j--) {
+            const l = lasers[j];
+            if (Math.abs(l.x - a.x) < 20 && Math.abs(l.y - a.y) < 15) {
+              aliens.splice(i, 1);
+              lasers.splice(j, 1);
+              score += 150;
+              updateLiveScore(score);
+              playSFX('score');
+              break;
+            }
+          }
+
+          if (a.y > canvas.height) { triggerGameOver(score); return; }
+        }
+
+        // Player Ship
+        ctx.fillStyle = '#06b6d4';
+        ctx.beginPath();
+        ctx.moveTo(ship.x, ship.y - 15);
+        ctx.lineTo(ship.x - 18, ship.y + 15);
+        ctx.lineTo(ship.x + 18, ship.y + 15);
+        ctx.closePath();
+        ctx.fill();
+      }
+
+      function cleanup() {
+        window.removeEventListener('keydown', handleKey);
+        window.removeEventListener('keyup', handleKey);
+      }
+
+      gameLoopFrame = requestAnimationFrame(loop);
+    }
+
+
+    // INITIALIZE ON LOAD
+    window.onload = function() {
+      loadScores();
+    };
+
+  </script>
+</body>
+</html>
